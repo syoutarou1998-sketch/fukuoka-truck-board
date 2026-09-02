@@ -1,121 +1,183 @@
 <!DOCTYPE html>
-
 <html lang="ja">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>福岡トラック掲示板</title>
 
 <style>
-
 * {
-
   box-sizing: border-box;
-
 }
 
 body {
-
   margin: 0;
-
-  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN",
-
-    "Yu Gothic", Meiryo, sans-serif;
-
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
   background: #f3f5f7;
-
   color: #222;
-
 }
 
 header {
-
   background: #111827;
-
   color: white;
+  padding: 24px 16px;
+  text-align: center;
+}
 
-  padding: 24px 16px;.submit {
+header h1 {
+  margin: 0 0 8px;
+  font-size: 25px;
+}
 
+header p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  padding: 16px;
+}
+
+.post-button {
   width: 100%;
-
-  padding: 14px;
-
   border: 0;
-
-  border-radius: 10px;
-
+  border-radius: 12px;
+  padding: 15px;
   background: #2563eb;
-
   color: white;
-
-  font-size: 16px;
-
+  font-size: 17px;
   font-weight: bold;
+  margin-bottom: 16px;
+}
 
+.categories {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.category {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.post {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.post-category {
+  display: inline-block;
+  background: #e5e7eb;
+  border-radius: 20px;
+  padding: 4px 9px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.post h3 {
+  margin: 5px 0;
+  font-size: 17px;
+}
+
+.post p {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.post small {
+  color: #777;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  padding: 20px;
+  z-index: 10;
+}
+
+.modal-box {
+  background: white;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 7px 0 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+textarea {
+  min-height: 120px;
+}
+
+.submit {
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .close {
-
   width: 100%;
-
   padding: 12px;
-
   margin-top: 8px;
-
   border: 0;
-
   border-radius: 10px;
-
   background: #eee;
-
 }
 
 .empty {
-
   text-align: center;
-
   color: #777;
-
   padding: 30px 10px;
-
 }
-
 </style>
-
 </head>
 
 <body>
 
 <header>
-
   <h1>🚛 福岡トラック掲示板</h1>
-
   <p>福岡のトラックドライバー・運送業界の情報交換</p>
-
 </header>
 
 <div class="container">
 
   <button class="post-button" onclick="openModal()">
-
     ＋ 投稿する
-
   </button>
 
   <div class="categories">
-
     <div class="category">💼 求人・仕事募集</div>
-
     <div class="category">🚛 運送情報</div>
-
     <div class="category">🛣️ 道路・待機場所</div>
-
     <div class="category">💬 雑談</div>
-
   </div>
 
   <div id="posts"></div>
@@ -123,7 +185,6 @@ header {
 </div>
 
 <div class="modal" id="modal">
-
   <div class="modal-box">
 
     <h2>投稿する</h2>
@@ -131,73 +192,49 @@ header {
     <label>カテゴリ</label>
 
     <select id="category">
-
       <option>求人・仕事募集</option>
-
       <option>運送情報</option>
-
       <option>道路・待機場所</option>
-
       <option>雑談</option>
-
     </select>
 
     <label>タイトル</label>
 
     <input
-
       id="title"
-
       type="text"
-
       placeholder="タイトルを入力"
-
     >
 
     <label>本文</label>
 
     <textarea
-
       id="body"
-
       placeholder="内容を入力"
-
     ></textarea>
 
     <button class="submit" onclick="addPost()">
-
       投稿する
-
     </button>
 
     <button class="close" onclick="closeModal()">
-
       キャンセル
-
     </button>
 
   </div>
-
 </div>
 
 <script>
 
 let posts = JSON.parse(
-
   localStorage.getItem("fukuokaTruckPosts") || "[]"
-
 );
 
 function save() {
-
   localStorage.setItem(
-
     "fukuokaTruckPosts",
-
     JSON.stringify(posts)
-
   );
-
 }
 
 function render() {
@@ -207,123 +244,84 @@ function render() {
   if (posts.length === 0) {
 
     area.innerHTML =
-
       '<div class="empty">' +
-
       'まだ投稿がありません。<br>' +
-
       '最初の投稿をしてみよう！🚛' +
-
       '</div>';
 
     return;
-
   }
 
   area.innerHTML = posts.map(post => `
-
     <div class="post">
 
       <span class="post-category">
-
         ${escapeHtml(post.category)}
-
       </span>
 
       <h3>
-
         ${escapeHtml(post.title)}
-
       </h3>
 
       <p>
-
         ${escapeHtml(post.body).replace(/\n/g, "<br>")}
-
       </p>
 
       <small>
-
         ${escapeHtml(post.date)}
-
       </small>
 
     </div>
-
   `).join("");
-
 }
 
 function openModal() {
-
   document.getElementById("modal").style.display = "block";
-
 }
 
 function closeModal() {
-
   document.getElementById("modal").style.display = "none";
-
 }
 
 function addPost() {
 
   const category =
-
     document.getElementById("category").value;
 
   const title =
-
     document.getElementById("title").value.trim();
 
   const body =
-
     document.getElementById("body").value.trim();
 
   if (!title || !body) {
-
     alert("タイトルと本文を入力してください");
-
     return;
-
   }
 
   posts.unshift({
-
     category: category,
-
     title: title,
-
     body: body,
-
     date: new Date().toLocaleString("ja-JP")
-
   });
 
   save();
 
   document.getElementById("title").value = "";
-
   document.getElementById("body").value = "";
 
   closeModal();
-
   render();
+}
 
-}function escapeHtml(text) {
-
+function escapeHtml(text) {
   return text
-
     .replace(/&/g, "&amp;")
-
     .replace(/</g, "&lt;")
-
     .replace(/>/g, "&gt;")
-
     .replace(/"/g, "&quot;")
-
     .replace(/'/g, "&#039;");
-
 }
 
 render();
@@ -331,5 +329,4 @@ render();
 </script>
 
 </body>
-
 </html>
