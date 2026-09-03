@@ -57,9 +57,7 @@ header p{
 }
 
 
-/* =========================
-   検索
-========================= */
+/* 検索 */
 
 .search-box{
   background:white;
@@ -102,9 +100,7 @@ header p{
 }
 
 
-/* =========================
-   カテゴリー
-========================= */
+/* カテゴリー */
 
 .categories{
   display:grid;
@@ -130,9 +126,7 @@ header p{
 }
 
 
-/* =========================
-   投稿
-========================= */
+/* 投稿 */
 
 .post{
   background:white;
@@ -173,9 +167,7 @@ header p{
 }
 
 
-/* =========================
-   返信
-========================= */
+/* 返信 */
 
 .reply-area{
   margin-top:14px;
@@ -253,9 +245,48 @@ header p{
 }
 
 
-/* =========================
-   投稿モーダル
-========================= */
+/* 通報 */
+
+.report-button{
+  margin-top:10px;
+  border:0;
+  border-radius:8px;
+  background:#fee2e2;
+  color:#b91c1c;
+  padding:9px 13px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.report-form{
+  display:none;
+  margin-top:10px;
+  padding:12px;
+  background:#fff7f7;
+  border-radius:10px;
+  border:1px solid #fecaca;
+}
+
+.report-form select,
+.report-form input{
+  width:100%;
+  padding:10px;
+  margin-bottom:8px;
+  border:1px solid #ccc;
+  border-radius:8px;
+}
+
+.report-submit{
+  border:0;
+  border-radius:8px;
+  background:#dc2626;
+  color:white;
+  padding:10px 14px;
+  font-weight:bold;
+}
+
+
+/* モーダル */
 
 .modal{
   display:none;
@@ -332,7 +363,6 @@ textarea{
 
 <body>
 
-
 <header>
 
 <h1>🚛 福岡トラック掲示板</h1>
@@ -348,36 +378,34 @@ textarea{
 
 
 <button
-  class="post-button"
-  onclick="openModal()"
+class="post-button"
+onclick="openModal()"
 >
 ＋ 投稿する
 </button>
 
 
-<!-- =========================
-     検索
-========================= -->
+<!-- 検索 -->
 
 <div class="search-box">
 
 <input
-  id="search"
-  class="search-input"
-  type="search"
-  placeholder="4t・大型・トレーラー・求人など"
+id="search"
+class="search-input"
+type="search"
+placeholder="4t・大型・トレーラー・求人など"
 >
 
 <button
-  class="search-button"
-  onclick="searchPosts()"
+class="search-button"
+onclick="searchPosts()"
 >
 🔍 検索
 </button>
 
 <button
-  class="clear-button"
-  onclick="clearSearch()"
+class="clear-button"
+onclick="clearSearch()"
 >
 検索をクリア
 </button>
@@ -385,52 +413,46 @@ textarea{
 </div>
 
 
-<!-- =========================
-     カテゴリー
-========================= -->
+<!-- カテゴリー -->
 
 <div class="categories">
 
 <div
-  class="category active"
-  data-category="すべて"
-  onclick="filterCategory('すべて')"
+class="category active"
+data-category="すべて"
+onclick="filterCategory('すべて')"
 >
 📋 すべて
 </div>
 
-
 <div
-  class="category"
-  data-category="求人・仕事募集"
-  onclick="filterCategory('求人・仕事募集')"
+class="category"
+data-category="求人・仕事募集"
+onclick="filterCategory('求人・仕事募集')"
 >
 💼 求人・仕事募集
 </div>
 
-
 <div
-  class="category"
-  data-category="運送情報"
-  onclick="filterCategory('運送情報')"
+class="category"
+data-category="運送情報"
+onclick="filterCategory('運送情報')"
 >
 🚛 運送情報
 </div>
 
-
 <div
-  class="category"
-  data-category="道路・待機場所"
-  onclick="filterCategory('道路・待機場所')"
+class="category"
+data-category="道路・待機場所"
+onclick="filterCategory('道路・待機場所')"
 >
 🛣️ 道路・待機場所
 </div>
 
-
 <div
-  class="category"
-  data-category="雑談"
-  onclick="filterCategory('雑談')"
+class="category"
+data-category="雑談"
+onclick="filterCategory('雑談')"
 >
 💬 雑談
 </div>
@@ -439,8 +461,8 @@ textarea{
 
 
 <div
-  id="status"
-  class="status"
+id="status"
+class="status"
 >
 投稿を読み込み中...
 </div>
@@ -448,100 +470,79 @@ textarea{
 
 <div id="posts"></div>
 
-
 </div>
 
 
 
-<!-- =========================
-     投稿フォーム
-========================= -->
+<!-- 投稿モーダル -->
 
 <div
-  class="modal"
-  id="modal"
+class="modal"
+id="modal"
 >
 
 <div class="modal-box">
 
 <h2>投稿する</h2>
 
-
-<label>
-ニックネーム
-</label>
+<label>ニックネーム</label>
 
 <input
-  id="author"
-  type="text"
-  maxlength="30"
-  placeholder="例：福岡トラック太郎"
+id="author"
+type="text"
+maxlength="30"
+placeholder="例：福岡トラック太郎"
 >
 
 
-<label>
-カテゴリ
-</label>
+<label>カテゴリ</label>
 
 <select id="category">
 
-<option>
-求人・仕事募集
-</option>
+<option>求人・仕事募集</option>
 
-<option>
-運送情報
-</option>
+<option>運送情報</option>
 
-<option>
-道路・待機場所
-</option>
+<option>道路・待機場所</option>
 
-<option>
-雑談
-</option>
+<option>雑談</option>
 
 </select>
 
 
-<label>
-タイトル
-</label>
+<label>タイトル</label>
 
 <input
-  id="title"
-  type="text"
-  maxlength="100"
-  placeholder="タイトルを入力"
+id="title"
+type="text"
+maxlength="100"
+placeholder="タイトルを入力"
 >
 
 
-<label>
-本文
-</label>
+<label>本文</label>
 
 <textarea
-  id="body"
-  maxlength="2000"
-  placeholder="内容を入力"
+id="body"
+maxlength="2000"
+placeholder="内容を入力"
 ></textarea>
 
 
 <button
-  class="submit"
-  onclick="addPost()"
+class="submit"
+onclick="addPost()"
 >
 投稿する
 </button>
 
 
 <button
-  class="close"
-  onclick="closeModal()"
+class="close"
+onclick="closeModal()"
 >
 キャンセル
 </button>
-
 
 </div>
 
@@ -553,7 +554,7 @@ textarea{
 
 
 import {
-  createClient
+createClient
 }
 from
 "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
@@ -569,14 +570,10 @@ const SUPABASE_KEY =
 
 const supabase =
 createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
-
-/* =========================
-   状態
-========================= */
 
 let currentCategory =
 "すべて";
@@ -655,13 +652,14 @@ loadPosts();
 
 
 /* =========================
-   検索ボタン
+   検索
 ========================= */
 
 window.searchPosts =
 function(){
 
 currentSearch =
+
 document
 .getElementById("search")
 .value
@@ -673,10 +671,6 @@ loadPosts();
 
 };
 
-
-/* =========================
-   検索クリア
-========================= */
 
 window.clearSearch =
 function(){
@@ -703,7 +697,6 @@ async function loadPosts(){
 const status =
 document.getElementById("status");
 
-
 const area =
 document.getElementById("posts");
 
@@ -713,11 +706,8 @@ status.textContent =
 
 
 const {
-
 data:posts,
-
 error
-
 } =
 await supabase
 
@@ -726,13 +716,10 @@ await supabase
 .select("*")
 
 .order(
-
 "created_at",
-
 {
 ascending:false
 }
-
 );
 
 
@@ -746,11 +733,8 @@ status.textContent =
 
 
 area.innerHTML =
-
 '<div class="empty">' +
-
 'データベース接続エラー' +
-
 '</div>';
 
 
@@ -776,7 +760,7 @@ currentCategory
 );
 
 
-/* キーワード */
+/* 検索 */
 
 if(currentSearch){
 
@@ -787,17 +771,11 @@ post => {
 const text = (
 
 (post.author || "") +
-
 " " +
-
 (post.title || "") +
-
 " " +
-
 (post.body || "") +
-
 " " +
-
 (post.category || "")
 
 ).toLowerCase();
@@ -813,7 +791,6 @@ currentSearch
 
 
 status.textContent =
-
 filteredPosts.length +
 "件の投稿";
 
@@ -821,11 +798,8 @@ filteredPosts.length +
 if(filteredPosts.length === 0){
 
 area.innerHTML =
-
 '<div class="empty">' +
-
 '条件に一致する投稿がありません。' +
-
 '</div>';
 
 return;
@@ -833,24 +807,17 @@ return;
 }
 
 
-/* 投稿ID */
-
 const postIds =
 filteredPosts.map(
 post => post.id
 );
 
 
-/* =========================
-   返信取得
-========================= */
+/* 返信 */
 
 const {
-
 data:replies,
-
 error:replyError
-
 } =
 await supabase
 
@@ -861,13 +828,10 @@ await supabase
 .in("post_id",postIds)
 
 .order(
-
 "created_at",
-
 {
 ascending:true
 }
-
 );
 
 
@@ -882,9 +846,7 @@ const replyList =
 replies || [];
 
 
-/* =========================
-   投稿表示
-========================= */
+/* 投稿表示 */
 
 area.innerHTML =
 
@@ -893,23 +855,17 @@ post => {
 
 
 const postReplies =
-
 replyList.filter(
 
 reply =>
 
-String(
-reply.post_id
-) ===
-
-String(
-post.id
-)
+String(reply.post_id) ===
+String(post.id)
 
 );
 
 
-/* 返信HTML */
+/* 返信表示 */
 
 const repliesHtml =
 
@@ -924,7 +880,6 @@ postReplies.length === 0
 :
 
 postReplies.map(
-
 reply => `
 
 <div class="reply">
@@ -934,7 +889,6 @@ reply => `
 👤 ${escapeHtml(
 
 reply.author ||
-
 "名無しのトラック運転手"
 
 )}
@@ -959,10 +913,71 @@ reply.created_at
 
 </div>
 
+
+<button
+class="report-button"
+onclick=
+"toggleReplyReport('${reply.id}')"
+>
+🚨 返信を通報
+</button>
+
+
+<div
+class="report-form"
+id=
+"reply-report-${reply.id}"
+>
+
+<select
+id=
+"reply-reason-${reply.id}"
+>
+
+<option value="">
+通報理由を選択
+</option>
+
+<option>
+迷惑投稿・荒らし
+</option>
+
+<option>
+誹謗中傷
+</option>
+
+<option>
+広告・宣伝
+</option>
+
+<option>
+その他
+</option>
+
+</select>
+
+
+<input
+id=
+"reply-reporter-${reply.id}"
+maxlength="30"
+placeholder="名前（任意）"
+>
+
+
+<button
+class="report-submit"
+onclick=
+"reportReply('${reply.id}')"
+>
+通報する
+</button>
+
+</div>
+
 </div>
 
 `
-
 ).join("");
 
 
@@ -985,7 +1000,6 @@ post.category
 👤 ${escapeHtml(
 
 post.author ||
-
 "名無しのトラック運転手"
 
 )}
@@ -1020,6 +1034,68 @@ post.created_at
 </small>
 
 
+<button
+class="report-button"
+onclick=
+"togglePostReport('${post.id}')"
+>
+🚨 この投稿を通報
+</button>
+
+
+<div
+class="report-form"
+id=
+"post-report-${post.id}"
+>
+
+<select
+id=
+"post-reason-${post.id}"
+>
+
+<option value="">
+通報理由を選択
+</option>
+
+<option>
+迷惑投稿・荒らし
+</option>
+
+<option>
+誹謗中傷
+</option>
+
+<option>
+広告・宣伝
+</option>
+
+<option>
+その他
+</option>
+
+</select>
+
+
+<input
+id=
+"post-reporter-${post.id}"
+maxlength="30"
+placeholder="名前（任意）"
+>
+
+
+<button
+class="report-submit"
+onclick=
+"reportPost('${post.id}')"
+>
+通報する
+</button>
+
+</div>
+
+
 <div class="reply-area">
 
 
@@ -1035,12 +1111,9 @@ ${repliesHtml}
 
 
 <button
-
 class="reply-button"
-
 onclick=
 "toggleReplyForm('${post.id}')"
-
 >
 
 ＋ 返信する
@@ -1049,48 +1122,33 @@ onclick=
 
 
 <div
-
 class="reply-form"
-
 id=
 "reply-form-${post.id}"
-
 >
 
 
 <input
-
 id=
 "reply-author-${post.id}"
-
 type="text"
-
 maxlength="30"
-
 placeholder="ニックネーム"
-
 >
 
 
 <textarea
-
 id=
 "reply-body-${post.id}"
-
 maxlength="1000"
-
 placeholder="返信内容"
-
 ></textarea>
 
 
 <button
-
 class="reply-submit"
-
 onclick=
 "addReply('${post.id}')"
-
 >
 
 返信を投稿
@@ -1216,13 +1274,9 @@ console.error(error);
 
 
 alert(
-
 "投稿に失敗しました。\n" +
-
 error.message
-
 );
-
 
 return;
 
@@ -1261,27 +1315,17 @@ function(postId){
 
 const form =
 document.getElementById(
-
-"reply-form-" +
-postId
-
+"reply-form-" + postId
 );
 
 
-if(
-form.style.display ===
-"block"
-){
-
 form.style.display =
-"none";
 
-}else{
+form.style.display === "block"
 
-form.style.display =
-"block";
+? "none"
 
-}
+: "block";
 
 };
 
@@ -1295,10 +1339,7 @@ async function(postId){
 
 const author =
 document.getElementById(
-
-"reply-author-" +
-postId
-
+"reply-author-" + postId
 )
 .value
 .trim();
@@ -1306,10 +1347,7 @@ postId
 
 const body =
 document.getElementById(
-
-"reply-body-" +
-postId
-
+"reply-body-" + postId
 )
 .value
 .trim();
@@ -1337,11 +1375,8 @@ return;
 }
 
 
-const {
+const {error} =
 
-error
-
-} =
 await supabase
 
 .from("replies")
@@ -1363,13 +1398,9 @@ console.error(error);
 
 
 alert(
-
 "返信に失敗しました。\n" +
-
 error.message
-
 );
-
 
 return;
 
@@ -1377,6 +1408,212 @@ return;
 
 
 await loadPosts();
+
+};
+
+
+/* =========================
+   投稿通報フォーム
+========================= */
+
+window.togglePostReport =
+function(postId){
+
+const form =
+document.getElementById(
+"post-report-" + postId
+);
+
+
+form.style.display =
+
+form.style.display === "block"
+
+? "none"
+
+: "block";
+
+};
+
+
+/* =========================
+   返信通報フォーム
+========================= */
+
+window.toggleReplyReport =
+function(replyId){
+
+const form =
+document.getElementById(
+"reply-report-" + replyId
+);
+
+
+form.style.display =
+
+form.style.display === "block"
+
+? "none"
+
+: "block";
+
+};
+
+
+/* =========================
+   投稿を通報
+========================= */
+
+window.reportPost =
+async function(postId){
+
+const reason =
+document.getElementById(
+"post-reason-" + postId
+)
+.value;
+
+
+const reporter =
+document.getElementById(
+"post-reporter-" + postId
+)
+.value
+.trim() ||
+"匿名";
+
+
+if(!reason){
+
+alert(
+"通報理由を選択してください"
+);
+
+return;
+
+}
+
+
+const {error} =
+
+await supabase
+
+.from("reports")
+
+.insert({
+
+post_id:postId,
+
+reason:reason,
+
+reporter_name:reporter
+
+});
+
+
+if(error){
+
+console.error(error);
+
+
+alert(
+"通報に失敗しました。\n" +
+error.message
+);
+
+return;
+
+}
+
+
+alert(
+"通報を受け付けました。"
+);
+
+
+document.getElementById(
+"post-report-" + postId
+).style.display =
+"none";
+
+};
+
+
+/* =========================
+   返信を通報
+========================= */
+
+window.reportReply =
+async function(replyId){
+
+const reason =
+document.getElementById(
+"reply-reason-" + replyId
+)
+.value;
+
+
+const reporter =
+document.getElementById(
+"reply-reporter-" + replyId
+)
+.value
+.trim() ||
+"匿名";
+
+
+if(!reason){
+
+alert(
+"通報理由を選択してください"
+);
+
+return;
+
+}
+
+
+const {error} =
+
+await supabase
+
+.from("reports")
+
+.insert({
+
+reply_id:replyId,
+
+reason:reason,
+
+reporter_name:reporter
+
+});
+
+
+if(error){
+
+console.error(error);
+
+
+alert(
+"通報に失敗しました。\n" +
+error.message
+);
+
+return;
+
+}
+
+
+alert(
+"通報を受け付けました。"
+);
+
+
+document.getElementById(
+"reply-report-" + replyId
+).style.display =
+"none";
 
 };
 
