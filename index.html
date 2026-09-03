@@ -7,7 +7,7 @@
 
 <style>
 *{
-  box-sizing:border-box
+  box-sizing:border-box;
 }
 
 body{
@@ -15,31 +15,31 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,
   "Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
   background:#f3f5f7;
-  color:#222
+  color:#222;
 }
 
 header{
   background:#111827;
   color:white;
   padding:24px 16px;
-  text-align:center
+  text-align:center;
 }
 
 header h1{
   margin:0 0 8px;
-  font-size:25px
+  font-size:25px;
 }
 
 header p{
   margin:0;
   font-size:13px;
-  opacity:.8
+  opacity:.8;
 }
 
 .container{
   max-width:700px;
   margin:auto;
-  padding:16px
+  padding:16px;
 }
 
 .post-button{
@@ -51,14 +51,14 @@ header p{
   color:white;
   font-size:17px;
   font-weight:bold;
-  margin-bottom:16px
+  margin-bottom:16px;
 }
 
 .categories{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:10px;
-  margin-bottom:20px
+  margin-bottom:20px;
 }
 
 .category{
@@ -67,15 +67,15 @@ header p{
   border-radius:12px;
   padding:16px 10px;
   text-align:center;
-  font-weight:bold
+  font-weight:bold;
 }
 
 .post{
   background:white;
   border-radius:12px;
   padding:16px;
-  margin-bottom:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.06)
+  margin-bottom:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
 .post-category{
@@ -84,28 +84,105 @@ header p{
   border-radius:20px;
   padding:4px 9px;
   font-size:12px;
-  margin-bottom:8px
+  margin-bottom:8px;
 }
 
 .post-author{
   font-size:13px;
   font-weight:bold;
   color:#555;
-  margin-bottom:5px
+  margin-bottom:5px;
 }
 
 .post h3{
   margin:5px 0;
-  font-size:17px
+  font-size:17px;
 }
 
 .post p{
   margin:8px 0;
-  line-height:1.6
+  line-height:1.6;
+  white-space:normal;
 }
 
 .post small{
-  color:#777
+  color:#777;
+}
+
+.reply-area{
+  margin-top:14px;
+  border-top:1px solid #eee;
+  padding-top:12px;
+}
+
+.reply-title{
+  font-weight:bold;
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+.reply{
+  background:#f8fafc;
+  border-radius:9px;
+  padding:10px;
+  margin-top:7px;
+}
+
+.reply-author{
+  font-size:12px;
+  font-weight:bold;
+  color:#555;
+}
+
+.reply-body{
+  margin-top:4px;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.reply-date{
+  font-size:11px;
+  color:#888;
+  margin-top:4px;
+}
+
+.reply-button{
+  margin-top:10px;
+  border:0;
+  border-radius:8px;
+  background:#e5e7eb;
+  padding:9px 13px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.reply-form{
+  display:none;
+  margin-top:10px;
+}
+
+.reply-form input,
+.reply-form textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:15px;
+  margin-bottom:8px;
+}
+
+.reply-form textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+.reply-submit{
+  border:0;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  padding:10px 14px;
+  font-weight:bold;
 }
 
 .modal{
@@ -114,7 +191,7 @@ header p{
   inset:0;
   background:rgba(0,0,0,.5);
   padding:20px;
-  z-index:10
+  z-index:10;
 }
 
 .modal-box{
@@ -122,20 +199,22 @@ header p{
   max-width:600px;
   margin:40px auto;
   padding:20px;
-  border-radius:16px
+  border-radius:16px;
 }
 
-input,textarea,select{
+input,
+textarea,
+select{
   width:100%;
   padding:12px;
   margin:7px 0 14px;
   border:1px solid #ccc;
   border-radius:8px;
-  font-size:16px
+  font-size:16px;
 }
 
 textarea{
-  min-height:120px
+  min-height:120px;
 }
 
 .submit{
@@ -146,11 +225,11 @@ textarea{
   background:#2563eb;
   color:white;
   font-size:16px;
-  font-weight:bold
+  font-weight:bold;
 }
 
 .submit:disabled{
-  opacity:.6
+  opacity:.6;
 }
 
 .close{
@@ -159,20 +238,20 @@ textarea{
   margin-top:8px;
   border:0;
   border-radius:10px;
-  background:#eee
+  background:#eee;
 }
 
 .empty{
   text-align:center;
   color:#777;
-  padding:30px 10px
+  padding:30px 10px;
 }
 
 .status{
   text-align:center;
   font-size:13px;
   color:#777;
-  margin:10px
+  margin:10px;
 }
 </style>
 </head>
@@ -204,6 +283,9 @@ textarea{
 <div id="posts"></div>
 
 </div>
+
+
+<!-- 投稿モーダル -->
 
 <div class="modal" id="modal">
 
@@ -257,16 +339,13 @@ textarea{
 </div>
 </div>
 
+
 <script type="module">
 
 import {
   createClient
 } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-
-/* =========================
-   Supabase設定
-   ========================= */
 
 const SUPABASE_URL =
 "https://rwhsxtzzpwddkmtjszzc.supabase.co";
@@ -282,7 +361,39 @@ createClient(
 
 
 /* =========================
-   投稿取得
+   HTML安全処理
+   ========================= */
+
+function escapeHtml(text){
+
+  return String(text ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function formatText(text){
+
+  return escapeHtml(text)
+    .replace(/\n/g,"<br>");
+
+}
+
+
+function formatDate(date){
+
+  return new Date(date)
+    .toLocaleString("ja-JP");
+
+}
+
+
+/* =========================
+   投稿読み込み
    ========================= */
 
 async function loadPosts(){
@@ -298,7 +409,7 @@ async function loadPosts(){
 
 
   const {
-    data,
+    data:posts,
     error
   } =
     await supabase
@@ -329,10 +440,10 @@ async function loadPosts(){
 
 
   status.textContent =
-    data.length + "件の投稿";
+    posts.length + "件の投稿";
 
 
-  if(data.length === 0){
+  if(posts.length === 0){
 
     area.innerHTML =
       '<div class="empty">' +
@@ -344,9 +455,79 @@ async function loadPosts(){
   }
 
 
+  const postIds =
+    posts.map(post => post.id);
+
+
+  const {
+    data:replies,
+    error:replyError
+  } =
+    await supabase
+      .from("replies")
+      .select("*")
+      .in("post_id",postIds)
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
+
+
+  if(replyError){
+
+    console.error(replyError);
+  }
+
+
+  const replyList =
+    replies || [];
+
+
   area.innerHTML =
-    data.map(
-      post => `
+    posts.map(post => {
+
+      const postReplies =
+        replyList.filter(
+          reply =>
+            String(reply.post_id) ===
+            String(post.id)
+        );
+
+
+      const repliesHtml =
+        postReplies.length === 0
+        ?
+        '<div style="color:#888;font-size:13px;">まだ返信はありません</div>'
+        :
+        postReplies.map(
+          reply => `
+
+            <div class="reply">
+
+              <div class="reply-author">
+                👤 ${escapeHtml(
+                  reply.author ||
+                  "名無しのトラック運転手"
+                )}
+              </div>
+
+              <div class="reply-body">
+                ${formatText(reply.body)}
+              </div>
+
+              <div class="reply-date">
+                ${formatDate(reply.created_at)}
+              </div>
+
+            </div>
+
+          `
+        ).join("");
+
+
+      return `
 
         <div class="post">
 
@@ -366,51 +547,90 @@ async function loadPosts(){
           </h3>
 
           <p>
-            ${escapeHtml(post.body)
-              .replace(/\n/g,"<br>")}
+            ${formatText(post.body)}
           </p>
 
           <small>
             ${formatDate(post.created_at)}
           </small>
 
+
+          <div class="reply-area">
+
+            <div class="reply-title">
+              💬 返信 ${postReplies.length}件
+            </div>
+
+            ${repliesHtml}
+
+            <button
+              class="reply-button"
+              onclick="toggleReplyForm('${post.id}')"
+            >
+              ＋ 返信する
+            </button>
+
+
+            <div
+              class="reply-form"
+              id="reply-form-${post.id}"
+            >
+
+              <input
+                id="reply-author-${post.id}"
+                type="text"
+                maxlength="30"
+                placeholder="ニックネーム"
+              >
+
+              <textarea
+                id="reply-body-${post.id}"
+                maxlength="1000"
+                placeholder="返信内容"
+              ></textarea>
+
+              <button
+                class="reply-submit"
+                onclick="addReply('${post.id}')"
+              >
+                返信を投稿
+              </button>
+
+            </div>
+
+          </div>
+
         </div>
 
-      `
-    ).join("");
+      `;
+
+    }).join("");
 
 }
 
 
 /* =========================
-   投稿作成
+   投稿する
    ========================= */
 
 window.addPost =
 async function(){
 
   const author =
-    document
-      .getElementById("author")
-      .value
-      .trim();
+    document.getElementById("author")
+      .value.trim();
 
   const category =
-    document
-      .getElementById("category")
+    document.getElementById("category")
       .value;
 
   const title =
-    document
-      .getElementById("title")
-      .value
-      .trim();
+    document.getElementById("title")
+      .value.trim();
 
   const body =
-    document
-      .getElementById("body")
-      .value
-      .trim();
+    document.getElementById("body")
+      .value.trim();
 
 
   if(!author){
@@ -436,26 +656,20 @@ async function(){
   const button =
     document.querySelector(".submit");
 
-
   button.disabled = true;
 
   button.textContent =
     "投稿中...";
 
 
-  const {
-    error
-  } =
+  const { error } =
     await supabase
       .from("posts")
       .insert({
 
         author:author,
-
         category:category,
-
         title:title,
-
         body:body
 
       });
@@ -480,20 +694,116 @@ async function(){
   }
 
 
-  document
-    .getElementById("author")
+  document.getElementById("author")
     .value = "";
 
-  document
-    .getElementById("title")
+  document.getElementById("title")
     .value = "";
 
-  document
-    .getElementById("body")
+  document.getElementById("body")
     .value = "";
 
 
   closeModal();
+
+  await loadPosts();
+
+};
+
+
+/* =========================
+   返信フォーム表示
+   ========================= */
+
+window.toggleReplyForm =
+function(postId){
+
+  const form =
+    document.getElementById(
+      "reply-form-" + postId
+    );
+
+
+  if(
+    form.style.display === "block"
+  ){
+
+    form.style.display = "none";
+
+  }else{
+
+    form.style.display = "block";
+
+  }
+
+};
+
+
+/* =========================
+   返信投稿
+   ========================= */
+
+window.addReply =
+async function(postId){
+
+  const author =
+    document.getElementById(
+      "reply-author-" + postId
+    ).value.trim();
+
+
+  const body =
+    document.getElementById(
+      "reply-body-" + postId
+    ).value.trim();
+
+
+  if(!author){
+
+    alert(
+      "ニックネームを入力してください"
+    );
+
+    return;
+  }
+
+
+  if(!body){
+
+    alert(
+      "返信内容を入力してください"
+    );
+
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabase
+      .from("replies")
+      .insert({
+
+        post_id:postId,
+        author:author,
+        body:body
+
+      });
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "返信に失敗しました。\n" +
+      error.message
+    );
+
+    return;
+  }
+
 
   await loadPosts();
 
@@ -507,10 +817,8 @@ async function(){
 window.openModal =
 function(){
 
-  document
-    .getElementById("modal")
-    .style.display =
-    "block";
+  document.getElementById("modal")
+    .style.display = "block";
 
 };
 
@@ -518,62 +826,10 @@ function(){
 window.closeModal =
 function(){
 
-  document
-    .getElementById("modal")
-    .style.display =
-    "none";
+  document.getElementById("modal")
+    .style.display = "none";
 
 };
-
-
-/* =========================
-   XSS対策
-   ========================= */
-
-function escapeHtml(text){
-
-  return String(text)
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
-
-
-/* =========================
-   日付
-   ========================= */
-
-function formatDate(date){
-
-  return new Date(date)
-    .toLocaleString(
-      "ja-JP"
-    );
-
-}
 
 
 /* =========================
