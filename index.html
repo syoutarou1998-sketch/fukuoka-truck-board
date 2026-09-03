@@ -6,157 +6,72 @@
 <title>福岡トラック掲示板</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",
+  "Yu Gothic",Meiryo,sans-serif;
+  background:#f3f5f7;
+  color:#222
 }
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
-  background: #f3f5f7;
-  color: #222;
+header{
+  background:#111827;
+  color:white;
+  padding:24px 16px;
+  text-align:center
 }
-
-header {
-  background: #111827;
-  color: white;
-  padding: 24px 16px;
-  text-align: center;
+header h1{margin:0 0 8px;font-size:25px}
+header p{margin:0;font-size:13px;opacity:.8}
+.container{max-width:700px;margin:auto;padding:16px}
+.post-button{
+  width:100%;border:0;border-radius:12px;padding:15px;
+  background:#2563eb;color:white;font-size:17px;font-weight:bold;
+  margin-bottom:16px
 }
-
-header h1 {
-  margin: 0 0 8px;
-  font-size: 25px;
+.categories{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-bottom:20px
 }
-
-header p {
-  margin: 0;
-  font-size: 13px;
-  opacity: 0.8;
+.category{
+  background:white;border:1px solid #ddd;border-radius:12px;
+  padding:16px 10px;text-align:center;font-weight:bold
 }
-
-.container {
-  max-width: 700px;
-  margin: auto;
-  padding: 16px;
+.post{
+  background:white;border-radius:12px;padding:16px;
+  margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)
 }
-
-.post-button {
-  width: 100%;
-  border: 0;
-  border-radius: 12px;
-  padding: 15px;
-  background: #2563eb;
-  color: white;
-  font-size: 17px;
-  font-weight: bold;
-  margin-bottom: 16px;
+.post-category{
+  display:inline-block;background:#e5e7eb;border-radius:20px;
+  padding:4px 9px;font-size:12px;margin-bottom:8px
 }
-
-.categories {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
+.post h3{margin:5px 0;font-size:17px}
+.post p{margin:8px 0;line-height:1.6}
+.post small{color:#777}
+.modal{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+  padding:20px;z-index:10
 }
-
-.category {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 16px 10px;
-  text-align: center;
-  font-weight: bold;
+.modal-box{
+  background:white;max-width:600px;margin:40px auto;
+  padding:20px;border-radius:16px
 }
-
-.post {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+input,textarea,select{
+  width:100%;padding:12px;margin:7px 0 14px;
+  border:1px solid #ccc;border-radius:8px;font-size:16px
 }
-
-.post-category {
-  display: inline-block;
-  background: #e5e7eb;
-  border-radius: 20px;
-  padding: 4px 9px;
-  font-size: 12px;
-  margin-bottom: 8px;
+textarea{min-height:120px}
+.submit{
+  width:100%;padding:14px;border:0;border-radius:10px;
+  background:#2563eb;color:white;font-size:16px;font-weight:bold
 }
-
-.post h3 {
-  margin: 5px 0;
-  font-size: 17px;
+.close{
+  width:100%;padding:12px;margin-top:8px;border:0;
+  border-radius:10px;background:#eee
 }
-
-.post p {
-  margin: 8px 0;
-  line-height: 1.6;
-}
-
-.post small {
-  color: #777;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.5);
-  padding: 20px;
-  z-index: 10;
-}
-
-.modal-box {
-  background: white;
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  border-radius: 16px;
-}
-
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 12px;
-  margin: 7px 0 14px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-textarea {
-  min-height: 120px;
-}
-
-.submit {
-  width: 100%;
-  padding: 14px;
-  border: 0;
-  border-radius: 10px;
-  background: #2563eb;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.close {
-  width: 100%;
-  padding: 12px;
-  margin-top: 8px;
-  border: 0;
-  border-radius: 10px;
-  background: #eee;
-}
-
-.empty {
-  text-align: center;
-  color: #777;
-  padding: 30px 10px;
-}
+.empty{text-align:center;color:#777;padding:30px 10px}
+.status{text-align:center;font-size:13px;color:#777;margin:10px}
 </style>
 </head>
 
@@ -169,79 +84,112 @@ textarea {
 
 <div class="container">
 
-  <button class="post-button" onclick="openModal()">
-    ＋ 投稿する
-  </button>
+<button class="post-button" onclick="openModal()">
+＋ 投稿する
+</button>
 
-  <div class="categories">
-    <div class="category">💼 求人・仕事募集</div>
-    <div class="category">🚛 運送情報</div>
-    <div class="category">🛣️ 道路・待機場所</div>
-    <div class="category">💬 雑談</div>
-  </div>
+<div class="categories">
+  <div class="category">💼 求人・仕事募集</div>
+  <div class="category">🚛 運送情報</div>
+  <div class="category">🛣️ 道路・待機場所</div>
+  <div class="category">💬 雑談</div>
+</div>
 
-  <div id="posts"></div>
+<div id="status" class="status">投稿を読み込み中...</div>
+<div id="posts"></div>
 
 </div>
 
 <div class="modal" id="modal">
-  <div class="modal-box">
+<div class="modal-box">
 
-    <h2>投稿する</h2>
+<h2>投稿する</h2>
 
-    <label>カテゴリ</label>
+<label>カテゴリ</label>
+<select id="category">
+  <option>求人・仕事募集</option>
+  <option>運送情報</option>
+  <option>道路・待機場所</option>
+  <option>雑談</option>
+</select>
 
-    <select id="category">
-      <option>求人・仕事募集</option>
-      <option>運送情報</option>
-      <option>道路・待機場所</option>
-      <option>雑談</option>
-    </select>
+<label>タイトル</label>
+<input id="title" type="text" placeholder="タイトルを入力">
 
-    <label>タイトル</label>
+<label>本文</label>
+<textarea id="body" placeholder="内容を入力"></textarea>
 
-    <input
-      id="title"
-      type="text"
-      placeholder="タイトルを入力"
-    >
+<button class="submit" onclick="addPost()">
+投稿する
+</button>
 
-    <label>本文</label>
+<button class="close" onclick="closeModal()">
+キャンセル
+</button>
 
-    <textarea
-      id="body"
-      placeholder="内容を入力"
-    ></textarea>
-
-    <button class="submit" onclick="addPost()">
-      投稿する
-    </button>
-
-    <button class="close" onclick="closeModal()">
-      キャンセル
-    </button>
-
-  </div>
+</div>
 </div>
 
-<script>
+<script type="module">
 
-let posts = JSON.parse(
-  localStorage.getItem("fukuokaTruckPosts") || "[]"
+import { createClient }
+from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+/* =========================
+   Supabase設定
+   ========================= */
+
+const SUPABASE_URL =
+"https://rwhsxtzzpwddkmtjszzc.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_0H09q8OgCLAVQIgQZ_VQkQ_RfPFB_hS";
+
+const supabase = createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 
-function save() {
-  localStorage.setItem(
-    "fukuokaTruckPosts",
-    JSON.stringify(posts)
-  );
-}
+/* =========================
+   投稿取得
+   ========================= */
 
-function render() {
+async function loadPosts(){
 
-  const area = document.getElementById("posts");
+  const status =
+    document.getElementById("status");
 
-  if (posts.length === 0) {
+  const area =
+    document.getElementById("posts");
+
+  status.textContent =
+    "投稿を読み込み中...";
+
+  const { data, error } =
+    await supabase
+      .from("posts")
+      .select("*")
+      .order("created_at", {
+        ascending:false
+      });
+
+  if(error){
+
+    console.error(error);
+
+    status.textContent =
+      "投稿の読み込みに失敗しました";
+
+    area.innerHTML =
+      '<div class="empty">データベース接続エラー</div>';
+
+    return;
+  }
+
+  status.textContent =
+    data.length + "件の投稿";
+
+  if(data.length === 0){
 
     area.innerHTML =
       '<div class="empty">' +
@@ -252,81 +200,156 @@ function render() {
     return;
   }
 
-  area.innerHTML = posts.map(post => `
-    <div class="post">
+  area.innerHTML =
+    data.map(post => `
 
-      <span class="post-category">
-        ${escapeHtml(post.category)}
-      </span>
+      <div class="post">
 
-      <h3>
-        ${escapeHtml(post.title)}
-      </h3>
+        <span class="post-category">
+          ${escapeHtml(post.category)}
+        </span>
 
-      <p>
-        ${escapeHtml(post.body).replace(/\n/g, "<br>")}
-      </p>
+        <h3>
+          ${escapeHtml(post.title)}
+        </h3>
 
-      <small>
-        ${escapeHtml(post.date)}
-      </small>
+        <p>
+          ${escapeHtml(post.body)
+            .replace(/\n/g,"<br>")}
+        </p>
 
-    </div>
-  `).join("");
+        <small>
+          ${formatDate(post.created_at)}
+        </small>
+
+      </div>
+
+    `).join("");
+
 }
 
-function openModal() {
-  document.getElementById("modal").style.display = "block";
-}
+/* =========================
+   投稿作成
+   ========================= */
 
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-}
-
-function addPost() {
+window.addPost = async function(){
 
   const category =
     document.getElementById("category").value;
 
   const title =
-    document.getElementById("title").value.trim();
+    document.getElementById("title")
+      .value.trim();
 
   const body =
-    document.getElementById("body").value.trim();
+    document.getElementById("body")
+      .value.trim();
 
-  if (!title || !body) {
-    alert("タイトルと本文を入力してください");
+  if(!title || !body){
+
+    alert(
+      "タイトルと本文を入力してください"
+    );
+
     return;
   }
 
-  posts.unshift({
-    category: category,
-    title: title,
-    body: body,
-    date: new Date().toLocaleString("ja-JP")
-  });
+  const button =
+    document.querySelector(".submit");
 
-  save();
+  button.disabled = true;
+  button.textContent =
+    "投稿中...";
 
-  document.getElementById("title").value = "";
-  document.getElementById("body").value = "";
+  const { error } =
+    await supabase
+      .from("posts")
+      .insert({
+        category:category,
+        title:title,
+        body:body
+      });
+
+  button.disabled = false;
+  button.textContent =
+    "投稿する";
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "投稿に失敗しました。\n" +
+      error.message
+    );
+
+    return;
+  }
+
+  document.getElementById("title")
+    .value = "";
+
+  document.getElementById("body")
+    .value = "";
 
   closeModal();
-  render();
+
+  await loadPosts();
+
+};
+
+/* =========================
+   モーダル
+   ========================= */
+
+window.openModal = function(){
+
+  document.getElementById("modal")
+    .style.display = "block";
+
+};
+
+window.closeModal = function(){
+
+  document.getElementById("modal")
+    .style.display = "none";
+
+};
+
+/* =========================
+   XSS対策
+   ========================= */
+
+function escapeHtml(text){
+
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
 }
 
-function escapeHtml(text) {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+/* =========================
+   日付
+   ========================= */
+
+function formatDate(date){
+
+  return new Date(date)
+    .toLocaleString("ja-JP");
+
 }
 
-render();
+/* =========================
+   初期読み込み
+   ========================= */
+
+loadPosts();
 
 </script>
 
 </body>
 </html>
+　
