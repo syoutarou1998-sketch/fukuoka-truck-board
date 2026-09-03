@@ -1,1 +1,526 @@
 
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>福岡トラック掲示板｜管理者</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+header {
+  background: #111827;
+  color: white;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 21px;
+}
+
+main {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 6px 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  font-size: 16px;
+}
+
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.login {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+}
+
+.logout {
+  background: #e5e7eb;
+  margin-top: 12px;
+}
+
+.report {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.label {
+  margin-top: 10px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.value {
+  margin-top: 3px;
+  word-break: break-word;
+}
+
+.error {
+  color: #b91c1c;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.ok {
+  color: #15803d;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none;
+}
+
+.empty {
+  color: #6b7280;
+  text-align: center;
+  padding: 25px 5px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>👑 福岡トラック掲示板 管理画面</h1>
+</header>
+
+<main>
+
+  <section id="loginArea" class="card">
+    <h2>🔐 管理者ログイン</h2>
+
+    <input
+      id="email"
+      type="email"
+      placeholder="メールアドレス"
+      autocomplete="email"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="パスワード"
+      autocomplete="current-password"
+    >
+
+    <button class="login" id="loginButton">
+      ログイン
+    </button>
+
+    <div id="loginError" class="error"></div>
+  </section>
+
+
+  <section id="adminArea" class="hidden">
+
+    <div class="card">
+      <h2>👑 管理者</h2>
+
+      <div id="adminEmail"></div>
+
+      <button class="logout" id="logoutButton">
+        ログアウト
+      </button>
+    </div>
+
+
+    <div class="card">
+      <h2>🚨 通報一覧</h2>
+
+      <div id="status">
+        読み込み中...
+      </div>
+
+      <div id="reports"></div>
+    </div>
+
+  </section>
+
+</main>
+
+
+<script type="module">
+
+import {
+  createClient
+} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+
+/*
+  bo18c4d7-fc58-4711-a7cb-8bffc1a46752
+*/
+
+const SUPABASE_URL =
+  "https://rwhsxtzzpwddkmtjszzc.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "ここにコピーしたPublishable keyを貼る";
+
+
+const supabase =
+  createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/*
+  HTMLエスケープ
+*/
+
+function escapeHtml(value) {
+
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/*
+  日付
+*/
+
+function formatDate(value) {
+
+  if (!value) {
+    return "日時不明";
+  }
+
+  return new Date(value).toLocaleString("ja-JP");
+
+}
+
+
+/*
+  管理者確認
+*/
+
+async function checkAdmin() {
+
+  const {
+    data: {
+      user
+    }
+  } = await supabase.auth.getUser();
+
+
+  if (!user) {
+
+    document
+      .getElementById("loginArea")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("adminArea")
+      .classList.add("hidden");
+
+    return;
+
+  }
+
+
+  const {
+    data,
+    error
+  } = await supabase
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+
+  if (error) {
+
+    console.error(error);
+
+    document
+      .getElementById("loginError")
+      .textContent =
+      "管理者確認に失敗しました。";
+
+    return;
+
+  }
+
+
+  if (!data) {
+
+    await supabase.auth.signOut();
+
+    document
+      .getElementById("loginError")
+      .textContent =
+      "このアカウントには管理者権限がありません。";
+
+    return;
+
+  }
+
+
+  document
+    .getElementById("loginArea")
+    .classList.add("hidden");
+
+  document
+    .getElementById("adminArea")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("adminEmail")
+    .textContent =
+    user.email || "";
+
+  loadReports();
+
+}
+
+
+/*
+  ログイン
+*/
+
+document
+  .getElementById("loginButton")
+  .addEventListener("click", async () => {
+
+    const email =
+      document
+        .getElementById("email")
+        .value
+        .trim();
+
+    const password =
+      document
+        .getElementById("password")
+        .value;
+
+    const errorBox =
+      document
+        .getElementById("loginError");
+
+    errorBox.textContent = "";
+
+
+    if (!email || !password) {
+
+      errorBox.textContent =
+        "メールアドレスとパスワードを入力してください。";
+
+      return;
+
+    }
+
+
+    const {
+      error
+    } = await supabase.auth
+      .signInWithPassword({
+        email,
+        password
+      });
+
+
+    if (error) {
+
+      console.error(error);
+
+      errorBox.textContent =
+        "ログインに失敗しました。";
+
+      return;
+
+    }
+
+
+    await checkAdmin();
+
+  });
+
+
+/*
+  ログアウト
+*/
+
+document
+  .getElementById("logoutButton")
+  .addEventListener("click", async () => {
+
+    await supabase.auth.signOut();
+
+    location.reload();
+
+  });
+
+
+/*
+  通報一覧
+*/
+
+async function loadReports() {
+
+  const status =
+    document.getElementById("status");
+
+  const area =
+    document.getElementById("reports");
+
+
+  status.textContent =
+    "通報を読み込み中...";
+
+
+  const {
+    data,
+    error
+  } = await supabase
+    .from("reports")
+    .select("*")
+    .order("created_at", {
+      ascending: false
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    status.textContent =
+      "通報の読み込みに失敗しました。";
+
+    area.innerHTML =
+      `<div class="error">
+        ${escapeHtml(error.message)}
+      </div>`;
+
+    return;
+
+  }
+
+
+  if (!data || data.length === 0) {
+
+    status.textContent =
+      "通報 0件";
+
+    area.innerHTML =
+      `<div class="empty">
+        現在、通報はありません。
+      </div>`;
+
+    return;
+
+  }
+
+
+  status.textContent =
+    `通報 ${data.length}件`;
+
+
+  area.innerHTML =
+    data.map(report => {
+
+      return `
+        <div class="report">
+
+          <span class="badge">
+            🚨 ${escapeHtml(report.reason)}
+          </span>
+
+          <div class="label">
+            通報日時
+          </div>
+
+          <div class="value">
+            ${formatDate(report.created_at)}
+          </div>
+
+          <div class="label">
+            投稿ID
+          </div>
+
+          <div class="value">
+            ${escapeHtml(report.post_id)}
+          </div>
+
+          <div class="label">
+            返信ID
+          </div>
+
+          <div class="value">
+            ${escapeHtml(report.reply)}
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+/*
+  初期確認
+*/
+
+checkAdmin();
+
+</script>
+
+</body>
+</html>
