@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>福岡トラック掲示板</title>
 
 <style>
+
 *{
   box-sizing:border-box;
 }
@@ -54,27 +56,55 @@ header p{
   margin-bottom:14px;
 }
 
+
+/* =========================
+   検索
+========================= */
+
 .search-box{
-  position:relative;
-  margin-bottom:14px;
-}
-
-.search-box input{
-  width:100%;
-  padding:14px 45px 14px 16px;
-  border:1px solid #d1d5db;
-  border-radius:12px;
-  font-size:16px;
   background:white;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
 }
 
-.search-icon{
-  position:absolute;
-  right:15px;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:20px;
+.search-input{
+  width:100%;
+  padding:13px;
+  border:1px solid #d1d5db;
+  border-radius:9px;
+  font-size:16px;
+  margin:0;
 }
+
+.search-button{
+  width:100%;
+  margin-top:8px;
+  padding:13px;
+  border:0;
+  border-radius:9px;
+  background:#2563eb;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.clear-button{
+  width:100%;
+  margin-top:8px;
+  padding:11px;
+  border:0;
+  border-radius:9px;
+  background:#e5e7eb;
+  color:#222;
+  font-size:14px;
+}
+
+
+/* =========================
+   カテゴリー
+========================= */
 
 .categories{
   display:grid;
@@ -98,6 +128,11 @@ header p{
   color:white;
   border-color:#2563eb;
 }
+
+
+/* =========================
+   投稿
+========================= */
 
 .post{
   background:white;
@@ -136,6 +171,11 @@ header p{
 .post small{
   color:#777;
 }
+
+
+/* =========================
+   返信
+========================= */
 
 .reply-area{
   margin-top:14px;
@@ -182,7 +222,6 @@ header p{
   padding:9px 13px;
   font-size:13px;
   font-weight:bold;
-  cursor:pointer;
 }
 
 .reply-form{
@@ -212,6 +251,11 @@ header p{
   padding:10px 14px;
   font-weight:bold;
 }
+
+
+/* =========================
+   投稿モーダル
+========================= */
 
 .modal{
   display:none;
@@ -281,149 +325,247 @@ textarea{
   color:#777;
   margin:10px;
 }
+
 </style>
 </head>
 
+
 <body>
 
+
 <header>
-  <h1>🚛 福岡トラック掲示板</h1>
-  <p>福岡のトラックドライバー・運送業界の情報交換</p>
+
+<h1>🚛 福岡トラック掲示板</h1>
+
+<p>
+福岡のトラックドライバー・運送業界の情報交換
+</p>
+
 </header>
+
 
 <div class="container">
 
-<button class="post-button" onclick="openModal()">
+
+<button
+  class="post-button"
+  onclick="openModal()"
+>
 ＋ 投稿する
 </button>
+
+
+<!-- =========================
+     検索
+========================= -->
 
 <div class="search-box">
 
 <input
   id="search"
+  class="search-input"
   type="search"
-  placeholder="🔍 投稿を検索（4t・大型・トレーラー・求人など）"
-  oninput="searchPosts()"
+  placeholder="4t・大型・トレーラー・求人など"
 >
 
-<span class="search-icon">🔍</span>
+<button
+  class="search-button"
+  onclick="searchPosts()"
+>
+🔍 検索
+</button>
+
+<button
+  class="clear-button"
+  onclick="clearSearch()"
+>
+検索をクリア
+</button>
 
 </div>
+
+
+<!-- =========================
+     カテゴリー
+========================= -->
 
 <div class="categories">
 
-  <div
-    class="category active"
-    data-category="すべて"
-    onclick="filterCategory('すべて')">
-    📋 すべて
-  </div>
+<div
+  class="category active"
+  data-category="すべて"
+  onclick="filterCategory('すべて')"
+>
+📋 すべて
+</div>
 
-  <div
-    class="category"
-    data-category="求人・仕事募集"
-    onclick="filterCategory('求人・仕事募集')">
-    💼 求人・仕事募集
-  </div>
 
-  <div
-    class="category"
-    data-category="運送情報"
-    onclick="filterCategory('運送情報')">
-    🚛 運送情報
-  </div>
+<div
+  class="category"
+  data-category="求人・仕事募集"
+  onclick="filterCategory('求人・仕事募集')"
+>
+💼 求人・仕事募集
+</div>
 
-  <div
-    class="category"
-    data-category="道路・待機場所"
-    onclick="filterCategory('道路・待機場所')">
-    🛣️ 道路・待機場所
-  </div>
 
-  <div
-    class="category"
-    data-category="雑談"
-    onclick="filterCategory('雑談')">
-    💬 雑談
-  </div>
+<div
+  class="category"
+  data-category="運送情報"
+  onclick="filterCategory('運送情報')"
+>
+🚛 運送情報
+</div>
+
+
+<div
+  class="category"
+  data-category="道路・待機場所"
+  onclick="filterCategory('道路・待機場所')"
+>
+🛣️ 道路・待機場所
+</div>
+
+
+<div
+  class="category"
+  data-category="雑談"
+  onclick="filterCategory('雑談')"
+>
+💬 雑談
+</div>
 
 </div>
 
-<div id="status" class="status">
+
+<div
+  id="status"
+  class="status"
+>
 投稿を読み込み中...
 </div>
 
+
 <div id="posts"></div>
+
 
 </div>
 
 
-<!-- 投稿モーダル -->
 
-<div class="modal" id="modal">
+<!-- =========================
+     投稿フォーム
+========================= -->
+
+<div
+  class="modal"
+  id="modal"
+>
 
 <div class="modal-box">
 
 <h2>投稿する</h2>
 
-<label>ニックネーム</label>
+
+<label>
+ニックネーム
+</label>
 
 <input
   id="author"
   type="text"
   maxlength="30"
-  placeholder="例：福岡トラック太郎">
+  placeholder="例：福岡トラック太郎"
+>
 
-<label>カテゴリ</label>
+
+<label>
+カテゴリ
+</label>
 
 <select id="category">
 
-  <option>求人・仕事募集</option>
-  <option>運送情報</option>
-  <option>道路・待機場所</option>
-  <option>雑談</option>
+<option>
+求人・仕事募集
+</option>
+
+<option>
+運送情報
+</option>
+
+<option>
+道路・待機場所
+</option>
+
+<option>
+雑談
+</option>
 
 </select>
 
-<label>タイトル</label>
+
+<label>
+タイトル
+</label>
 
 <input
   id="title"
   type="text"
   maxlength="100"
-  placeholder="タイトルを入力">
+  placeholder="タイトルを入力"
+>
 
-<label>本文</label>
+
+<label>
+本文
+</label>
 
 <textarea
   id="body"
   maxlength="2000"
-  placeholder="内容を入力"></textarea>
+  placeholder="内容を入力"
+></textarea>
 
-<button class="submit" onclick="addPost()">
+
+<button
+  class="submit"
+  onclick="addPost()"
+>
 投稿する
 </button>
 
-<button class="close" onclick="closeModal()">
+
+<button
+  class="close"
+  onclick="closeModal()"
+>
 キャンセル
 </button>
 
+
 </div>
+
 </div>
+
 
 
 <script type="module">
 
+
 import {
   createClient
-} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+}
+from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 
 const SUPABASE_URL =
 "https://rwhsxtzzpwddkmtjszzc.supabase.co";
 
+
 const SUPABASE_KEY =
 "sb_publishable_0H09q8OgCLAVQIgQZ_VQkQ_RfPFB_hS";
+
 
 const supabase =
 createClient(
@@ -432,549 +574,824 @@ createClient(
 );
 
 
-/* 現在の状態 */
+/* =========================
+   状態
+========================= */
 
-let currentCategory = "すべて";
+let currentCategory =
+"すべて";
 
-let currentSearch = "";
+let currentSearch =
+"";
 
 
-/* HTML安全処理 */
+/* =========================
+   安全処理
+========================= */
 
 function escapeHtml(text){
 
-  return String(text ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+return String(text ?? "")
+
+.replace(/&/g,"&amp;")
+
+.replace(/</g,"&lt;")
+
+.replace(/>/g,"&gt;")
+
+.replace(/"/g,"&quot;")
+
+.replace(/'/g,"&#039;");
 
 }
 
 
 function formatText(text){
 
-  return escapeHtml(text)
-    .replace(/\n/g,"<br>");
+return escapeHtml(text)
+.replace(/\n/g,"<br>");
 
 }
 
 
 function formatDate(date){
 
-  return new Date(date)
-    .toLocaleString("ja-JP");
+return new Date(date)
+.toLocaleString("ja-JP");
 
 }
 
 
-/* カテゴリー変更 */
+/* =========================
+   カテゴリー
+========================= */
 
 window.filterCategory =
 function(category){
 
-  currentCategory = category;
+currentCategory =
+category;
 
-  document
-    .querySelectorAll(".category")
-    .forEach(button => {
 
-      button.classList.toggle(
-        "active",
-        button.dataset.category === category
-      );
+document
+.querySelectorAll(".category")
+.forEach(button => {
 
-    });
+button.classList.toggle(
 
-  loadPosts();
+"active",
+
+button.dataset.category ===
+category
+
+);
+
+});
+
+
+loadPosts();
 
 };
 
 
-/* 検索 */
+/* =========================
+   検索ボタン
+========================= */
 
 window.searchPosts =
 function(){
 
-  currentSearch =
-    document
-      .getElementById("search")
-      .value
-      .trim()
-      .toLowerCase();
+currentSearch =
+document
+.getElementById("search")
+.value
+.trim()
+.toLowerCase();
 
-  loadPosts();
+
+loadPosts();
 
 };
 
 
-/* 投稿読み込み */
+/* =========================
+   検索クリア
+========================= */
+
+window.clearSearch =
+function(){
+
+document
+.getElementById("search")
+.value = "";
+
+
+currentSearch = "";
+
+
+loadPosts();
+
+};
+
+
+/* =========================
+   投稿読み込み
+========================= */
 
 async function loadPosts(){
 
-  const status =
-    document.getElementById("status");
+const status =
+document.getElementById("status");
 
-  const area =
-    document.getElementById("posts");
 
-  status.textContent =
-    "投稿を読み込み中...";
+const area =
+document.getElementById("posts");
 
 
-  const {
-    data:posts,
-    error
-  } =
-    await supabase
-      .from("posts")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
+status.textContent =
+"投稿を読み込み中...";
 
 
-  if(error){
+const {
 
-    console.error(error);
+data:posts,
 
-    status.textContent =
-      "投稿の読み込みに失敗しました";
+error
 
-    area.innerHTML =
-      '<div class="empty">' +
-      'データベース接続エラー' +
-      '</div>';
+} =
+await supabase
 
-    return;
-  }
+.from("posts")
 
+.select("*")
 
-  let filteredPosts =
-    currentCategory === "すべて"
-      ? posts
-      : posts.filter(
-          post =>
-            post.category === currentCategory
-        );
+.order(
 
+"created_at",
 
-  /* キーワード検索 */
+{
+ascending:false
+}
 
-  if(currentSearch){
+);
 
-    filteredPosts =
-      filteredPosts.filter(post => {
 
-        const text = (
+if(error){
 
-          (post.author || "") +
-          " " +
-          (post.title || "") +
-          " " +
-          (post.body || "") +
-          " " +
-          (post.category || "")
+console.error(error);
 
-        ).toLowerCase();
 
-        return text.includes(
-          currentSearch
-        );
+status.textContent =
+"投稿の読み込みに失敗しました";
 
-      });
 
-  }
+area.innerHTML =
 
+'<div class="empty">' +
 
-  status.textContent =
-    filteredPosts.length +
-    "件の投稿";
+'データベース接続エラー' +
 
+'</div>';
 
-  if(filteredPosts.length === 0){
 
-    area.innerHTML =
-      '<div class="empty">' +
-      '条件に一致する投稿がありません。' +
-      '</div>';
-
-    return;
-  }
-
-
-  const postIds =
-    filteredPosts.map(
-      post => post.id
-    );
-
-
-  const {
-    data:replies,
-    error:replyError
-  } =
-    await supabase
-      .from("replies")
-      .select("*")
-      .in("post_id",postIds)
-      .order(
-        "created_at",
-        {
-          ascending:true
-        }
-      );
-
-
-  if(replyError){
-
-    console.error(replyError);
-
-  }
-
-
-  const replyList =
-    replies || [];
-
-
-  area.innerHTML =
-    filteredPosts.map(post => {
-
-      const postReplies =
-        replyList.filter(
-          reply =>
-            String(reply.post_id) ===
-            String(post.id)
-        );
-
-
-      const repliesHtml =
-        postReplies.length === 0
-
-        ?
-
-        '<div style="color:#888;font-size:13px;">まだ返信はありません</div>'
-
-        :
-
-        postReplies.map(
-          reply => `
-
-            <div class="reply">
-
-              <div class="reply-author">
-                👤 ${escapeHtml(
-                  reply.author ||
-                  "名無しのトラック運転手"
-                )}
-              </div>
-
-              <div class="reply-body">
-                ${formatText(reply.body)}
-              </div>
-
-              <div class="reply-date">
-                ${formatDate(reply.created_at)}
-              </div>
-
-            </div>
-
-          `
-        ).join("");
-
-
-      return `
-
-        <div class="post">
-
-          <span class="post-category">
-            ${escapeHtml(post.category)}
-          </span>
-
-          <div class="post-author">
-            👤 ${escapeHtml(
-              post.author ||
-              "名無しのトラック運転手"
-            )}
-          </div>
-
-          <h3>
-            ${escapeHtml(post.title)}
-          </h3>
-
-          <p>
-            ${formatText(post.body)}
-          </p>
-
-          <small>
-            ${formatDate(post.created_at)}
-          </small>
-
-
-          <div class="reply-area">
-
-            <div class="reply-title">
-              💬 返信 ${postReplies.length}件
-            </div>
-
-            ${repliesHtml}
-
-            <button
-              class="reply-button"
-              onclick="toggleReplyForm('${post.id}')">
-
-              ＋ 返信する
-
-            </button>
-
-
-            <div
-              class="reply-form"
-              id="reply-form-${post.id}">
-
-              <input
-                id="reply-author-${post.id}"
-                type="text"
-                maxlength="30"
-                placeholder="ニックネーム">
-
-              <textarea
-                id="reply-body-${post.id}"
-                maxlength="1000"
-                placeholder="返信内容"></textarea>
-
-              <button
-                class="reply-submit"
-                onclick="addReply('${post.id}')">
-
-                返信を投稿
-
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      `;
-
-    }).join("");
+return;
 
 }
 
 
-/* 投稿 */
+/* カテゴリー */
+
+let filteredPosts =
+
+currentCategory === "すべて"
+
+? posts
+
+: posts.filter(
+
+post =>
+post.category ===
+currentCategory
+
+);
+
+
+/* キーワード */
+
+if(currentSearch){
+
+filteredPosts =
+filteredPosts.filter(
+post => {
+
+const text = (
+
+(post.author || "") +
+
+" " +
+
+(post.title || "") +
+
+" " +
+
+(post.body || "") +
+
+" " +
+
+(post.category || "")
+
+).toLowerCase();
+
+
+return text.includes(
+currentSearch
+);
+
+});
+
+}
+
+
+status.textContent =
+
+filteredPosts.length +
+"件の投稿";
+
+
+if(filteredPosts.length === 0){
+
+area.innerHTML =
+
+'<div class="empty">' +
+
+'条件に一致する投稿がありません。' +
+
+'</div>';
+
+return;
+
+}
+
+
+/* 投稿ID */
+
+const postIds =
+filteredPosts.map(
+post => post.id
+);
+
+
+/* =========================
+   返信取得
+========================= */
+
+const {
+
+data:replies,
+
+error:replyError
+
+} =
+await supabase
+
+.from("replies")
+
+.select("*")
+
+.in("post_id",postIds)
+
+.order(
+
+"created_at",
+
+{
+ascending:true
+}
+
+);
+
+
+if(replyError){
+
+console.error(replyError);
+
+}
+
+
+const replyList =
+replies || [];
+
+
+/* =========================
+   投稿表示
+========================= */
+
+area.innerHTML =
+
+filteredPosts.map(
+post => {
+
+
+const postReplies =
+
+replyList.filter(
+
+reply =>
+
+String(
+reply.post_id
+) ===
+
+String(
+post.id
+)
+
+);
+
+
+/* 返信HTML */
+
+const repliesHtml =
+
+postReplies.length === 0
+
+?
+
+'<div style="color:#888;font-size:13px;">' +
+'まだ返信はありません' +
+'</div>'
+
+:
+
+postReplies.map(
+
+reply => `
+
+<div class="reply">
+
+<div class="reply-author">
+
+👤 ${escapeHtml(
+
+reply.author ||
+
+"名無しのトラック運転手"
+
+)}
+
+</div>
+
+
+<div class="reply-body">
+
+${formatText(
+reply.body
+)}
+
+</div>
+
+
+<div class="reply-date">
+
+${formatDate(
+reply.created_at
+)}
+
+</div>
+
+</div>
+
+`
+
+).join("");
+
+
+return `
+
+<div class="post">
+
+
+<span class="post-category">
+
+${escapeHtml(
+post.category
+)}
+
+</span>
+
+
+<div class="post-author">
+
+👤 ${escapeHtml(
+
+post.author ||
+
+"名無しのトラック運転手"
+
+)}
+
+</div>
+
+
+<h3>
+
+${escapeHtml(
+post.title
+)}
+
+</h3>
+
+
+<p>
+
+${formatText(
+post.body
+)}
+
+</p>
+
+
+<small>
+
+${formatDate(
+post.created_at
+)}
+
+</small>
+
+
+<div class="reply-area">
+
+
+<div class="reply-title">
+
+💬 返信
+${postReplies.length}件
+
+</div>
+
+
+${repliesHtml}
+
+
+<button
+
+class="reply-button"
+
+onclick=
+"toggleReplyForm('${post.id}')"
+
+>
+
+＋ 返信する
+
+</button>
+
+
+<div
+
+class="reply-form"
+
+id=
+"reply-form-${post.id}"
+
+>
+
+
+<input
+
+id=
+"reply-author-${post.id}"
+
+type="text"
+
+maxlength="30"
+
+placeholder="ニックネーム"
+
+>
+
+
+<textarea
+
+id=
+"reply-body-${post.id}"
+
+maxlength="1000"
+
+placeholder="返信内容"
+
+></textarea>
+
+
+<button
+
+class="reply-submit"
+
+onclick=
+"addReply('${post.id}')"
+
+>
+
+返信を投稿
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+`;
+
+}
+
+).join("");
+
+}
+
+
+/* =========================
+   投稿
+========================= */
 
 window.addPost =
 async function(){
 
-  const author =
-    document
-      .getElementById("author")
-      .value.trim();
-
-  const category =
-    document
-      .getElementById("category")
-      .value;
-
-  const title =
-    document
-      .getElementById("title")
-      .value.trim();
-
-  const body =
-    document
-      .getElementById("body")
-      .value.trim();
+const author =
+document
+.getElementById("author")
+.value
+.trim();
 
 
-  if(!author){
-
-    alert(
-      "ニックネームを入力してください"
-    );
-
-    return;
-  }
+const category =
+document
+.getElementById("category")
+.value;
 
 
-  if(!title || !body){
-
-    alert(
-      "タイトルと本文を入力してください"
-    );
-
-    return;
-  }
+const title =
+document
+.getElementById("title")
+.value
+.trim();
 
 
-  const button =
-    document.querySelector(".submit");
-
-  button.disabled = true;
-
-  button.textContent =
-    "投稿中...";
+const body =
+document
+.getElementById("body")
+.value
+.trim();
 
 
-  const { error } =
-    await supabase
-      .from("posts")
-      .insert({
+if(!author){
 
-        author:author,
-        category:category,
-        title:title,
-        body:body
+alert(
+"ニックネームを入力してください"
+);
 
-      });
+return;
+
+}
 
 
-  button.disabled = false;
+if(!title || !body){
 
-  button.textContent =
-    "投稿する";
+alert(
+"タイトルと本文を入力してください"
+);
 
+return;
 
-  if(error){
-
-    console.error(error);
-
-    alert(
-      "投稿に失敗しました.\n" +
-      error.message
-    );
-
-    return;
-  }
+}
 
 
-  document
-    .getElementById("author")
-    .value = "";
-
-  document
-    .getElementById("title")
-    .value = "";
-
-  document
-    .getElementById("body")
-    .value = "";
+const button =
+document.querySelector(".submit");
 
 
-  closeModal();
+button.disabled =
+true;
 
-  await loadPosts();
+
+button.textContent =
+"投稿中...";
+
+
+const {error} =
+
+await supabase
+
+.from("posts")
+
+.insert({
+
+author:author,
+
+category:category,
+
+title:title,
+
+body:body
+
+});
+
+
+button.disabled =
+false;
+
+
+button.textContent =
+"投稿する";
+
+
+if(error){
+
+console.error(error);
+
+
+alert(
+
+"投稿に失敗しました。\n" +
+
+error.message
+
+);
+
+
+return;
+
+}
+
+
+document
+.getElementById("author")
+.value = "";
+
+
+document
+.getElementById("title")
+.value = "";
+
+
+document
+.getElementById("body")
+.value = "";
+
+
+closeModal();
+
+
+await loadPosts();
 
 };
 
 
-/* 返信フォーム */
+/* =========================
+   返信フォーム
+========================= */
 
 window.toggleReplyForm =
 function(postId){
 
-  const form =
-    document.getElementById(
-      "reply-form-" + postId
-    );
+const form =
+document.getElementById(
+
+"reply-form-" +
+postId
+
+);
 
 
-  if(form.style.display === "block"){
+if(
+form.style.display ===
+"block"
+){
 
-    form.style.display = "none";
+form.style.display =
+"none";
 
-  }else{
+}else{
 
-    form.style.display = "block";
+form.style.display =
+"block";
 
-  }
+}
 
 };
 
 
-/* 返信 */
+/* =========================
+   返信
+========================= */
 
 window.addReply =
 async function(postId){
 
-  const author =
-    document.getElementById(
-      "reply-author-" + postId
-    ).value.trim();
+const author =
+document.getElementById(
+
+"reply-author-" +
+postId
+
+)
+.value
+.trim();
 
 
-  const body =
-    document.getElementById(
-      "reply-body-" + postId
-    ).value.trim();
+const body =
+document.getElementById(
+
+"reply-body-" +
+postId
+
+)
+.value
+.trim();
 
 
-  if(!author){
+if(!author){
 
-    alert(
-      "ニックネームを入力してください"
-    );
+alert(
+"ニックネームを入力してください"
+);
 
-    return;
-  }
+return;
 
-
-  if(!body){
-
-    alert(
-      "返信内容を入力してください"
-    );
-
-    return;
-  }
+}
 
 
-  const {
-    error
-  } =
-    await supabase
-      .from("replies")
-      .insert({
+if(!body){
 
-        post_id:postId,
-        author:author,
-        body:body
+alert(
+"返信内容を入力してください"
+);
 
-      });
+return;
+
+}
 
 
-  if(error){
+const {
 
-    console.error(error);
+error
 
-    alert(
-      "返信に失敗しました.\n" +
-      error.message
-    );
+} =
+await supabase
 
-    return;
-  }
+.from("replies")
+
+.insert({
+
+post_id:postId,
+
+author:author,
+
+body:body
+
+});
 
 
-  await loadPosts();
+if(error){
+
+console.error(error);
+
+
+alert(
+
+"返信に失敗しました。\n" +
+
+error.message
+
+);
+
+
+return;
+
+}
+
+
+await loadPosts();
 
 };
 
 
-/* モーダル */
+/* =========================
+   モーダル
+========================= */
 
 window.openModal =
 function(){
 
-  document
-    .getElementById("modal")
-    .style.display = "block";
+document
+.getElementById("modal")
+.style.display =
+"block";
 
 };
 
@@ -982,14 +1399,17 @@ function(){
 window.closeModal =
 function(){
 
-  document
-    .getElementById("modal")
-    .style.display = "none";
+document
+.getElementById("modal")
+.style.display =
+"none";
 
 };
 
 
-/* 開始 */
+/* =========================
+   開始
+========================= */
 
 loadPosts();
 
