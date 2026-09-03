@@ -51,7 +51,29 @@ header p{
   color:white;
   font-size:17px;
   font-weight:bold;
-  margin-bottom:16px;
+  margin-bottom:14px;
+}
+
+.search-box{
+  position:relative;
+  margin-bottom:14px;
+}
+
+.search-box input{
+  width:100%;
+  padding:14px 45px 14px 16px;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  font-size:16px;
+  background:white;
+}
+
+.search-icon{
+  position:absolute;
+  right:15px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:20px;
 }
 
 .categories{
@@ -275,6 +297,19 @@ textarea{
 ＋ 投稿する
 </button>
 
+<div class="search-box">
+
+<input
+  id="search"
+  type="search"
+  placeholder="🔍 投稿を検索（4t・大型・トレーラー・求人など）"
+  oninput="searchPosts()"
+>
+
+<span class="search-icon">🔍</span>
+
+</div>
+
 <div class="categories">
 
   <div
@@ -397,9 +432,11 @@ createClient(
 );
 
 
-/* 現在選択中のカテゴリー */
+/* 現在の状態 */
 
 let currentCategory = "すべて";
+
+let currentSearch = "";
 
 
 /* HTML安全処理 */
@@ -455,6 +492,23 @@ function(category){
 };
 
 
+/* 検索 */
+
+window.searchPosts =
+function(){
+
+  currentSearch =
+    document
+      .getElementById("search")
+      .value
+      .trim()
+      .toLowerCase();
+
+  loadPosts();
+
+};
+
+
 /* 投稿読み込み */
 
 async function loadPosts(){
@@ -500,13 +554,41 @@ async function loadPosts(){
   }
 
 
-  const filteredPosts =
+  let filteredPosts =
     currentCategory === "すべて"
       ? posts
       : posts.filter(
           post =>
             post.category === currentCategory
         );
+
+
+  /* キーワード検索 */
+
+  if(currentSearch){
+
+    filteredPosts =
+      filteredPosts.filter(post => {
+
+        const text = (
+
+          (post.author || "") +
+          " " +
+          (post.title || "") +
+          " " +
+          (post.body || "") +
+          " " +
+          (post.category || "")
+
+        ).toLowerCase();
+
+        return text.includes(
+          currentSearch
+        );
+
+      });
+
+  }
 
 
   status.textContent =
@@ -518,7 +600,7 @@ async function loadPosts(){
 
     area.innerHTML =
       '<div class="empty">' +
-      'このカテゴリーにはまだ投稿がありません。' +
+      '条件に一致する投稿がありません。' +
       '</div>';
 
     return;
@@ -764,7 +846,7 @@ async function(){
     console.error(error);
 
     alert(
-      "投稿に失敗しました。\n" +
+      "投稿に失敗しました.\n" +
       error.message
     );
 
@@ -872,7 +954,7 @@ async function(postId){
     console.error(error);
 
     alert(
-      "返信に失敗しました。\n" +
+      "返信に失敗しました.\n" +
       error.message
     );
 
