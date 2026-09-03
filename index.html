@@ -65,9 +65,16 @@ header p{
   background:white;
   border:1px solid #ddd;
   border-radius:12px;
-  padding:16px 10px;
+  padding:15px 8px;
   text-align:center;
   font-weight:bold;
+  cursor:pointer;
+}
+
+.category.active{
+  background:#2563eb;
+  color:white;
+  border-color:#2563eb;
 }
 
 .post{
@@ -102,7 +109,6 @@ header p{
 .post p{
   margin:8px 0;
   line-height:1.6;
-  white-space:normal;
 }
 
 .post small{
@@ -154,6 +160,7 @@ header p{
   padding:9px 13px;
   font-size:13px;
   font-weight:bold;
+  cursor:pointer;
 }
 
 .reply-form{
@@ -173,7 +180,6 @@ header p{
 
 .reply-form textarea{
   min-height:80px;
-  resize:vertical;
 }
 
 .reply-submit{
@@ -270,10 +276,42 @@ textarea{
 </button>
 
 <div class="categories">
-  <div class="category">💼 求人・仕事募集</div>
-  <div class="category">🚛 運送情報</div>
-  <div class="category">🛣️ 道路・待機場所</div>
-  <div class="category">💬 雑談</div>
+
+  <div
+    class="category active"
+    data-category="すべて"
+    onclick="filterCategory('すべて')">
+    📋 すべて
+  </div>
+
+  <div
+    class="category"
+    data-category="求人・仕事募集"
+    onclick="filterCategory('求人・仕事募集')">
+    💼 求人・仕事募集
+  </div>
+
+  <div
+    class="category"
+    data-category="運送情報"
+    onclick="filterCategory('運送情報')">
+    🚛 運送情報
+  </div>
+
+  <div
+    class="category"
+    data-category="道路・待機場所"
+    onclick="filterCategory('道路・待機場所')">
+    🛣️ 道路・待機場所
+  </div>
+
+  <div
+    class="category"
+    data-category="雑談"
+    onclick="filterCategory('雑談')">
+    💬 雑談
+  </div>
+
 </div>
 
 <div id="status" class="status">
@@ -299,16 +337,17 @@ textarea{
   id="author"
   type="text"
   maxlength="30"
-  placeholder="例：福岡トラック太郎"
->
+  placeholder="例：福岡トラック太郎">
 
 <label>カテゴリ</label>
 
 <select id="category">
+
   <option>求人・仕事募集</option>
   <option>運送情報</option>
   <option>道路・待機場所</option>
   <option>雑談</option>
+
 </select>
 
 <label>タイトル</label>
@@ -317,16 +356,14 @@ textarea{
   id="title"
   type="text"
   maxlength="100"
-  placeholder="タイトルを入力"
->
+  placeholder="タイトルを入力">
 
 <label>本文</label>
 
 <textarea
   id="body"
   maxlength="2000"
-  placeholder="内容を入力"
-></textarea>
+  placeholder="内容を入力"></textarea>
 
 <button class="submit" onclick="addPost()">
 投稿する
@@ -360,9 +397,12 @@ createClient(
 );
 
 
-/* =========================
-   HTML安全処理
-   ========================= */
+/* 現在選択中のカテゴリー */
+
+let currentCategory = "すべて";
+
+
+/* HTML安全処理 */
 
 function escapeHtml(text){
 
@@ -392,9 +432,30 @@ function formatDate(date){
 }
 
 
-/* =========================
-   投稿読み込み
-   ========================= */
+/* カテゴリー変更 */
+
+window.filterCategory =
+function(category){
+
+  currentCategory = category;
+
+  document
+    .querySelectorAll(".category")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.category === category
+      );
+
+    });
+
+  loadPosts();
+
+};
+
+
+/* 投稿読み込み */
 
 async function loadPosts(){
 
@@ -439,16 +500,25 @@ async function loadPosts(){
   }
 
 
+  const filteredPosts =
+    currentCategory === "すべて"
+      ? posts
+      : posts.filter(
+          post =>
+            post.category === currentCategory
+        );
+
+
   status.textContent =
-    posts.length + "件の投稿";
+    filteredPosts.length +
+    "件の投稿";
 
 
-  if(posts.length === 0){
+  if(filteredPosts.length === 0){
 
     area.innerHTML =
       '<div class="empty">' +
-      'まだ投稿がありません。<br>' +
-      '最初の投稿をしてみよう！🚛' +
+      'このカテゴリーにはまだ投稿がありません。' +
       '</div>';
 
     return;
@@ -456,7 +526,9 @@ async function loadPosts(){
 
 
   const postIds =
-    posts.map(post => post.id);
+    filteredPosts.map(
+      post => post.id
+    );
 
 
   const {
@@ -478,6 +550,7 @@ async function loadPosts(){
   if(replyError){
 
     console.error(replyError);
+
   }
 
 
@@ -486,7 +559,7 @@ async function loadPosts(){
 
 
   area.innerHTML =
-    posts.map(post => {
+    filteredPosts.map(post => {
 
       const postReplies =
         replyList.filter(
@@ -498,9 +571,13 @@ async function loadPosts(){
 
       const repliesHtml =
         postReplies.length === 0
+
         ?
+
         '<div style="color:#888;font-size:13px;">まだ返信はありません</div>'
+
         :
+
         postReplies.map(
           reply => `
 
@@ -565,35 +642,34 @@ async function loadPosts(){
 
             <button
               class="reply-button"
-              onclick="toggleReplyForm('${post.id}')"
-            >
+              onclick="toggleReplyForm('${post.id}')">
+
               ＋ 返信する
+
             </button>
 
 
             <div
               class="reply-form"
-              id="reply-form-${post.id}"
-            >
+              id="reply-form-${post.id}">
 
               <input
                 id="reply-author-${post.id}"
                 type="text"
                 maxlength="30"
-                placeholder="ニックネーム"
-              >
+                placeholder="ニックネーム">
 
               <textarea
                 id="reply-body-${post.id}"
                 maxlength="1000"
-                placeholder="返信内容"
-              ></textarea>
+                placeholder="返信内容"></textarea>
 
               <button
                 class="reply-submit"
-                onclick="addReply('${post.id}')"
-              >
+                onclick="addReply('${post.id}')">
+
                 返信を投稿
+
               </button>
 
             </div>
@@ -609,27 +685,29 @@ async function loadPosts(){
 }
 
 
-/* =========================
-   投稿する
-   ========================= */
+/* 投稿 */
 
 window.addPost =
 async function(){
 
   const author =
-    document.getElementById("author")
+    document
+      .getElementById("author")
       .value.trim();
 
   const category =
-    document.getElementById("category")
+    document
+      .getElementById("category")
       .value;
 
   const title =
-    document.getElementById("title")
+    document
+      .getElementById("title")
       .value.trim();
 
   const body =
-    document.getElementById("body")
+    document
+      .getElementById("body")
       .value.trim();
 
 
@@ -694,13 +772,16 @@ async function(){
   }
 
 
-  document.getElementById("author")
+  document
+    .getElementById("author")
     .value = "";
 
-  document.getElementById("title")
+  document
+    .getElementById("title")
     .value = "";
 
-  document.getElementById("body")
+  document
+    .getElementById("body")
     .value = "";
 
 
@@ -711,9 +792,7 @@ async function(){
 };
 
 
-/* =========================
-   返信フォーム表示
-   ========================= */
+/* 返信フォーム */
 
 window.toggleReplyForm =
 function(postId){
@@ -724,9 +803,7 @@ function(postId){
     );
 
 
-  if(
-    form.style.display === "block"
-  ){
+  if(form.style.display === "block"){
 
     form.style.display = "none";
 
@@ -739,9 +816,7 @@ function(postId){
 };
 
 
-/* =========================
-   返信投稿
-   ========================= */
+/* 返信 */
 
 window.addReply =
 async function(postId){
@@ -810,14 +885,13 @@ async function(postId){
 };
 
 
-/* =========================
-   モーダル
-   ========================= */
+/* モーダル */
 
 window.openModal =
 function(){
 
-  document.getElementById("modal")
+  document
+    .getElementById("modal")
     .style.display = "block";
 
 };
@@ -826,15 +900,14 @@ function(){
 window.closeModal =
 function(){
 
-  document.getElementById("modal")
+  document
+    .getElementById("modal")
     .style.display = "none";
 
 };
 
 
-/* =========================
-   初期読み込み
-   ========================= */
+/* 開始 */
 
 loadPosts();
 
