@@ -295,6 +295,7 @@ header p{
   background:rgba(0,0,0,.5);
   padding:20px;
   z-index:10;
+  overflow-y:auto;
 }
 
 .modal-box{
@@ -485,6 +486,7 @@ id="modal"
 
 <h2>投稿する</h2>
 
+
 <label>ニックネーム</label>
 
 <input
@@ -495,75 +497,90 @@ placeholder="例：福岡トラック太郎"
 >
 
 
+<!-- カテゴリ -->
+
 <label>カテゴリ</label>
 
 <select id="category">
+
+<option value="求人・仕事募集">
+求人・仕事募集
+</option>
+
+<option value="運送情報">
+運送情報
+</option>
+
+<option value="道路・待機場所">
+道路・待機場所
+</option>
+
+<option value="雑談">
+雑談
+</option>
+
+</select>
+
+
+<!-- 都道府県 -->
+
 <label>都道府県</label>
 
 <select id="prefecture">
 
-<option>福岡県</option>
-<option>佐賀県</option>
-<option>長崎県</option>
-<option>熊本県</option>
-<option>大分県</option>
-<option>宮崎県</option>
-<option>鹿児島県</option>
-<option>沖縄県</option>
+<option value="福岡県">福岡県</option>
+<option value="佐賀県">佐賀県</option>
+<option value="長崎県">長崎県</option>
+<option value="熊本県">熊本県</option>
+<option value="大分県">大分県</option>
+<option value="宮崎県">宮崎県</option>
+<option value="鹿児島県">鹿児島県</option>
+<option value="沖縄県">沖縄県</option>
 
-<option>北海道</option>
-<option>青森県</option>
-<option>岩手県</option>
-<option>宮城県</option>
-<option>秋田県</option>
-<option>山形県</option>
-<option>福島県</option>
+<option value="北海道">北海道</option>
+<option value="青森県">青森県</option>
+<option value="岩手県">岩手県</option>
+<option value="宮城県">宮城県</option>
+<option value="秋田県">秋田県</option>
+<option value="山形県">山形県</option>
+<option value="福島県">福島県</option>
 
-<option>茨城県</option>
-<option>栃木県</option>
-<option>群馬県</option>
-<option>埼玉県</option>
-<option>千葉県</option>
-<option>東京都</option>
-<option>神奈川県</option>
+<option value="茨城県">茨城県</option>
+<option value="栃木県">栃木県</option>
+<option value="群馬県">群馬県</option>
+<option value="埼玉県">埼玉県</option>
+<option value="千葉県">千葉県</option>
+<option value="東京都">東京都</option>
+<option value="神奈川県">神奈川県</option>
 
-<option>新潟県</option>
-<option>富山県</option>
-<option>石川県</option>
-<option>福井県</option>
-<option>山梨県</option>
-<option>長野県</option>
-<option>岐阜県</option>
-<option>静岡県</option>
-<option>愛知県</option>
+<option value="新潟県">新潟県</option>
+<option value="富山県">富山県</option>
+<option value="石川県">石川県</option>
+<option value="福井県">福井県</option>
+<option value="山梨県">山梨県</option>
+<option value="長野県">長野県</option>
+<option value="岐阜県">岐阜県</option>
+<option value="静岡県">静岡県</option>
+<option value="愛知県">愛知県</option>
 
-<option>三重県</option>
-<option>滋賀県</option>
-<option>京都府</option>
-<option>大阪府</option>
-<option>兵庫県</option>
-<option>奈良県</option>
-<option>和歌山県</option>
+<option value="三重県">三重県</option>
+<option value="滋賀県">滋賀県</option>
+<option value="京都府">京都府</option>
+<option value="大阪府">大阪府</option>
+<option value="兵庫県">兵庫県</option>
+<option value="奈良県">奈良県</option>
+<option value="和歌山県">和歌山県</option>
 
-<option>鳥取県</option>
-<option>島根県</option>
-<option>岡山県</option>
-<option>広島県</option>
-<option>山口県</option>
+<option value="鳥取県">鳥取県</option>
+<option value="島根県">島根県</option>
+<option value="岡山県">岡山県</option>
+<option value="広島県">広島県</option>
+<option value="山口県">山口県</option>
 
-<option>徳島県</option>
-<option>香川県</option>
-<option>愛媛県</option>
-<option>高知県</option>
-
-</select>
-<option>求人・仕事募集</option>
-
-<option>運送情報</option>
-
-<option>道路・待機場所</option>
-
-<option>雑談</option>
+<option value="徳島県">徳島県</option>
+<option value="香川県">香川県</option>
+<option value="愛媛県">愛媛県</option>
+<option value="高知県">高知県</option>
 
 </select>
 
@@ -609,7 +626,6 @@ onclick="closeModal()"
 
 
 <script type="module">
-
 
 import {
 createClient
@@ -693,12 +709,8 @@ document
 .forEach(button => {
 
 button.classList.toggle(
-
 "active",
-
-button.dataset.category ===
-category
-
+button.dataset.category === category
 );
 
 });
@@ -717,7 +729,6 @@ window.searchPosts =
 function(){
 
 currentSearch =
-
 document
 .getElementById("search")
 .value
@@ -810,11 +821,8 @@ currentCategory === "すべて"
 ? posts
 
 : posts.filter(
-
 post =>
-post.category ===
-currentCategory
-
+post.category === currentCategory
 );
 
 
@@ -916,7 +924,6 @@ const postReplies =
 replyList.filter(
 
 reply =>
-
 String(reply.post_id) ===
 String(post.id)
 
@@ -945,10 +952,8 @@ reply => `
 <div class="reply-author">
 
 👤 ${escapeHtml(
-
 reply.author ||
 "名無しのトラック運転手"
-
 )}
 
 </div>
@@ -974,8 +979,7 @@ reply.created_at
 
 <button
 class="report-button"
-onclick=
-"toggleReplyReport('${reply.id}')"
+onclick="toggleReplyReport('${reply.id}')"
 >
 🚨 返信を通報
 </button>
@@ -983,13 +987,11 @@ onclick=
 
 <div
 class="report-form"
-id=
-"reply-report-${reply.id}"
+id="reply-report-${reply.id}"
 >
 
 <select
-id=
-"reply-reason-${reply.id}"
+id="reply-reason-${reply.id}"
 >
 
 <option value="">
@@ -1016,8 +1018,7 @@ id=
 
 
 <input
-id=
-"reply-reporter-${reply.id}"
+id="reply-reporter-${reply.id}"
 maxlength="30"
 placeholder="名前（任意）"
 >
@@ -1025,8 +1026,7 @@ placeholder="名前（任意）"
 
 <button
 class="report-submit"
-onclick=
-"reportReply('${reply.id}')"
+onclick="reportReply('${reply.id}')"
 >
 通報する
 </button>
@@ -1056,10 +1056,8 @@ post.category
 <div class="post-author">
 
 👤 ${escapeHtml(
-
 post.author ||
 "名無しのトラック運転手"
-
 )}
 
 </div>
@@ -1094,8 +1092,7 @@ post.created_at
 
 <button
 class="report-button"
-onclick=
-"togglePostReport('${post.id}')"
+onclick="togglePostReport('${post.id}')"
 >
 🚨 この投稿を通報
 </button>
@@ -1103,13 +1100,11 @@ onclick=
 
 <div
 class="report-form"
-id=
-"post-report-${post.id}"
+id="post-report-${post.id}"
 >
 
 <select
-id=
-"post-reason-${post.id}"
+id="post-reason-${post.id}"
 >
 
 <option value="">
@@ -1136,8 +1131,7 @@ id=
 
 
 <input
-id=
-"post-reporter-${post.id}"
+id="post-reporter-${post.id}"
 maxlength="30"
 placeholder="名前（任意）"
 >
@@ -1145,8 +1139,7 @@ placeholder="名前（任意）"
 
 <button
 class="report-submit"
-onclick=
-"reportPost('${post.id}')"
+onclick="reportPost('${post.id}')"
 >
 通報する
 </button>
@@ -1170,8 +1163,7 @@ ${repliesHtml}
 
 <button
 class="reply-button"
-onclick=
-"toggleReplyForm('${post.id}')"
+onclick="toggleReplyForm('${post.id}')"
 >
 
 ＋ 返信する
@@ -1181,14 +1173,12 @@ onclick=
 
 <div
 class="reply-form"
-id=
-"reply-form-${post.id}"
+id="reply-form-${post.id}"
 >
 
 
 <input
-id=
-"reply-author-${post.id}"
+id="reply-author-${post.id}"
 type="text"
 maxlength="30"
 placeholder="ニックネーム"
@@ -1196,8 +1186,7 @@ placeholder="ニックネーム"
 
 
 <textarea
-id=
-"reply-body-${post.id}"
+id="reply-body-${post.id}"
 maxlength="1000"
 placeholder="返信内容"
 ></textarea>
@@ -1205,8 +1194,7 @@ placeholder="返信内容"
 
 <button
 class="reply-submit"
-onclick=
-"addReply('${post.id}')"
+onclick="addReply('${post.id}')"
 >
 
 返信を投稿
@@ -1249,10 +1237,13 @@ const category =
 document
 .getElementById("category")
 .value;
+
+
 const prefecture =
 document
 .getElementById("prefecture")
 .value;
+
 
 const title =
 document
@@ -1266,6 +1257,9 @@ document
 .getElementById("body")
 .value
 .trim();
+
+
+console.log("選択された都道府県:", prefecture);
 
 
 if(!author){
