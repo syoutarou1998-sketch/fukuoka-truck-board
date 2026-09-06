@@ -1477,7 +1477,67 @@ await loadPosts();
 
 };
 
+/* =========================
+   いいね
+========================= */
 
+window.likePost =
+async function(postId){
+
+const { data, error } =
+await supabase
+.from("likes")
+.select("id")
+.eq("post_id", postId);
+
+if(error){
+
+console.error(error);
+
+alert(
+"いいねに失敗しました。\n" +
+error.message
+);
+
+return;
+
+}
+
+if(data && data.length > 0){
+
+alert("この投稿にはすでにいいねしています。");
+
+return;
+
+}
+
+const { error: insertError } =
+await supabase
+.from("likes")
+.insert({
+
+post_id: postId
+
+});
+
+if(insertError){
+
+console.error(insertError);
+
+alert(
+"いいねに失敗しました。\n" +
+insertError.message
+);
+
+return;
+
+}
+
+alert("👍 いいねしました！");
+
+loadPosts();
+
+};
 /* =========================
    返信フォーム
 ========================= */
