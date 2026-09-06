@@ -1195,7 +1195,7 @@ post.created_at
 <div style="margin-top:10px;">
 
 <button
-class="reply-button"
+class="reply-button ${localStorage.getItem("liked_post_" + post.id) === "true" ? "liked" : ""}"
 onclick="likePost('${post.id}')"
 >
 ${localStorage.getItem("liked_post_" + post.id) === "true" ? "👍 いいね済み" : "👍 いいね"}
