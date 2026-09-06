@@ -1484,11 +1484,13 @@ await loadPosts();
 window.likePost =
 async function(postId){
 
-const { data, error } =
-await supabase
-.from("likes")
-.select("id")
-.eq("post_id", postId);
+const { error } =
+await supabase.rpc(
+"increment_post_likes",
+{
+post_id_input: postId
+}
+);
 
 if(error){
 
@@ -1503,22 +1505,9 @@ return;
 
 }
 
-if(data && data.length > 0){
+loadPosts();
 
-alert("この投稿にはすでにいいねしています。");
-
-return;
-
-}
-
-const { error: insertError } =
-await supabase
-.from("likes")
-.insert({
-
-post_id: postId
-
-});
+};
 
 if(insertError){
 
