@@ -1192,7 +1192,20 @@ post.created_at
 )}
 
 </small>
+<div style="margin-top:10px;">
 
+<button
+class="reply-button"
+onclick="likePost('${post.id}')"
+>
+👍 いいね
+</button>
+
+<span id="like-count-${post.id}">
+0
+</span>
+
+</div>
 
 <button
 class="report-button"
