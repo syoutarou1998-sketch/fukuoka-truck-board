@@ -1481,38 +1481,52 @@ await loadPosts();
    いいね
 ========================= */
 
-window.likePost =
-async function(postId){
+window.likePost = async function(postId){
 
-const { error } =
-await supabase.rpc(
-"increment_post_likes",
-{
-post_id_input: postId
-}
-);
+  const { error } = await supabase.rpc(
+    "increment_post_likes",
+    {
+      post_id_input: Number(postId)
+    }
+  );
 
-if(error){
+  if(error){
+    console.error(error);
 
-console.error(error);
+    alert(
+      "いいねに失敗しました。\n" +
+      error.message
+    );
 
-alert(
-"いいねに失敗しました。\n" +
-error.message
-);
+    return;
+  }
 
-return;
+  const { data, error: selectError } = await supabase
+    .from("posts")
+    .select("likes")
+    .eq("id", Number(postId))
+    .single();
 
-}
+  if(selectError){
+    console.error(selectError);
 
-loadPosts();
+    alert(
+      "いいね数の取得に失敗しました。\n" +
+      selectError.message
+    );
 
+    return;
+  }
 
+  const countElement = document.getElementById(
+    "like-count-" + postId
+  );
 
-alert("👍 いいねしました！");
+  if(countElement){
+    countElement.textContent = data.likes ?? 0;
+  }
 
-loadPosts();
-
+  alert("👍 いいねしました！");
 };
 /* =========================
    返信フォーム
