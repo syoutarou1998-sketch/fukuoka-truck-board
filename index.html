@@ -827,7 +827,22 @@ currentSearch = "";
 loadPosts();
 
 };
+/* =========================
+   都道府県フィルター
+========================= */
 
+window.filterPrefecture =
+function(){
+
+currentPrefecture =
+document
+.getElementById("prefecture-filter")
+.value;
+
+
+loadPosts();
+
+};
 
 /* =========================
    投稿読み込み
