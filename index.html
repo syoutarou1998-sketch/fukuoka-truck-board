@@ -911,7 +911,17 @@ currentCategory === "すべて"
 post =>
 post.category === currentCategory
 );
+/* 都道府県 */
 
+if(currentPrefecture !== "すべて"){
+
+filteredPosts =
+filteredPosts.filter(
+post =>
+post.prefecture === currentPrefecture
+);
+
+}
 
 /* 検索 */
 
