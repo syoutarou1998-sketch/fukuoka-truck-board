@@ -1483,10 +1483,18 @@ await loadPosts();
 
 window.likePost = async function(postId){
 
+  const likeKey = "liked_post_" + postId;
+
+  // すでにいいね済みか確認
+  if(localStorage.getItem(likeKey) === "true"){
+    alert("この投稿には、すでにいいねしています👍");
+    return;
+  }
+
   const { error } = await supabase.rpc(
     "increment_post_likes",
     {
-      post_id_input: Number(postId)
+      post_id_input: postId
     }
   );
 
@@ -1501,32 +1509,12 @@ window.likePost = async function(postId){
     return;
   }
 
-  const { data, error: selectError } = await supabase
-    .from("posts")
-    .select("likes")
-    .eq("id", Number(postId))
-    .single();
-
-  if(selectError){
-    console.error(selectError);
-
-    alert(
-      "いいね数の取得に失敗しました。\n" +
-      selectError.message
-    );
-
-    return;
-  }
-
-  const countElement = document.getElementById(
-    "like-count-" + postId
-  );
-
-  if(countElement){
-    countElement.textContent = data.likes ?? 0;
-  }
+  // いいね済みとして保存
+  localStorage.setItem(likeKey, "true");
 
   alert("👍 いいねしました！");
+
+  loadPosts();
 };
 /* =========================
    返信フォーム
