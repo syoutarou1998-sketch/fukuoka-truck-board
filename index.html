@@ -1198,7 +1198,7 @@ post.created_at
 class="reply-button"
 onclick="likePost('${post.id}')"
 >
-👍 いいね
+${localStorage.getItem("liked_post_" + post.id) === "true" ? "👍 いいね済み" : "👍 いいね"}
 </button>
 
 <span id="like-count-${post.id}">
