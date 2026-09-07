@@ -1,39 +1,38 @@
-<!DOCTYPE html>
+name: Deploy static site to GitHub Pages
 
-<html lang="ja">
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
 
-<head>
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
-<meta charset="UTF-8">
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
 
-<title>福岡トラック掲示板</title>
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-<style>
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-* {
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
 
-  box-sizing: border-box;
-
-}
-
-body {
-
-  margin: 0;
-
-  font-family:
-
-    -apple-system,
-
-    BlinkMacSystemFont,
-
-    "Hiragino Kaku Gothic ProN",
-
-    "Yu Gothic",
-
-    Meiryo,
-
-    sans-serif;
-
-  background: #f3f5f7;
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
