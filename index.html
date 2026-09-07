@@ -5,7 +5,658 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>全国トラック掲示板</title>
+/* =================================================
+   🚛 全国トラック掲示板
+   PREMIUM BLACK × EMERALD
+================================================= */
 
+:root{
+  --main:#10b981;
+  --main-light:#34d399;
+  --main-dark:#047857;
+  --bg:#050908;
+  --panel:#0c1712;
+  --panel2:#10221a;
+  --border:#1b5743;
+  --text:#f2fff9;
+  --sub:#a8c8bd;
+}
+
+/* ===== 全体 ===== */
+
+body{
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(16,185,129,.18),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      #06100d 0%,
+      #08150f 45%,
+      #030706 100%
+    );
+
+  color:var(--text);
+}
+
+
+/* ===== ヘッダー ===== */
+
+header{
+  position:relative;
+  overflow:hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% -30%,
+      rgba(52,211,153,.28),
+      transparent 55%
+    ),
+    linear-gradient(
+      135deg,
+      #040b08,
+      #0b2118 50%,
+      #040b08
+    );
+
+  padding:34px 18px 30px;
+
+  border-bottom:1px solid rgba(52,211,153,.45);
+
+  box-shadow:
+    0 10px 35px rgba(0,0,0,.5);
+}
+
+
+/* ヘッダーにトラックマーク */
+
+header h1::before{
+  content:"🚛";
+  margin-right:10px;
+  font-size:30px;
+  filter:drop-shadow(0 3px 8px rgba(16,185,129,.35));
+}
+
+
+/* タイトル */
+
+header h1{
+  margin:0 0 10px;
+
+  font-size:28px;
+  font-weight:950;
+  letter-spacing:.5px;
+
+  color:#ffffff;
+
+  text-shadow:
+    0 0 15px rgba(52,211,153,.25);
+}
+
+
+/* タイトルの「全国」 */
+
+header h1::after{
+  content:"";
+}
+
+
+/* 説明 */
+
+header p{
+  color:#b9d8ce;
+  opacity:1;
+  font-size:13px;
+  font-weight:600;
+}
+
+
+/* ===== メイン ===== */
+
+.container{
+  max-width:720px;
+  padding:18px;
+}
+
+
+/* ===== 投稿ボタン ===== */
+
+.post-button{
+
+  background:
+    linear-gradient(
+      135deg,
+      #036b4a 0%,
+      #0b9f69 45%,
+      #20d890 100%
+    );
+
+  color:white;
+
+  border:1px solid rgba(255,255,255,.18);
+
+  border-radius:16px;
+
+  padding:18px;
+
+  font-size:19px;
+  font-weight:950;
+
+  box-shadow:
+    0 9px 28px rgba(16,185,129,.28),
+    inset 0 1px 0 rgba(255,255,255,.25);
+
+  transition:.2s;
+}
+
+.post-button:active{
+  transform:scale(.98);
+}
+
+
+/* ===== 検索ボックス ===== */
+
+.search-box{
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(17,35,27,.98),
+      rgba(7,15,11,.98)
+    );
+
+  border:1px solid var(--border);
+
+  border-radius:18px;
+
+  padding:14px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.3);
+}
+
+
+/* ===== 入力欄 ===== */
+
+.search-input,
+input,
+textarea,
+select{
+
+  background:#08130f !important;
+
+  color:#effff8 !important;
+
+  border:1px solid #205f4b !important;
+
+  border-radius:12px !important;
+}
+
+.search-input::placeholder,
+input::placeholder,
+textarea::placeholder{
+  color:#718f84;
+}
+
+
+/* ===== 検索 ===== */
+
+.search-button{
+
+  background:
+    linear-gradient(
+      135deg,
+      #047857,
+      #10b981
+    );
+
+  color:white;
+
+  border:none;
+
+  border-radius:11px;
+
+  font-weight:950;
+
+  box-shadow:
+    0 6px 20px rgba(16,185,129,.2);
+}
+
+
+/* ===== 検索クリア ===== */
+
+.clear-button{
+
+  background:#121e19;
+
+  color:#b8d2c8;
+
+  border:1px solid #29463b;
+
+  border-radius:11px;
+}
+
+
+/* ===== カテゴリー ===== */
+
+.categories{
+  gap:10px;
+}
+
+
+.category{
+
+  background:
+    linear-gradient(
+      145deg,
+      #10241b,
+      #09140f
+    );
+
+  color:#d0e8df;
+
+  border:1px solid #205340;
+
+  border-radius:15px;
+
+  padding:16px 8px;
+
+  box-shadow:
+    0 7px 20px rgba(0,0,0,.25);
+
+  transition:.2s;
+}
+
+
+.category.active{
+
+  background:
+    linear-gradient(
+      135deg,
+      #047857,
+      #10b981
+    );
+
+  color:white;
+
+  border-color:#34d399;
+
+  box-shadow:
+    0 8px 24px rgba(16,185,129,.28);
+}
+
+
+/* ===== 投稿カード ===== */
+
+.post{
+
+  position:relative;
+
+  background:
+    linear-gradient(
+      145deg,
+      #10231b,
+      #07110d
+    );
+
+  color:#edfff8;
+
+  border:1px solid #1b5542;
+
+  border-radius:18px;
+
+  padding:18px;
+
+  box-shadow:
+    0 12px 32px rgba(0,0,0,.38);
+
+  overflow:hidden;
+}
+
+
+/* 左側のエメラルドライン */
+
+.post::before{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  top:0;
+  bottom:0;
+
+  width:3px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #34d399,
+      #047857
+    );
+}
+
+
+/* ===== カテゴリータグ ===== */
+
+.post-category{
+
+  background:#12382b;
+
+  color:#6ff0b8;
+
+  border:1px solid #22664d;
+
+  border-radius:999px;
+
+  padding:5px 10px;
+
+  font-weight:900;
+}
+
+
+/* ===== 投稿者 ===== */
+
+.post-author{
+  color:#9fbab0;
+  font-weight:800;
+}
+
+
+/* ===== 場所 ===== */
+
+.post-location{
+  color:#87a69a;
+}
+
+
+/* ===== 投稿タイトル ===== */
+
+.post h3{
+
+  color:#ffffff;
+
+  font-size:18px;
+
+  font-weight:950;
+
+  letter-spacing:.2px;
+}
+
+
+/* ===== 投稿本文 ===== */
+
+.post p{
+
+  color:#d4e8df;
+
+  line-height:1.7;
+}
+
+
+/* ===== いいね・返信 ===== */
+
+.reply-button{
+
+  background:
+    linear-gradient(
+      135deg,
+      #087f58,
+      #16c978
+    );
+
+  color:white;
+
+  border:none;
+
+  border-radius:10px;
+
+  box-shadow:
+    0 5px 16px rgba(16,185,129,.2);
+}
+
+
+.like-button{
+
+  background:
+    linear-gradient(
+      135deg,
+      #087f58,
+      #16c978
+    );
+
+  color:white;
+
+  border:none;
+
+  border-radius:10px;
+
+  padding:9px 12px;
+
+  font-weight:900;
+}
+
+
+.like-button.liked{
+
+  background:#14231c;
+
+  color:#67e8b5;
+
+  border:1px solid #2aa876;
+}
+
+
+/* ===== 返信エリア ===== */
+
+.reply-area{
+
+  border-top:1px solid #1b3c30;
+}
+
+
+.reply{
+
+  background:#0a1511;
+
+  border:1px solid #18382c;
+
+  border-radius:10px;
+}
+
+
+.reply-author{
+  color:#8fb4a5;
+}
+
+
+.reply-body{
+  color:#d6e9e1;
+}
+
+
+.reply-date{
+  color:#6f8980;
+}
+
+
+/* ===== 通報 ===== */
+
+.report-button{
+
+  background:#151b18;
+
+  color:#ff8989;
+
+  border:1px solid #4b2929;
+
+  border-radius:9px;
+}
+
+
+/* ===== 都道府県フィルター ===== */
+
+.filter-box{
+
+  background:
+    linear-gradient(
+      145deg,
+      #10221a,
+      #09130f
+    );
+
+  border:1px solid #1d5541;
+
+  border-radius:15px;
+
+  color:#e2f5ed;
+}
+
+
+.sort-box{
+
+  background:#102019;
+
+  border:1px solid #1d5541;
+
+  color:#bde0d3;
+
+  border-radius:14px;
+}
+
+
+/* ===== 新着投稿 ===== */
+
+.section-title h2{
+
+  color:#ffffff;
+
+  font-weight:950;
+}
+
+
+.section-title h2::first-letter{
+  color:#34d399;
+}
+
+
+.section-title span{
+  color:#69e7b1;
+}
+
+
+/* ===== モーダル ===== */
+
+.modal{
+
+  background:rgba(0,0,0,.78);
+
+  backdrop-filter:blur(7px);
+}
+
+
+.modal-box{
+
+  background:
+    linear-gradient(
+      145deg,
+      #10231b,
+      #06100c
+    );
+
+  color:#effff8;
+
+  border:1px solid #27654d;
+
+  border-radius:20px;
+
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.65);
+}
+
+
+.submit{
+
+  background:
+    linear-gradient(
+      135deg,
+      #047857,
+      #10b981,
+      #34d399
+    );
+
+  border-radius:12px;
+
+  font-weight:950;
+}
+
+
+.close{
+
+  background:#151e1a;
+
+  color:#bfd3ca;
+
+  border:1px solid #2b4539;
+
+  border-radius:11px;
+}
+
+
+/* ===== スクロールバー ===== */
+
+::-webkit-scrollbar{
+  width:6px;
+}
+
+::-webkit-scrollbar-track{
+  background:#040807;
+}
+
+::-webkit-scrollbar-thumb{
+  background:#176247;
+  border-radius:10px;
+}
+
+
+/* ===== スマホ ===== */
+
+@media(max-width:600px){
+
+  header{
+    padding:28px 14px 25px;
+  }
+
+  header h1{
+    font-size:25px;
+  }
+
+  header h1::before{
+    font-size:27px;
+  }
+
+  .container{
+    padding:14px 11px 30px;
+  }
+
+  .categories{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .category{
+    min-height:64px;
+  }
+
+  .post{
+    padding:16px;
+  }
+
+  .post h3{
+    font-size:17px;
+  }
+}
 <style>
 
 *{
