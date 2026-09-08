@@ -1911,7 +1911,63 @@ onchange="filterPrefecture()"
 <div id="posts"></div>
 
 </div>
+<!-- =========================
+     ログイン・新規登録モーダル
+========================= -->
 
+<div
+class="modal"
+id="auth-modal"
+>
+
+<div class="modal-box">
+
+<h2 id="auth-title">
+🔐 ログイン
+</h2>
+
+<label>メールアドレス</label>
+
+<input
+id="auth-email"
+type="email"
+placeholder="メールアドレス"
+>
+
+<label>パスワード</label>
+
+<input
+id="auth-password"
+type="password"
+placeholder="パスワード"
+>
+
+<button
+class="submit"
+onclick="loginUser()"
+id="login-button"
+>
+ログイン
+</button>
+
+<button
+class="close"
+onclick="signupUser()"
+id="signup-button"
+>
+新規登録はこちら
+</button>
+
+<button
+class="close"
+onclick="closeAuthModal()"
+>
+閉じる
+</button>
+
+</div>
+
+</div>
 
 
 <!-- 投稿モーダル -->
