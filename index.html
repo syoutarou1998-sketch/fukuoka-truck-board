@@ -3279,12 +3279,339 @@ document
 
 
 /* =========================
+   ユーザー認証
+========================= */
+
+window.openAuthModal =
+function(){
+
+document
+.getElementById("auth-modal")
+.style.display = "block";
+
+};
+
+
+window.closeAuthModal =
+function(){
+
+document
+.getElementById("auth-modal")
+.style.display = "none";
+
+};
+
+
+/* =========================
+   ログイン
+========================= */
+
+window.loginUser =
+async function(){
+
+const email =
+document
+.getElementById("auth-email")
+.value
+.trim();
+
+const password =
+document
+.getElementById("auth-password")
+.value;
+
+
+if(!email || !password){
+
+alert("メールアドレスとパスワードを入力してください");
+
+return;
+
+}
+
+
+const button =
+document
+.getElementById("login-button");
+
+
+button.disabled = true;
+
+button.textContent = "ログイン中...";
+
+
+const { error } =
+await supabase.auth.signInWithPassword({
+
+email: email,
+
+password: password
+
+});
+
+
+button.disabled = false;
+
+button.textContent = "ログイン";
+
+
+if(error){
+
+console.error(error);
+
+alert(
+"ログインに失敗しました。\n" +
+error.message
+);
+
+return;
+
+}
+
+
+alert("ログインしました！🚛");
+
+closeAuthModal();
+
+updateAuthArea();
+
+};
+
+
+/* =========================
+   新規登録
+========================= */
+
+window.signupUser =
+async function(){
+
+const email =
+document
+.getElementById("auth-email")
+.value
+.trim();
+
+const password =
+document
+.getElementById("auth-password")
+.value;
+
+
+if(!email || !password){
+
+alert(
+"メールアドレスとパスワードを入力してください"
+);
+
+return;
+
+}
+
+
+if(password.length < 6){
+
+alert(
+"パスワードは6文字以上にしてください"
+);
+
+return;
+
+}
+
+
+const button =
+document
+.getElementById("signup-button");
+
+
+button.disabled = true;
+
+button.textContent = "登録中...";
+
+
+const { data, error } =
+await supabase.auth.signUp({
+
+email: email,
+
+password: password
+
+});
+
+
+button.disabled = false;
+
+button.textContent = "新規登録はこちら";
+
+
+if(error){
+
+console.error(error);
+
+alert(
+"登録に失敗しました。\n" +
+error.message
+);
+
+return;
+
+}
+
+
+if(data.session){
+
+alert(
+"新規登録が完了しました！🚛"
+);
+
+closeAuthModal();
+
+}else{
+
+alert(
+"登録しました！\n" +
+"確認メールが必要な設定の場合は、メールを確認してください。"
+);
+
+}
+
+};
+
+
+/* =========================
+   ログアウト
+========================= */
+
+window.logoutUser =
+async function(){
+
+const { error } =
+await supabase.auth.signOut();
+
+
+if(error){
+
+console.error(error);
+
+alert(
+"ログアウトに失敗しました。\n" +
+error.message
+);
+
+return;
+
+}
+
+
+alert("ログアウトしました");
+
+updateAuthArea();
+
+};
+
+
+/* =========================
+   ログイン状態表示
+========================= */
+
+async function updateAuthArea(){
+
+const area =
+document.getElementById("auth-area");
+
+
+if(!area){
+
+return;
+
+}
+
+
+const {
+data:{
+user
+}
+} =
+await supabase.auth.getUser();
+
+
+if(user){
+
+area.innerHTML = `
+
+<div style="
+font-size:13px;
+margin-bottom:8px;
+color:#b9d9ce;
+">
+
+👤 ${escapeHtml(user.email)}
+
+</div>
+
+<button
+onclick="logoutUser()"
+style="
+background:#17231f;
+color:#b8d3ca;
+border:1px solid #29483d;
+border-radius:10px;
+padding:10px 18px;
+font-weight:bold;
+"
+>
+ログアウト
+</button>
+
+`;
+
+}else{
+
+area.innerHTML = `
+
+<button
+onclick="openAuthModal()"
+style="
+background:linear-gradient(135deg,#047857,#10b981);
+color:white;
+border:none;
+border-radius:10px;
+padding:11px 18px;
+font-weight:bold;
+font-size:14px;
+"
+>
+🔐 ログイン / 新規登録
+</button>
+
+`;
+
+}
+
+}
+
+
+/* =========================
+   認証状態の監視
+========================= */
+
+supabase.auth.onAuthStateChange(
+
+(event, session) => {
+
+updateAuthArea();
+
+}
+
+);
+
+
+/* =========================
    開始
 ========================= */
 
 loadPosts();
 
-</script>
+updateAuthArea();
 
-</body>
-</html>
+</script>
