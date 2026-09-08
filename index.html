@@ -1974,7 +1974,126 @@ onclick="closeAuthModal()"
 
 </div>
 
+<!-- =========================
+     プロフィールモーダル
+========================= -->
 
+<div
+class="modal"
+id="profile-modal"
+>
+
+<div class="modal-box">
+
+<h2>
+👤 プロフィール
+</h2>
+
+<label>ニックネーム</label>
+
+<input
+id="profile-nickname"
+type="text"
+maxlength="30"
+placeholder="例：福岡トラック太郎"
+>
+
+<label>都道府県</label>
+
+<select id="profile-prefecture">
+
+<option value="">選択してください</option>
+
+<option>北海道</option>
+<option>青森県</option>
+<option>岩手県</option>
+<option>宮城県</option>
+<option>秋田県</option>
+<option>山形県</option>
+<option>福島県</option>
+<option>茨城県</option>
+<option>栃木県</option>
+<option>群馬県</option>
+<option>埼玉県</option>
+<option>千葉県</option>
+<option>東京都</option>
+<option>神奈川県</option>
+<option>新潟県</option>
+<option>富山県</option>
+<option>石川県</option>
+<option>福井県</option>
+<option>山梨県</option>
+<option>長野県</option>
+<option>岐阜県</option>
+<option>静岡県</option>
+<option>愛知県</option>
+<option>三重県</option>
+<option>滋賀県</option>
+<option>京都府</option>
+<option>大阪府</option>
+<option>兵庫県</option>
+<option>奈良県</option>
+<option>和歌山県</option>
+<option>鳥取県</option>
+<option>島根県</option>
+<option>岡山県</option>
+<option>広島県</option>
+<option>山口県</option>
+<option>徳島県</option>
+<option>香川県</option>
+<option>愛媛県</option>
+<option>高知県</option>
+<option>福岡県</option>
+<option>佐賀県</option>
+<option>長崎県</option>
+<option>熊本県</option>
+<option>大分県</option>
+<option>宮崎県</option>
+<option>鹿児島県</option>
+<option>沖縄県</option>
+
+</select>
+
+<label>車種</label>
+
+<select id="profile-truck-type">
+
+<option value="">選択してください</option>
+
+<option>軽貨物</option>
+<option>2t</option>
+<option>4t</option>
+<option>大型</option>
+<option>トレーラー</option>
+<option>その他</option>
+
+</select>
+
+<label>自己紹介</label>
+
+<textarea
+id="profile-bio"
+maxlength="500"
+placeholder="ドライバー歴、仕事内容など"
+></textarea>
+
+<button
+class="submit"
+onclick="saveProfile()"
+>
+プロフィールを保存
+</button>
+
+<button
+class="close"
+onclick="closeProfileModal()"
+>
+閉じる
+</button>
+
+</div>
+
+</div>
 <!-- 投稿モーダル -->
 
 <div
