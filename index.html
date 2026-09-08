@@ -3735,7 +3735,252 @@ updateAuthArea();
 ========================= */
 
 loadPosts();
+/* =========================
+   プロフィール
+========================= */
 
+window.openProfileModal =
+async function(){
+
+const {
+data:{
+user
+}
+} =
+await supabase.auth.getUser();
+
+if(!user){
+
+alert("プロフィールを利用するにはログインしてください");
+
+return;
+
+}
+
+
+/* 現在のプロフィールを取得 */
+
+const {
+data:profile,
+error
+} =
+await supabase
+
+.from("profiles")
+
+.select("*")
+
+.eq("id",user.id)
+
+.maybeSingle();
+
+
+if(error){
+
+console.error(error);
+
+alert(
+"プロフィールの読み込みに失敗しました。\n" +
+error.message
+);
+
+return;
+
+}
+
+
+/* 既存データを表示 */
+
+if(profile){
+
+document
+.getElementById("profile-nickname")
+.value =
+profile.nickname || "";
+
+document
+.getElementById("profile-prefecture")
+.value =
+profile.prefecture || "";
+
+document
+.getElementById("profile-truck-type")
+.value =
+profile.truck_type || "";
+
+document
+.getElementById("profile-bio")
+.value =
+profile.bio || "";
+
+}else{
+
+document
+.getElementById("profile-nickname")
+.value = "";
+
+document
+.getElementById("profile-prefecture")
+.value = "";
+
+document
+.getElementById("profile-truck-type")
+.value = "";
+
+document
+.getElementById("profile-bio")
+.value = "";
+
+}
+
+
+document
+.getElementById("profile-modal")
+.style.display =
+"block";
+
+};
+
+
+/* =========================
+   プロフィール保存
+========================= */
+
+window.saveProfile =
+async function(){
+
+const {
+data:{
+user
+}
+} =
+await supabase.auth.getUser();
+
+
+if(!user){
+
+alert("ログインしてください");
+
+return;
+
+}
+
+
+const nickname =
+document
+.getElementById("profile-nickname")
+.value
+.trim();
+
+
+const prefecture =
+document
+.getElementById("profile-prefecture")
+.value;
+
+
+const truckType =
+document
+.getElementById("profile-truck-type")
+.value;
+
+
+const bio =
+document
+.getElementById("profile-bio")
+.value
+.trim();
+
+
+if(!nickname){
+
+alert(
+"ニックネームを入力してください"
+);
+
+return;
+
+}
+
+
+const button =
+document.querySelector(
+"#profile-modal .submit"
+);
+
+button.disabled = true;
+
+button.textContent =
+"保存中...";
+
+
+const {error} =
+await supabase
+
+.from("profiles")
+
+.upsert({
+
+id:user.id,
+
+nickname:nickname,
+
+prefecture:prefecture || null,
+
+truck_type:truckType || null,
+
+bio:bio || null,
+
+updated_at:new Date().toISOString()
+
+});
+
+
+button.disabled = false;
+
+button.textContent =
+"プロフィールを保存";
+
+
+if(error){
+
+console.error(error);
+
+alert(
+"プロフィールの保存に失敗しました。\n" +
+error.message
+);
+
+return;
+
+}
+
+
+alert(
+"プロフィールを保存しました！🚛"
+);
+
+
+closeProfileModal();
+
+updateAuthArea();
+
+};
+
+
+/* =========================
+   プロフィールを閉じる
+========================= */
+
+window.closeProfileModal =
+function(){
+
+document
+.getElementById("profile-modal")
+.style.display =
+"none";
+
+};
 updateAuthArea();
 
 </script>
