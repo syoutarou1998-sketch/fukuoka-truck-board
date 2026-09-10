@@ -3199,80 +3199,219 @@ async function(postId){
    返信
 ========================= */
 
+/* =========================
+   返信
+   ログイン必須＋プロフィール連携
+========================= */
+
 window.addReply =
 async function(postId){
 
-const author =
-document.getElementById(
-"reply-author-" + postId
-)
-.value
-.trim();
+  /* =========================
+     ログイン確認
+  ========================= */
+
+  const {
+    data:{
+      user
+    }
+  } = await supabase.auth.getUser();
 
 
-const body =
-document.getElementById(
-"reply-body-" + postId
-)
-.value
-.trim();
+  if(!user){
+
+    alert(
+      "返信するにはログインしてください🚛"
+    );
+
+    openAuthModal();
+
+    return;
+
+  }
 
 
-if(!author){
+  /* =========================
+     プロフィール取得
+  ========================= */
 
-alert(
-"ニックネームを入力してください"
-);
+  const {
+    data:profile,
+    error:profileError
+  } = await supabase
 
-return;
+    .from("profiles")
 
-}
+    .select("nickname")
 
+    .eq("id",user.id)
 
-if(!body){
-
-alert(
-"返信内容を入力してください"
-);
-
-return;
-
-}
+    .maybeSingle();
 
 
-const {error} =
+  if(profileError){
 
-await supabase
+    console.error(
+      "プロフィール取得エラー:",
+      profileError
+    );
 
-.from("replies")
+    alert(
+      "プロフィールの取得に失敗しました。\n" +
+      profileError.message
+    );
 
-.insert({
+    return;
 
-post_id:postId,
-
-author:author,
-
-body:body
-
-});
-
-
-if(error){
-
-console.error(error);
+  }
 
 
-alert(
-"返信に失敗しました。\n" +
-error.message
-);
+  /* =========================
+     ニックネーム確認
+  ========================= */
 
-return;
+  if(!profile || !profile.nickname){
 
-}
+    alert(
+      "返信する前にプロフィールのニックネームを設定してください👤"
+    );
+
+    openProfileModal();
+
+    return;
+
+  }
 
 
-await loadPosts();
+  /* =========================
+     本文取得
+  ========================= */
+
+  const bodyInput =
+    document.getElementById(
+      "reply-body-" + postId
+    );
+
+
+  const body =
+    bodyInput.value.trim();
+
+
+  if(!body){
+
+    alert(
+      "返信内容を入力してください"
+    );
+
+    return;
+
+  }
+
+
+  /* =========================
+     返信ボタン取得
+  ========================= */
+
+  const form =
+    document.getElementById(
+      "reply-form-" + postId
+    );
+
+
+  const button =
+    form.querySelector(
+      ".reply-submit"
+    );
+
+
+  button.disabled = true;
+
+  button.textContent =
+    "返信中...";
+
+
+  /* =========================
+     返信投稿
+  ========================= */
+
+  const {
+    error
+  } = await supabase
+
+    .from("replies")
+
+    .insert({
+
+      post_id:postId,
+
+      user_id:user.id,
+
+      author:profile.nickname,
+
+      body:body
+
+    });
+
+
+  /* =========================
+     ボタン復帰
+  ========================= */
+
+  button.disabled = false;
+
+  button.textContent =
+    "返信を投稿";
+
+
+  /* =========================
+     エラー
+  ========================= */
+
+  if(error){
+
+    console.error(
+      "返信投稿エラー:",
+      error
+    );
+
+    alert(
+      "返信に失敗しました。\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  /* =========================
+     入力クリア
+  ========================= */
+
+  bodyInput.value = "";
+
+
+  /* ニックネームもプロフィールから自動なので
+     フォームを閉じる */
+
+  if(form){
+
+    form.style.display =
+      "none";
+
+  }
+
+
+  alert(
+    "返信しました！🚛"
+  );
+
+
+  /* =========================
+     投稿再読み込み
+  ========================= */
+
+  await loadPosts();
 
 };
 
