@@ -3411,7 +3411,55 @@ document.getElementById(
 /* =========================
    モーダル
 ========================= */
+/* =========================
+   プロフィール自動反映
+========================= */
 
+async function loadProfileToPostForm(){
+
+  const {
+    data:{
+      user
+    }
+  } = await supabase.auth.getUser();
+
+  if(!user){
+    return;
+  }
+
+  const {
+    data:profile,
+    error
+  } = await supabase
+    .from("profiles")
+    .select("nickname,prefecture")
+    .eq("id",user.id)
+    .maybeSingle();
+
+  if(error){
+    console.error("プロフィール取得エラー:", error);
+    return;
+  }
+
+  if(profile){
+
+    const authorInput =
+      document.getElementById("author");
+
+    const prefectureInput =
+      document.getElementById("prefecture");
+
+    if(authorInput && profile.nickname){
+      authorInput.value = profile.nickname;
+    }
+
+    if(prefectureInput && profile.prefecture){
+      prefectureInput.value = profile.prefecture;
+    }
+
+  }
+
+}
 window.openModal =
 function(){
 
