@@ -3335,22 +3335,38 @@ async function(postId){
   ========================= */
 
   const {
-    error
-  } = await supabase
+  data: {
+    user
+  }
+} = await supabase.auth.getUser();
 
-    .from("replies")
+if(!user){
 
-    .insert({
+  alert("返信するにはログインしてください🚛");
 
-      post_id:postId,
+  openAuthModal();
 
-      user_id:user.id,
+  return;
 
-      author:profile.nickname,
+}
 
-      body:body
+const {error} =
 
-    });
+await supabase
+
+.from("replies")
+
+.insert({
+
+  post_id: postId,
+
+  user_id: user.id,
+
+  author: author,
+
+  body: body
+
+});
 
 
   /* =========================
