@@ -3100,22 +3100,97 @@ window.likePost = async function(postId){
    返信フォーム
 ========================= */
 
+/* =========================
+   返信フォーム
+   ログイン必須＋プロフィール自動反映
+========================= */
+
 window.toggleReplyForm =
-function(postId){
+async function(postId){
 
-const form =
-document.getElementById(
-"reply-form-" + postId
-);
+  /* ログイン確認 */
+
+  const {
+    data:{
+      user
+    }
+  } = await supabase.auth.getUser();
 
 
-form.style.display =
+  if(!user){
 
-form.style.display === "block"
+    alert(
+      "返信するにはログインしてください🚛"
+    );
 
-? "none"
+    openAuthModal();
 
-: "block";
+    return;
+
+  }
+
+
+  const form =
+    document.getElementById(
+      "reply-form-" + postId
+    );
+
+
+  /* 閉じる */
+
+  if(form.style.display === "block"){
+
+    form.style.display = "none";
+
+    return;
+
+  }
+
+
+  /* プロフィール取得 */
+
+  const {
+    data:profile,
+    error
+  } = await supabase
+
+    .from("profiles")
+
+    .select("nickname")
+
+    .eq("id",user.id)
+
+    .maybeSingle();
+
+
+  if(error){
+
+    console.error(
+      "プロフィール取得エラー:",
+      error
+    );
+
+  }
+
+
+  /* ニックネーム自動入力 */
+
+  const authorInput =
+    document.getElementById(
+      "reply-author-" + postId
+    );
+
+
+  if(profile && profile.nickname){
+
+    authorInput.value =
+      profile.nickname;
+
+  }
+
+
+  form.style.display =
+    "block";
 
 };
 
