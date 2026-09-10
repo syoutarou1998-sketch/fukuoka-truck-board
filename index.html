@@ -3275,23 +3275,7 @@ return;
 await loadPosts();
 
 };
-  const {
-    data:{
-      user
-    }
-  } = await supabase.auth.getUser();
 
-  if(!user){
-
-    alert(
-      "返信するにはログインしてください🚛"
-    );
-
-    openAuthModal();
-
-    return;
-
-  }
 
 /* =========================
    投稿通報フォーム
