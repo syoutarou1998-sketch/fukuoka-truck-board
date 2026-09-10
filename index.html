@@ -3461,12 +3461,29 @@ async function loadProfileToPostForm(){
 
 }
 window.openModal =
-function(){
+async function(){
 
-document
-.getElementById("modal")
-.style.display =
-"block";
+  const {
+    data:{
+      user
+    }
+  } = await supabase.auth.getUser();
+
+  if(!user){
+
+    alert("投稿するにはログインしてください🚛");
+
+    openAuthModal();
+
+    return;
+  }
+
+  await loadProfileToPostForm();
+
+  document
+    .getElementById("modal")
+    .style.display =
+    "block";
 
 };
 
