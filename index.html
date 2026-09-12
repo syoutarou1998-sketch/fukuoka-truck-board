@@ -3462,7 +3462,76 @@ await supabase
   await loadPosts();
 
 };
+/* =========================
+   自分の返信を削除
+========================= */
 
+window.deleteReply =
+async function(replyId){
+
+  /* ログイン確認 */
+  const {
+    data:{
+      user
+    }
+  } = await supabase.auth.getUser();
+
+  if(!user){
+
+    alert(
+      "返信を削除するにはログインしてください"
+    );
+
+    return;
+  }
+
+
+  /* 確認 */
+  const ok =
+    confirm(
+      "この返信を削除しますか？"
+    );
+
+  if(!ok){
+    return;
+  }
+
+
+  /* 削除 */
+  const {error} =
+    await supabase
+      .from("replies")
+      .delete()
+      .eq("id",replyId)
+      .eq("user_id",user.id);
+
+
+  /* エラー */
+  if(error){
+
+    console.error(
+      "返信削除エラー:",
+      error
+    );
+
+    alert(
+      "返信の削除に失敗しました。\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "返信を削除しました！🗑️"
+  );
+
+
+  /* 投稿を再読み込み */
+  await loadPosts();
+
+};
 
 /* =========================
    投稿通報フォーム
