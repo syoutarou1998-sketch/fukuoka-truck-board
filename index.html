@@ -2425,32 +2425,7 @@ document.getElementById("status");
 
 const area =
 document.getElementById("posts");
-const deleteReplyButton =
-currentUser &&
-String(reply.user_id) === String(currentUser.id)
 
-?
-
-`
-<button
-style="
-margin-top:8px;
-background:#2a1717;
-color:#ff8f8f;
-border:1px solid #633333;
-border-radius:9px;
-padding:8px 12px;
-font-weight:bold;
-"
-onclick="deleteReply('${reply.id}')"
->
-🗑️ 自分の返信を削除
-</button>
-`
-
-:
-
-"";
 
 status.textContent =
 "投稿を読み込み中...";
