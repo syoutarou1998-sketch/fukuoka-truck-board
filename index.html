@@ -4598,7 +4598,22 @@ async function(){
           ">
             ${formatDate(post.created_at)}
           </div>
-
+<button
+  onclick="deleteMyPost('${post.id}')"
+  style="
+    margin-top:10px;
+    width:100%;
+    padding:9px;
+    border-radius:8px;
+    border:1px solid #7f1d1d;
+    background:#1f0b0b;
+    color:#fca5a5;
+    font-weight:bold;
+    cursor:pointer;
+  "
+>
+  🗑️ この投稿を削除
+</button>
         </div>
 
       `).join("");
