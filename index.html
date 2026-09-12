@@ -4348,6 +4348,401 @@ document
 "none";
 
 };
-updateAuthArea();
+/* =========================
+   マイページ
+========================= */
+
+window.openMyPage =
+async function(){
+
+  /* =========================
+     ログイン確認
+  ========================= */
+
+  const {
+    data:{
+      user
+    }
+  } =
+  await supabase.auth.getUser();
+
+
+  if(!user){
+
+    alert(
+      "マイページを利用するにはログインしてください"
+    );
+
+    openAuthModal();
+
+    return;
+
+  }
+
+
+  /* =========================
+     モーダル表示
+  ========================= */
+
+  const modal =
+    document.getElementById(
+      "mypage-modal"
+    );
+
+  const content =
+    document.getElementById(
+      "mypage-content"
+    );
+
+
+  modal.style.display =
+    "block";
+
+
+  content.innerHTML =
+    "読み込み中...";
+
+
+  /* =========================
+     プロフィール取得
+  ========================= */
+
+  const {
+    data:profile,
+    error:profileError
+  } =
+  await supabase
+
+    .from("profiles")
+
+    .select("*")
+
+    .eq("id",user.id)
+
+    .maybeSingle();
+
+
+  if(profileError){
+
+    console.error(
+      "プロフィール取得エラー:",
+      profileError
+    );
+
+  }
+
+
+  /* =========================
+     自分の投稿取得
+  ========================= */
+
+  const {
+    data:myPosts,
+    error:postsError
+  } =
+  await supabase
+
+    .from("posts")
+
+    .select("*")
+
+    .eq("user_id",user.id)
+
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    );
+
+
+  if(postsError){
+
+    console.error(
+      "投稿取得エラー:",
+      postsError
+    );
+
+  }
+
+
+  /* =========================
+     自分の返信取得
+  ========================= */
+
+  const {
+    data:myReplies,
+    error:repliesError
+  } =
+  await supabase
+
+    .from("replies")
+
+    .select("*")
+
+    .eq("user_id",user.id)
+
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    );
+
+
+  if(repliesError){
+
+    console.error(
+      "返信取得エラー:",
+      repliesError
+    );
+
+  }
+
+
+  const posts =
+    myPosts || [];
+
+
+  const replies =
+    myReplies || [];
+
+
+  /* =========================
+     プロフィール表示
+  ========================= */
+
+  const nickname =
+    profile?.nickname ||
+    "未設定";
+
+
+  const prefecture =
+    profile?.prefecture ||
+    "未設定";
+
+
+  const truckType =
+    profile?.truck_type ||
+    "未設定";
+
+
+  const bio =
+    profile?.bio ||
+    "自己紹介はまだありません";
+
+
+  /* =========================
+     投稿一覧
+  ========================= */
+
+  let postsHtml = "";
+
+
+  if(posts.length === 0){
+
+    postsHtml =
+      `
+      <div style="
+        padding:15px;
+        color:#8faea2;
+        text-align:center;
+      ">
+        まだ投稿していません。
+      </div>
+      `;
+
+  }else{
+
+    postsHtml =
+      posts.map(post => `
+
+        <div style="
+          background:#091712;
+          border:1px solid #174f3d;
+          border-radius:12px;
+          padding:14px;
+          margin-top:10px;
+        ">
+
+          <div style="
+            color:#67e8b5;
+            font-size:12px;
+            font-weight:bold;
+          ">
+            ${escapeHtml(post.category || "")}
+          </div>
+
+          <div style="
+            color:white;
+            font-size:16px;
+            font-weight:bold;
+            margin-top:5px;
+          ">
+            ${escapeHtml(post.title || "")}
+          </div>
+
+          <div style="
+            color:#b9d9ce;
+            font-size:13px;
+            margin-top:6px;
+            line-height:1.5;
+          ">
+            ${formatText(post.body || "")}
+          </div>
+
+          <div style="
+            color:#6f8e85;
+            font-size:11px;
+            margin-top:8px;
+          ">
+            ${formatDate(post.created_at)}
+          </div>
+
+        </div>
+
+      `).join("");
+
+  }
+
+
+  /* =========================
+     マイページ表示
+  ========================= */
+
+  content.innerHTML = `
+
+    <div style="
+      background:linear-gradient(
+        145deg,
+        #10231b,
+        #08130f
+      );
+      border:1px solid #1b5b46;
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:15px;
+    ">
+
+      <div style="
+        font-size:20px;
+        font-weight:900;
+        color:white;
+        margin-bottom:12px;
+      ">
+        👤 ${escapeHtml(nickname)}
+      </div>
+
+      <div style="
+        color:#b9d9ce;
+        line-height:1.8;
+        font-size:14px;
+      ">
+        📍 ${escapeHtml(prefecture)}<br>
+        🚛 ${escapeHtml(truckType)}
+      </div>
+
+      <div style="
+        margin-top:12px;
+        padding-top:12px;
+        border-top:1px solid #1b3d32;
+        color:#d5ebe3;
+        line-height:1.6;
+        font-size:14px;
+      ">
+        ${formatText(bio)}
+      </div>
+
+    </div>
+
+
+    <div style="
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-bottom:18px;
+    ">
+
+      <div style="
+        background:#0b1712;
+        border:1px solid #174f3d;
+        border-radius:12px;
+        padding:14px;
+        text-align:center;
+      ">
+
+        <div style="
+          color:#6ee7b7;
+          font-size:24px;
+          font-weight:900;
+        ">
+          ${posts.length}
+        </div>
+
+        <div style="
+          color:#91b7aa;
+          font-size:12px;
+        ">
+          📝 投稿
+        </div>
+
+      </div>
+
+
+      <div style="
+        background:#0b1712;
+        border:1px solid #174f3d;
+        border-radius:12px;
+        padding:14px;
+        text-align:center;
+      ">
+
+        <div style="
+          color:#6ee7b7;
+          font-size:24px;
+          font-weight:900;
+        ">
+          ${replies.length}
+        </div>
+
+        <div style="
+          color:#91b7aa;
+          font-size:12px;
+        ">
+          💬 返信
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div style="
+      color:white;
+      font-size:17px;
+      font-weight:900;
+      margin-bottom:8px;
+    ">
+      📝 自分の投稿
+    </div>
+
+    ${postsHtml}
+
+
+    <button
+      class="close"
+      onclick="
+        document.getElementById('mypage-modal').style.display='none'
+      "
+      style="
+        margin-top:15px;
+      "
+    >
+      閉じる
+    </button>
+
+  `;
+
+};updateAuthArea();
 
 </script>
