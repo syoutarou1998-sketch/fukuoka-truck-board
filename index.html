@@ -4773,6 +4773,86 @@ async function(){
 
   `;
 
-};updateAuthArea();
+};
+
+/* =========================
+   自分の投稿を削除
+========================= */
+
+window.deleteMyPost =
+async function(postId){
+
+  const {
+    data:{
+      user
+    }
+  } = await supabase.auth.getUser();
+
+  if(!user){
+
+    alert(
+      "削除するにはログインしてください"
+    );
+
+    return;
+
+  }
+
+
+  const confirmed =
+    confirm(
+      "この投稿を削除しますか？\n\nこの操作は取り消せません。"
+    );
+
+  if(!confirmed){
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } = await supabase
+
+    .from("posts")
+
+    .delete()
+
+    .eq("id",postId)
+
+    .eq("user_id",user.id);
+
+
+  if(error){
+
+    console.error(
+      "投稿削除エラー:",
+      error
+    );
+
+    alert(
+      "投稿の削除に失敗しました。\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  alert(
+    "投稿を削除しました！"
+  );
+
+
+  openMyPage();
+
+  loadPosts();
+
+};
+
+
+updateAuthArea();
 
 </script>
