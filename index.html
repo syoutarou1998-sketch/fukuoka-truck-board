@@ -4506,7 +4506,58 @@ async function(){
 
   const replies =
     myReplies || [];
+/* =========================
+   自分の返信一覧
+========================= */
 
+let repliesHtml = "";
+
+if(replies.length === 0){
+
+  repliesHtml = `
+    <div style="
+      padding:15px;
+      color:#8faea2;
+      text-align:center;
+    ">
+      まだ返信していません。
+    </div>
+  `;
+
+}else{
+
+  repliesHtml =
+    replies.map(reply => `
+
+      <div style="
+        background:#091712;
+        border:1px solid #174f3d;
+        border-radius:12px;
+        padding:14px;
+        margin-top:10px;
+      ">
+
+        <div style="
+          color:#b9d9ce;
+          font-size:14px;
+          line-height:1.6;
+        ">
+          ${formatText(reply.body || "")}
+        </div>
+
+        <div style="
+          color:#6f8e85;
+          font-size:11px;
+          margin-top:8px;
+        ">
+          ${formatDate(reply.created_at)}
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
 
   /* =========================
      プロフィール表示
