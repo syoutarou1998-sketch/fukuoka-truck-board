@@ -2300,6 +2300,15 @@ let currentPrefecture =
 let likedPosts = new Set();
 let currentUser = null;
 /* =========================
+   ログインユーザー取得
+========================= */
+
+supabase.auth.getUser()
+.then(({ data }) => {
+
+  currentUser = data.user || null;
+
+});/* =========================
    安全処理
 ========================= */
 
