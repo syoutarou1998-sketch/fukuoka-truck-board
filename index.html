@@ -4750,6 +4750,21 @@ if(replies.length === 0){
             ${formatDate(post.created_at)}
           </div>
 <button
+  onclick="editMyPost('${post.id}')"
+  style="
+    margin-top:10px;
+    width:100%;
+    padding:9px;
+    border-radius:8px;
+    border:1px solid #2aa879;
+    background:#0b2119;
+    color:#7ff0bd;
+    font-weight:bold;
+    cursor:pointer;
+  "
+>
+  ✏️ この投稿を編集
+</button><button
   onclick="deleteMyPost('${post.id}')"
   style="
     margin-top:10px;
