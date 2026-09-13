@@ -5017,7 +5017,193 @@ async function(postId){
   loadPosts();
 
 };
+/* =========================
+   自分の投稿を編集
+========================= */
 
+window.editMyPost =
+async function(postId){
+
+  /* ログイン確認 */
+
+  const {
+    data:{
+      user
+    }
+  } = await supabase.auth.getUser();
+
+
+  if(!user){
+
+    alert(
+      "投稿を編集するにはログインしてください"
+    );
+
+    return;
+
+  }
+
+
+  /* 投稿取得 */
+
+  const {
+    data:post,
+    error:postError
+  } = await supabase
+
+    .from("posts")
+
+    .select("*")
+
+    .eq("id",postId)
+
+    .eq("user_id",user.id)
+
+    .maybeSingle();
+
+
+  if(postError){
+
+    console.error(
+      "投稿取得エラー:",
+      postError
+    );
+
+    alert(
+      "投稿の取得に失敗しました。\n" +
+      postError.message
+    );
+
+    return;
+
+  }
+
+
+  if(!post){
+
+    alert(
+      "この投稿を編集する権限がありません"
+    );
+
+    return;
+
+  }
+
+
+  /* タイトル編集 */
+
+  const newTitle =
+    prompt(
+      "タイトルを編集してください",
+      post.title || ""
+    );
+
+
+  if(newTitle === null){
+
+    return;
+
+  }
+
+
+  const title =
+    newTitle.trim();
+
+
+  if(!title){
+
+    alert(
+      "タイトルを入力してください"
+    );
+
+    return;
+
+  }
+
+
+  /* 本文編集 */
+
+  const newBody =
+    prompt(
+      "本文を編集してください",
+      post.body || ""
+    );
+
+
+  if(newBody === null){
+
+    return;
+
+  }
+
+
+  const body =
+    newBody.trim();
+
+
+  if(!body){
+
+    alert(
+      "本文を入力してください"
+    );
+
+    return;
+
+  }
+
+
+  /* データ更新 */
+
+  const {
+    error
+  } = await supabase
+
+    .from("posts")
+
+    .update({
+
+      title:title,
+
+      body:body,
+
+      updated_at:new Date().toISOString()
+
+    })
+
+    .eq("id",postId)
+
+    .eq("user_id",user.id);
+
+
+  if(error){
+
+    console.error(
+      "投稿編集エラー:",
+      error
+    );
+
+    alert(
+      "投稿の編集に失敗しました。\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  alert(
+    "投稿を編集しました！✏️"
+  );
+
+
+  /* 画面更新 */
+
+  await loadPosts();
+
+  await openMyPage();
+
+};
 
 updateAuthArea();
 
