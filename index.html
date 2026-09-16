@@ -3258,7 +3258,59 @@ window.likePost = async function(postId){
 
   alert(
     "👍 いいねしました！"
+  );/* ================================
+   いいね通知を投稿者へ保存
+================================ */
+
+try {
+
+  /* 投稿者を取得 */
+  const {
+    data: postAuthor,
+    error: authorError
+  } = await supabase
+    .from("posts")
+    .select("user_id")
+    .eq("id", postId)
+    .single();
+
+  if (authorError) {
+    console.error("投稿者取得エラー:", authorError);
+  }
+
+  /* 自分の投稿ではない場合だけ通知 */
+  if (
+    postAuthor &&
+    postAuthor.user_id &&
+    postAuthor.user_id !== user.id
+  ) {
+
+    const { error: notificationError } = await supabase
+      .from("notifications")
+      .insert({
+        user_id: postAuthor.user_id,
+        type: "like",
+        message: "あなたの投稿に「いいね」がつきました👍",
+        post_id: postId
+      });
+
+    if (notificationError) {
+      console.error(
+        "いいね通知保存エラー:",
+        notificationError
+      );
+    }
+  }
+
+} catch (notificationError) {
+
+  /* 通知でエラーが出ても「いいね」自体は止めない */
+  console.error(
+    "いいね通知処理エラー:",
+    notificationError
   );
+
+}
 localStorage.setItem(
 
   "liked_post_" + postId,
