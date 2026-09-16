@@ -4731,7 +4731,143 @@ async function(){
 
   }
 
+/* =========================
+   いいねした投稿取得
+========================= */
 
+const {
+  data:likedRows,
+  error:likedRowsError
+} = await supabase
+
+  .from("post_likes")
+
+  .select("post_id")
+
+  .eq("user_id",user.id);
+
+
+if(likedRowsError){
+
+  console.error(
+    "いいね履歴取得エラー:",
+    likedRowsError
+  );
+
+}
+
+
+const likedPostIds =
+  (likedRows || [])
+    .map(item => item.post_id);
+
+
+let likedPosts = [];
+
+
+if(likedPostIds.length > 0){
+
+  const {
+    data:likedPostData,
+    error:likedPostError
+  } = await supabase
+
+    .from("posts")
+
+    .select("*")
+
+    .in("id",likedPostIds);
+
+
+  if(likedPostError){
+
+    console.error(
+      "いいねした投稿取得エラー:",
+      likedPostError
+    );
+
+  }else{
+
+    likedPosts =
+      likedPostData || [];
+
+  }
+
+}
+
+
+/* =========================
+   いいねした投稿一覧
+========================= */
+
+let likedPostsHtml = "";
+
+
+if(likedPosts.length === 0){
+
+  likedPostsHtml = `
+    <div style="
+      padding:15px;
+      color:#8faea2;
+      text-align:center;
+    ">
+      まだいいねした投稿はありません。
+    </div>
+  `;
+
+}else{
+
+  likedPostsHtml =
+    likedPosts.map(post => `
+
+      <div style="
+        background:#091712;
+        border:1px solid #174f3d;
+        border-radius:12px;
+        padding:14px;
+        margin-top:10px;
+      ">
+
+        <div style="
+          color:#67e8b5;
+          font-size:12px;
+          font-weight:bold;
+        ">
+          ${escapeHtml(post.category || "")}
+        </div>
+
+        <div style="
+          color:white;
+          font-size:16px;
+          font-weight:bold;
+          margin-top:5px;
+        ">
+          ${escapeHtml(post.title || "")}
+        </div>
+
+        <div style="
+          color:#b9d9ce;
+          font-size:13px;
+          margin-top:6px;
+          line-height:1.5;
+        ">
+          ${formatText(post.body || "")}
+        </div>
+
+        <div style="
+          color:#6f8e85;
+          font-size:11px;
+          margin-top:8px;
+        ">
+          👤 ${escapeHtml(post.author || "匿名")}<br>
+          ${formatDate(post.created_at)}
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
   const posts =
     myPosts || [];
 
