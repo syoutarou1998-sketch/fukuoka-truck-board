@@ -3122,19 +3122,24 @@ await loadPosts();
    いいね
    Supabase保存版
 ========================= */
+/* =========================
+   いいね
+   Supabase保存版
+========================= */
 
 window.likePost = async function(postId){
 
-  /* =========================
-     ログイン確認
-  ========================= */
-
+  /* ログイン確認 */
   const {
-    data:{
-      user
-    }
+    data:{ user },
+    error:userError
   } = await supabase.auth.getUser();
 
+  if(userError){
+    console.error("ログイン確認エラー:",userError);
+    alert("ログイン確認に失敗しました。");
+    return;
+  }
 
   if(!user){
 
@@ -3149,22 +3154,17 @@ window.likePost = async function(postId){
 
 
   /* =========================
-     すでにいいねしているか確認
+     すでにいいね済みか確認
   ========================= */
 
   const {
     data:existingLike,
     error:checkError
   } = await supabase
-
     .from("post_likes")
-
     .select("id")
-
     .eq("post_id",postId)
-
     .eq("user_id",user.id)
-
     .maybeSingle();
 
 
@@ -3184,6 +3184,10 @@ window.likePost = async function(postId){
   }
 
 
+  /* =========================
+     すでにいいね済み
+  ========================= */
+
   if(existingLike){
 
     alert(
@@ -3195,21 +3199,16 @@ window.likePost = async function(postId){
 
 
   /* =========================
-     いいね情報を保存
+     いいねを保存
   ========================= */
 
   const {
     error:insertError
   } = await supabase
-
     .from("post_likes")
-
     .insert({
-
       post_id:postId,
-
       user_id:user.id
-
     });
 
 
@@ -3230,19 +3229,16 @@ window.likePost = async function(postId){
 
 
   /* =========================
-     投稿のいいね数を増やす
+     投稿のいいね数を更新
   ========================= */
 
   const {
     error:rpcError
   } = await supabase.rpc(
-
     "increment_post_likes",
-
     {
       post_id_input:postId
     }
-
   );
 
 
@@ -3264,23 +3260,15 @@ window.likePost = async function(postId){
 
 
   /* =========================
-     端末側にも保存
+     完了
   ========================= */
-
-  const likeKey =
-    "liked_post_" + postId;
-
-  localStorage.setItem(
-    likeKey,
-    "true"
-  );
-
 
   alert(
     "👍 いいねしました！"
   );
 
 
+  /* 投稿一覧を再読み込み */
   await loadPosts();
 
 };
