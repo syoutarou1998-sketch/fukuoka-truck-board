@@ -3118,40 +3118,172 @@ await loadPosts();
    いいね
 ========================= */
 
+/* =========================
+   いいね
+   Supabase保存版
+========================= */
+
 window.likePost = async function(postId){
 
-  const likeKey = "liked_post_" + postId;
+  /* =========================
+     ログイン確認
+  ========================= */
 
-  // すでにいいね済みか確認
-  if(localStorage.getItem(likeKey) === "true"){
-    alert("この投稿には、すでにいいねしています👍");
+  const {
+    data:{
+      user
+    }
+  } = await supabase.auth.getUser();
+
+
+  if(!user){
+
+    alert(
+      "いいねするにはログインしてください🚛"
+    );
+
+    openAuthModal();
+
     return;
   }
 
-  const { error } = await supabase.rpc(
-    "increment_post_likes",
-    {
-      post_id_input: postId
-    }
-  );
 
-  if(error){
-    console.error(error);
+  /* =========================
+     すでにいいねしているか確認
+  ========================= */
+
+  const {
+    data:existingLike,
+    error:checkError
+  } = await supabase
+
+    .from("post_likes")
+
+    .select("id")
+
+    .eq("post_id",postId)
+
+    .eq("user_id",user.id)
+
+    .maybeSingle();
+
+
+  if(checkError){
+
+    console.error(
+      "いいね確認エラー:",
+      checkError
+    );
 
     alert(
-      "いいねに失敗しました。\n" +
-      error.message
+      "いいね状態の確認に失敗しました。\n" +
+      checkError.message
     );
 
     return;
   }
 
-  // いいね済みとして保存
-  localStorage.setItem(likeKey, "true");
 
-  alert("👍 いいねしました！");
+  if(existingLike){
 
-  loadPosts();
+    alert(
+      "この投稿には、すでにいいねしています👍"
+    );
+
+    return;
+  }
+
+
+  /* =========================
+     いいね情報を保存
+  ========================= */
+
+  const {
+    error:insertError
+  } = await supabase
+
+    .from("post_likes")
+
+    .insert({
+
+      post_id:postId,
+
+      user_id:user.id
+
+    });
+
+
+  if(insertError){
+
+    console.error(
+      "いいね保存エラー:",
+      insertError
+    );
+
+    alert(
+      "いいねに失敗しました。\n" +
+      insertError.message
+    );
+
+    return;
+  }
+
+
+  /* =========================
+     投稿のいいね数を増やす
+  ========================= */
+
+  const {
+    error:rpcError
+  } = await supabase.rpc(
+
+    "increment_post_likes",
+
+    {
+      post_id_input:postId
+    }
+
+  );
+
+
+  if(rpcError){
+
+    console.error(
+      "いいね数更新エラー:",
+      rpcError
+    );
+
+    alert(
+      "いいねは保存されましたが、\n" +
+      "いいね数の更新に失敗しました。\n" +
+      rpcError.message
+    );
+
+    return;
+  }
+
+
+  /* =========================
+     端末側にも保存
+  ========================= */
+
+  const likeKey =
+    "liked_post_" + postId;
+
+  localStorage.setItem(
+    likeKey,
+    "true"
+  );
+
+
+  alert(
+    "👍 いいねしました！"
+  );
+
+
+  await loadPosts();
+
+};
 };
 /* =========================
    返信フォーム
