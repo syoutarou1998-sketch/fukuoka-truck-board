@@ -3259,7 +3259,13 @@ window.likePost = async function(postId){
   alert(
     "👍 いいねしました！"
   );
+localStorage.setItem(
 
+  "liked_post_" + postId,
+
+  "true"
+
+);
 
   /* 投稿一覧を再読み込み */
   await loadPosts();
