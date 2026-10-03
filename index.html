@@ -5037,7 +5037,10 @@ if(!notifications || notifications.length === 0){
     notifications.map(notification => `
 
       <div style="
-        background:#091712;
+        <div
+  onclick="openNotificationPost('${notification.post_id || ""}','${notification.id}')"
+  style="
+    background:${notification.is_read ? "#091712" : "#123c2d"};
         border:1px solid #174f3d;
         border-radius:12px;
         padding:14px;
