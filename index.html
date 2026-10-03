@@ -2400,9 +2400,14 @@ onclick="deleteReply('${reply.id}')"
 
 <button
 class="report-button"
+id="reply-report-button-${reply.id}"
 onclick="toggleReplyReport('${reply.id}')"
 >
-🚨 返信を通報
+${
+  localStorage.getItem("reported_reply_" + reply.id) === "true"
+    ? "🚨 通報済み"
+    : "🚨 返信を通報"
+}
 </button>
 
 
