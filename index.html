@@ -2845,15 +2845,26 @@ await loadPosts();
 
 window.likePost = async function(postId){
 
-  /* ログイン確認 */
+  /* =========================
+     ログイン確認
+  ========================= */
+
   const {
     data:{ user },
     error:userError
   } = await supabase.auth.getUser();
 
   if(userError){
-    console.error("ログイン確認エラー:",userError);
-    alert("ログイン確認に失敗しました。");
+
+    console.error(
+      "ログイン確認エラー:",
+      userError
+    );
+
+    alert(
+      "ログイン確認に失敗しました。"
+    );
+
     return;
   }
 
@@ -2870,17 +2881,22 @@ window.likePost = async function(postId){
 
 
   /* =========================
-     すでにいいね済みか確認
+     現在のいいね状態を確認
   ========================= */
 
   const {
     data:existingLike,
     error:checkError
   } = await supabase
+
     .from("post_likes")
+
     .select("id")
+
     .eq("post_id",postId)
+
     .eq("user_id",user.id)
+
     .maybeSingle();
 
 
@@ -2900,31 +2916,103 @@ window.likePost = async function(postId){
   }
 
 
-  /* =========================
-     すでにいいね済み
-  ========================= */
+  /* =================================================
+     すでにいいね済み → いいねを取り消す
+  ================================================= */
 
   if(existingLike){
 
-    alert(
-      "この投稿には、すでにいいねしています👍"
+    const {
+      error:deleteError
+    } = await supabase
+
+      .from("post_likes")
+
+      .delete()
+
+      .eq("id",existingLike.id)
+      .eq("user_id",user.id);
+
+
+    if(deleteError){
+
+      console.error(
+        "いいね解除エラー:",
+        deleteError
+      );
+
+      alert(
+        "いいねの取り消しに失敗しました。\n" +
+        deleteError.message
+      );
+
+      return;
+    }
+
+
+    /* いいね数を -1 */
+
+    const {
+      error:rpcError
+    } = await supabase.rpc(
+      "decrement_post_likes",
+      {
+        post_id_input:postId
+      }
     );
+
+
+    if(rpcError){
+
+      console.error(
+        "いいね数減少エラー:",
+        rpcError
+      );
+
+      alert(
+        "いいねは取り消しましたが、\n" +
+        "いいね数の更新に失敗しました。\n" +
+        rpcError.message
+      );
+
+      return;
+    }
+
+
+    /* localStorage解除 */
+
+    localStorage.removeItem(
+      "liked_post_" + postId
+    );
+
+
+    alert(
+      "👍 いいねを取り消しました"
+    );
+
+
+    await loadPosts();
 
     return;
   }
 
 
-  /* =========================
-     いいねを保存
-  ========================= */
+  /* =================================================
+     まだいいねしていない → いいねする
+  ================================================= */
 
   const {
     error:insertError
   } = await supabase
+
     .from("post_likes")
+
     .insert({
+
       post_id:postId,
+
       user_id:user.id
+
     });
 
 
@@ -2944,9 +3032,7 @@ window.likePost = async function(postId){
   }
 
 
-  /* =========================
-     投稿のいいね数を更新
-  ========================= */
+  /* いいね数を +1 */
 
   const {
     error:rpcError
@@ -2975,74 +3061,98 @@ window.likePost = async function(postId){
   }
 
 
-  /* =========================
-     完了
-  ========================= */
+  /* localStorage保存 */
+
+  localStorage.setItem(
+    "liked_post_" + postId,
+    "true"
+  );
+
 
   alert(
     "👍 いいねしました！"
-  );/* ================================
-   いいね通知を投稿者へ保存
-================================ */
-
-try {
-
-  /* 投稿者を取得 */
-  const {
-    data: postAuthor,
-    error: authorError
-  } = await supabase
-    .from("posts")
-    .select("user_id")
-    .eq("id", postId)
-    .single();
-
-  if (authorError) {
-    console.error("投稿者取得エラー:", authorError);
-  }
-
-  /* 自分の投稿ではない場合だけ通知 */
-  if (
-    postAuthor &&
-    postAuthor.user_id &&
-    postAuthor.user_id !== user.id
-  ) {
-
-    const { error: notificationError } = await supabase
-      .from("notifications")
-      .insert({
-        user_id: postAuthor.user_id,
-        type: "like",
-        message: "あなたの投稿に「いいね」がつきました👍",
-        post_id: postId
-      });
-
-    if (notificationError) {
-      console.error(
-        "いいね通知保存エラー:",
-        notificationError
-      );
-    }
-  }
-
-} catch (notificationError) {
-
-  /* 通知でエラーが出ても「いいね」自体は止めない */
-  console.error(
-    "いいね通知処理エラー:",
-    notificationError
   );
 
-}
-localStorage.setItem(
 
-  "liked_post_" + postId,
+  /* =========================
+     いいね通知
+  ========================= */
 
-  "true"
+  try{
 
-);
+    const {
+      data:postAuthor,
+      error:authorError
+    } = await supabase
+
+      .from("posts")
+
+      .select("user_id")
+
+      .eq("id",postId)
+
+      .single();
+
+
+    if(authorError){
+
+      console.error(
+        "投稿者取得エラー:",
+        authorError
+      );
+
+    }
+
+
+    if(
+      postAuthor &&
+      postAuthor.user_id &&
+      postAuthor.user_id !== user.id
+    ){
+
+      const {
+        error:notificationError
+      } = await supabase
+
+        .from("notifications")
+
+        .insert({
+
+          user_id:postAuthor.user_id,
+
+          type:"like",
+
+          message:
+            "あなたの投稿に「いいね」がつきました👍",
+
+          post_id:postId
+
+        });
+
+
+      if(notificationError){
+
+        console.error(
+          "いいね通知保存エラー:",
+          notificationError
+        );
+
+      }
+
+    }
+
+  }catch(notificationError){
+
+    console.error(
+      "いいね通知処理エラー:",
+      notificationError
+    );
+
+  }
+
 
   /* 投稿一覧を再読み込み */
+
   await loadPosts();
 
 };
