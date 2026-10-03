@@ -3610,74 +3610,91 @@ form.style.display === "block"
 window.reportPost =
 async function(postId){
 
-const reason =
-document.getElementById(
-"post-reason-" + postId
-)
-.value;
+  // 二重送信防止
+  if(
+    localStorage.getItem(
+      "reported_post_" + postId
+    ) === "true"
+  ){
+    alert("この投稿はすでに通報済みです。");
+    return;
+  }
 
+  const reason =
+    document.getElementById(
+      "post-reason-" + postId
+    ).value;
 
-const reporter =
-document.getElementById(
-"post-reporter-" + postId
-)
-.value
-.trim() ||
-"匿名";
+  const reporter =
+    document.getElementById(
+      "post-reporter-" + postId
+    ).value.trim() ||
+    "匿名";
 
+  if(!reason){
 
-if(!reason){
+    alert(
+      "通報理由を選択してください"
+    );
 
-alert(
-"通報理由を選択してください"
-);
+    return;
+  }
 
-return;
+  const button =
+    document.getElementById(
+      "post-report-button-" + postId
+    );
 
-}
+  // 連打防止
+  if(button){
+    button.disabled = true;
+    button.textContent = "送信中...";
+  }
 
+  const {error} =
+    await supabase
+      .from("reports")
+      .insert({
+        post_id: postId,
+        reason: reason,
+        reporter_name: reporter
+      });
 
-const {error} =
+  if(error){
 
-await supabase
+    console.error(error);
 
-.from("reports")
+    if(button){
+      button.disabled = false;
+      button.textContent = "🚨 この投稿を通報";
+    }
 
-.insert({
+    alert(
+      "通報に失敗しました。\n" +
+      error.message
+    );
 
-post_id:postId,
+    return;
+  }
 
-reason:reason,
+  // 通報済みとして保存
+  localStorage.setItem(
+    "reported_post_" + postId,
+    "true"
+  );
 
-reporter_name:reporter
+  alert(
+    "通報を受け付けました。"
+  );
 
-});
+  if(button){
+    button.textContent = "🚨 通報済み";
+    button.disabled = true;
+  }
 
-
-if(error){
-
-console.error(error);
-
-
-alert(
-"通報に失敗しました。\n" +
-error.message
-);
-
-return;
-
-}
-
-
-alert(
-"通報を受け付けました。"
-);
-
-
-document.getElementById(
-"post-report-" + postId
-).style.display =
-"none";
+  document.getElementById(
+    "post-report-" + postId
+  ).style.display = "none";
 
 };
 
