@@ -4315,6 +4315,87 @@ updateAuthArea();
 
 loadPosts();
 /* =========================
+   掲示板リアルタイム更新
+========================= */
+
+let boardRealtimeChannel = null;
+
+function setupBoardRealtime(){
+
+  if(boardRealtimeChannel){
+
+    supabase.removeChannel(
+      boardRealtimeChannel
+    );
+
+  }
+
+
+  boardRealtimeChannel =
+    supabase
+      .channel("board-realtime")
+
+
+      /* 投稿の変更を監視 */
+
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "posts"
+        },
+        async function(){
+
+          console.log(
+            "📡 投稿が更新されました"
+          );
+
+          await loadPosts();
+
+        }
+      )
+
+
+      /* 返信の変更を監視 */
+
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "replies"
+        },
+        async function(){
+
+          console.log(
+            "📡 返信が更新されました"
+          );
+
+          await loadPosts();
+
+        }
+      )
+
+
+      .subscribe(
+        function(status){
+
+          console.log(
+            "📡 Realtime:",
+            status
+          );
+
+        }
+      );
+
+}
+
+
+/* Realtime開始 */
+
+setupBoardRealtime();
+/* =========================
    プロフィール
 ========================= */
 
