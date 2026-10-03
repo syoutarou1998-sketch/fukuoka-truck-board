@@ -5014,6 +5014,11 @@ if(notificationsError){
 
 let notificationsHtml = "";
 
+const unreadNotificationCount =
+  (notifications || []).filter(
+    notification => !notification.is_read
+  ).length;
+
 if(!notifications || notifications.length === 0){
 
   notificationsHtml = `
