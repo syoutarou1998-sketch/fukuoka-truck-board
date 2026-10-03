@@ -5249,7 +5249,7 @@ const notificationSection = `
       margin:0 0 8px;
       font-size:18px;
     ">
-      🔔 通知
+      🔔 通知 ${unreadNotificationCount > 0 ? `(${unreadNotificationCount})` : ""}
     </h3>
 
     ${notificationsHtml}
