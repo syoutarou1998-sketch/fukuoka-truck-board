@@ -2533,9 +2533,14 @@ ${post.likes || 0}
 
 <button
 class="report-button"
+id="post-report-button-${post.id}"
 onclick="togglePostReport('${post.id}')"
 >
-🚨 この投稿を通報
+${
+  localStorage.getItem("reported_post_" + post.id) === "true"
+    ? "🚨 通報済み"
+    : "🚨 この投稿を通報"
+}
 </button>
 
 
