@@ -2787,7 +2787,91 @@ button.textContent =
 "投稿中...";
 
 
-/* 投稿 */
+/* =========================
+   画像アップロード
+========================= */
+
+let imageUrl = null;
+
+if(imageFile){
+
+const fileExt =
+imageFile.name
+.split(".")
+.pop()
+.toLowerCase();
+
+
+const fileName =
+user.id +
+"/" +
+Date.now() +
+"." +
+fileExt;
+
+
+const {
+error:uploadError
+} =
+await supabase
+.storage
+.from("post-images")
+.upload(
+fileName,
+imageFile,
+{
+contentType:imageFile.type,
+upsert:false
+}
+);
+
+
+if(uploadError){
+
+console.error(
+"画像アップロードエラー:",
+uploadError
+);
+
+button.disabled =
+false;
+
+button.textContent =
+"投稿する";
+
+
+alert(
+"画像のアップロードに失敗しました。\n" +
+uploadError.message
+);
+
+return;
+
+}
+
+
+/* 公開URL取得 */
+
+const {
+data:publicUrlData
+} =
+supabase
+.storage
+.from("post-images")
+.getPublicUrl(
+fileName
+);
+
+
+imageUrl =
+publicUrlData.publicUrl;
+
+}
+
+
+/* =========================
+   投稿
+========================= */
 
 const {error} =
 await supabase
@@ -2806,7 +2890,9 @@ prefecture:prefecture,
 
 title:title,
 
-body:body
+body:body,
+
+image_url:imageUrl
 
 });
 
