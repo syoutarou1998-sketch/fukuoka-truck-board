@@ -4984,7 +4984,87 @@ if(likedRowsError){
 const likedPostIds =
   (likedRows || [])
     .map(item => item.post_id);
+/* =========================
+   通知取得
+========================= */
 
+const {
+  data:notifications,
+  error:notificationsError
+} = await supabase
+  .from("notifications")
+  .select("*")
+  .eq("user_id",user.id)
+  .order("created_at",{ascending:false})
+  .limit(30);
+
+if(notificationsError){
+
+  console.error(
+    "通知取得エラー:",
+    notificationsError
+  );
+
+}
+
+
+/* =========================
+   通知一覧
+========================= */
+
+let notificationsHtml = "";
+
+if(!notifications || notifications.length === 0){
+
+  notificationsHtml = `
+    <div style="
+      padding:15px;
+      color:#8faea2;
+      text-align:center;
+    ">
+      🔔 通知はありません。
+    </div>
+  `;
+
+}else{
+
+  notificationsHtml =
+    notifications.map(notification => `
+
+      <div style="
+        background:#091712;
+        border:1px solid #174f3d;
+        border-radius:12px;
+        padding:14px;
+        margin-top:10px;
+      ">
+
+        <div style="
+          color:#eafff6;
+          font-size:14px;
+          font-weight:bold;
+        ">
+          ${escapeHtml(
+            notification.message ||
+            "通知があります"
+          )}
+        </div>
+
+        <div style="
+          color:#6f8e85;
+          font-size:11px;
+          margin-top:7px;
+        ">
+          ${formatDate(
+            notification.created_at
+          )}
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
 
 let likedPosts = [];
 
