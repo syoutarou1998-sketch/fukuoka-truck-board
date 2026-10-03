@@ -2523,7 +2523,32 @@ post.body
 )}
 
 </p>
+${post.image_url ? `
 
+<div
+style="
+margin-top:12px;
+"
+>
+
+<img
+src="${escapeHtml(post.image_url)}"
+alt="投稿画像"
+loading="lazy"
+style="
+width:100%;
+max-width:600px;
+max-height:500px;
+object-fit:contain;
+border-radius:12px;
+border:1px solid #1b5542;
+display:block;
+"
+>
+
+</div>
+
+` : ""}
 
 <small>
 
