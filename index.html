@@ -4396,6 +4396,18 @@ function setupBoardRealtime(){
 
 setupBoardRealtime();
 /* =========================
+   掲示板自動更新
+========================= */
+
+setInterval(
+  async function(){
+
+    await loadPosts();
+
+  },
+  5000
+);
+/* =========================
    プロフィール
 ========================= */
 
