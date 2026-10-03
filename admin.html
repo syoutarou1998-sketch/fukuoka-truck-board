@@ -713,7 +713,37 @@ async function loadReports() {
                 post.body ?? ""
               )}
             </div>
+${post.image_url ? `
 
+<div
+  style="
+    margin-top:12px;
+  "
+>
+
+<div class="label">
+  📷 投稿画像
+</div>
+
+<img
+  src="${escapeHtml(post.image_url)}"
+  alt="通報された投稿画像"
+  loading="lazy"
+  style="
+    width:100%;
+    max-width:600px;
+    max-height:500px;
+    object-fit:contain;
+    border-radius:12px;
+    border:1px solid #ddd;
+    display:block;
+    margin-top:8px;
+  "
+>
+
+</div>
+
+` : ""}
             <div class="label">
               通報日時
             </div>
