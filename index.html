@@ -3706,74 +3706,157 @@ async function(postId){
 window.reportReply =
 async function(replyId){
 
-const reason =
-document.getElementById(
-"reply-reason-" + replyId
-)
-.value;
+  const reasonEl =
+    document.getElementById(
+      "reply-reason-" + replyId
+    );
+
+  const reporterEl =
+    document.getElementById(
+      "reply-reporter-" + replyId
+    );
+
+  if(!reasonEl){
+    alert("通報理由を選択してください");
+    return;
+  }
+
+  const reason =
+    reasonEl.value;
+
+  const reporter =
+    reporterEl?.value.trim() ||
+    "匿名";
 
 
-const reporter =
-document.getElementById(
-"reply-reporter-" + replyId
-)
-.value
-.trim() ||
-"匿名";
+  /* 通報理由チェック */
+  if(!reason){
+
+    alert(
+      "通報理由を選択してください"
+    );
+
+    return;
+  }
 
 
-if(!reason){
+  /* =========================
+     二重通報チェック
+  ========================= */
 
-alert(
-"通報理由を選択してください"
-);
+  const { data: existingReport, error: checkError } =
+    await supabase
+      .from("reports")
+      .select("id")
+      .eq("reply_id", replyId)
+      .eq("reporter_name", reporter)
+      .limit(1);
 
-return;
+  if(checkError){
 
-}
+    console.error(checkError);
 
+    alert(
+      "通報状態の確認に失敗しました。\n" +
+      checkError.message
+    );
 
-const {error} =
-
-await supabase
-
-.from("reports")
-
-.insert({
-
-reply_id:replyId,
-
-reason:reason,
-
-reporter_name:reporter
-
-});
+    return;
+  }
 
 
-if(error){
+  if(existingReport && existingReport.length > 0){
 
-console.error(error);
+    alert(
+      "この返信はすでに通報済みです。"
+    );
+
+    const reportBox =
+      document.getElementById(
+        "reply-report-" + replyId
+      );
+
+    if(reportBox){
+      reportBox.style.display = "none";
+    }
+
+    return;
+  }
 
 
-alert(
-"通報に失敗しました。\n" +
-error.message
-);
+  /* =========================
+     通報登録
+  ========================= */
 
-return;
+  const { error } =
+    await supabase
+      .from("reports")
+      .insert({
 
-}
+        reply_id: replyId,
+
+        reason: reason,
+
+        reporter_name: reporter
+
+      });
 
 
-alert(
-"通報を受け付けました。"
-);
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "通報に失敗しました。\n" +
+      error.message
+    );
+
+    return;
+  }
 
 
-document.getElementById(
-"reply-report-" + replyId
-).style.display =
-"none";
+  /* =========================
+     通報成功
+  ========================= */
+
+  alert(
+    "通報を受け付けました。"
+  );
+
+
+  /* 通報フォームを消す */
+
+  const reportBox =
+    document.getElementById(
+      "reply-report-" + replyId
+    );
+
+  if(reportBox){
+    reportBox.style.display = "none";
+  }
+
+
+  /* ボタンを「通報済み」に変更 */
+
+  const reportButton =
+    document.getElementById(
+      "reply-report-button-" + replyId
+    );
+
+  if(reportButton){
+
+    reportButton.textContent =
+      "通報済み";
+
+    reportButton.disabled =
+      true;
+
+    reportButton.style.opacity =
+      "0.5";
+
+    reportButton.style.cursor =
+      "default";
+  }
 
 };
 
