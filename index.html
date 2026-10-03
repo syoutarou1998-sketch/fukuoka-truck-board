@@ -4396,16 +4396,167 @@ function setupBoardRealtime(){
 
 setupBoardRealtime();
 /* =========================
-   掲示板自動更新
+   下に引っ張って更新
 ========================= */
 
-setInterval(
-  async function(){
+let pullStartY = 0;
+let pullDistance = 0;
+let isPulling = false;
+let isRefreshing = false;
 
-    await loadPosts();
+const pullThreshold = 80;
+
+
+/* タッチ開始 */
+
+document.addEventListener(
+  "touchstart",
+  function(e){
+
+    if(
+      window.scrollY <= 0 &&
+      !isRefreshing
+    ){
+
+      pullStartY =
+        e.touches[0].clientY;
+
+      pullDistance = 0;
+
+      isPulling = true;
+
+    }
 
   },
-  5000
+  { passive:true }
+);
+
+
+/* 引っ張っている途中 */
+
+document.addEventListener(
+  "touchmove",
+  function(e){
+
+    if(
+      !isPulling ||
+      isRefreshing
+    ){
+      return;
+    }
+
+    const currentY =
+      e.touches[0].clientY;
+
+    pullDistance =
+      currentY - pullStartY;
+
+
+    if(pullDistance <= 0){
+      return;
+    }
+
+
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+
+    if(!status){
+      return;
+    }
+
+
+    if(
+      pullDistance >= pullThreshold
+    ){
+
+      status.textContent =
+        "↓ 離して更新";
+
+    }
+    else{
+
+      status.textContent =
+        "↓ 引っ張って更新";
+
+    }
+
+  },
+  { passive:true }
+);
+
+
+/* 指を離した */
+
+document.addEventListener(
+  "touchend",
+  async function(){
+
+    if(!isPulling){
+      return;
+    }
+
+    isPulling = false;
+
+
+    if(
+      pullDistance >= pullThreshold &&
+      !isRefreshing
+    ){
+
+      isRefreshing = true;
+
+
+      const status =
+        document.getElementById(
+          "status"
+        );
+
+
+      if(status){
+
+        status.textContent =
+          "🔄 更新中...";
+
+      }
+
+
+      await loadPosts();
+
+
+      if(status){
+
+        status.textContent =
+          "✓ 更新完了";
+
+      }
+
+
+      setTimeout(
+        function(){
+
+          if(status){
+
+            status.textContent =
+              "";
+
+          }
+
+        },
+        1000
+      );
+
+      isRefreshing = false;
+
+    }
+
+
+    pullStartY = 0;
+    pullDistance = 0;
+
+  }
 );
 /* =========================
    プロフィール
