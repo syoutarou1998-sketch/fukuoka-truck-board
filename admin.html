@@ -325,61 +325,116 @@ document
 async function deletePost(postId, reportId) {
 
   if (!confirm(
-    "投稿ID " + postId +
-    " を削除しますか？\n\n" +
-    "この操作は元に戻せません。"
+    "この投稿を削除しますか？\n\nこの操作は元に戻せません。"
   )) {
-
     return;
   }
 
-
-  /* 投稿を削除 */
-
-  const postResult =
-  await supabase
+  const postResult = await supabase
     .from("posts")
     .delete()
     .eq("id", postId);
 
-
   if (postResult.error) {
-
     alert(
       "投稿の削除に失敗しました：\n" +
       postResult.error.message
     );
-
     return;
   }
 
-
-  /* 通報も削除 */
-
-  const reportResult =
-  await supabase
+  const reportResult = await supabase
     .from("reports")
     .delete()
     .eq("id", reportId);
 
-
   if (reportResult.error) {
-
     alert(
-      "投稿は削除しましたが、" +
+      "投稿は削除しましたが、\n" +
       "通報の削除に失敗しました：\n" +
       reportResult.error.message
     );
-
+    return;
   }
 
-
-  /* 一覧を更新 */
+  alert("投稿を削除しました！");
 
   await loadReports();
-
 }
 
+
+/* =========================
+   返信削除
+========================= */
+
+async function deleteReply(replyId, reportId) {
+
+  if (!confirm(
+    "この返信を削除しますか？\n\nこの操作は元に戻せません。"
+  )) {
+    return;
+  }
+
+  const replyResult = await supabase
+    .from("replies")
+    .delete()
+    .eq("id", replyId);
+
+  if (replyResult.error) {
+    alert(
+      "返信の削除に失敗しました：\n" +
+      replyResult.error.message
+    );
+    return;
+  }
+
+  const reportResult = await supabase
+    .from("reports")
+    .delete()
+    .eq("id", reportId);
+
+  if (reportResult.error) {
+    alert(
+      "返信は削除しましたが、\n" +
+      "通報の削除に失敗しました：\n" +
+      reportResult.error.message
+    );
+    return;
+  }
+
+  alert("返信を削除しました！");
+
+  await loadReports();
+}
+
+
+/* =========================
+   通報だけ削除
+========================= */
+
+async function deleteReport(reportId) {
+
+  if (!confirm(
+    "この通報を一覧から削除しますか？"
+  )) {
+    return;
+  }
+
+  const result = await supabase
+    .from("reports")
+    .delete()
+    .eq("id", reportId);
+
+  if (result.error) {
+    alert(
+      "通報の削除に失敗しました：\n" +
+      result.error.message
+    );
+    return;
+  }
+
+  await loadReports();
+}
 
 
 /* =========================
@@ -389,46 +444,47 @@ async function deletePost(postId, reportId) {
 async function loadReports() {
 
   const status =
-  document.getElementById("status");
+    document.getElementById("status");
 
   const reports =
-  document.getElementById("reports");
+    document.getElementById("reports");
+
+  status.textContent = "読み込み中...";
 
 
-  status.textContent =
-  "読み込み中...";
+  /* 通報一覧 */
 
-
-  const result =
-  await supabase
+  const reportResult = await supabase
     .from("reports")
     .select("*")
     .order("created_at", {
-      ascending:false
+      ascending: false
     });
 
-
-  if (result.error) {
+  if (reportResult.error) {
 
     status.textContent =
-    "通報の読み込みに失敗しました。";
+      "通報の読み込みに失敗しました。";
 
     reports.innerHTML =
-    `<div class="error">
-      ${escapeHtml(result.error.message)}
-    </div>`;
+      `<div class="error">
+        ${escapeHtml(
+          reportResult.error.message
+        )}
+      </div>`;
 
     return;
   }
 
 
-  if (
-    !result.data ||
-    result.data.length === 0
-  ) {
+  const reportRows =
+    reportResult.data || [];
+
+
+  if (reportRows.length === 0) {
 
     status.textContent =
-    "通報はありません。";
+      "通報はありません。";
 
     reports.innerHTML = "";
 
@@ -436,73 +492,428 @@ async function loadReports() {
   }
 
 
-  status.textContent =
-  "通報 " +
-  result.data.length +
-  "件";
+  /* 投稿・返信ID */
 
+  const postIds =
+    reportRows
+      .map(report => report.post_id)
+      .filter(id => id !== null);
+
+  const replyIds =
+    reportRows
+      .map(report => report.reply_id)
+      .filter(id => id !== null);
+
+
+  let posts = [];
+  let replies = [];
+
+
+  /* 投稿取得 */
+
+  if (postIds.length > 0) {
+
+    const result = await supabase
+      .from("posts")
+      .select("*")
+      .in("id", postIds);
+
+    if (result.error) {
+
+      console.error(
+        "投稿取得エラー:",
+        result.error
+      );
+
+    } else {
+
+      posts = result.data || [];
+
+    }
+  }
+
+
+  /* 返信取得 */
+
+  if (replyIds.length > 0) {
+
+    const result = await supabase
+      .from("replies")
+      .select("*")
+      .in("id", replyIds);
+
+    if (result.error) {
+
+      console.error(
+        "返信取得エラー:",
+        result.error
+      );
+
+    } else {
+
+      replies = result.data || [];
+
+    }
+  }
+
+
+  /* IDで検索できるようにする */
+
+  const postMap = new Map(
+    posts.map(post => [
+      String(post.id),
+      post
+    ])
+  );
+
+  const replyMap = new Map(
+    replies.map(reply => [
+      String(reply.id),
+      reply
+    ])
+  );
+
+
+  status.textContent =
+    "通報 " +
+    reportRows.length +
+    "件";
+
+
+  /* 通報カード */
 
   reports.innerHTML =
-  result.data.map(report => `
+    reportRows.map(report => {
 
-    <div class="report">
-
-      <div class="label">
-        理由
-      </div>
-
-      <div class="value">
-        ${escapeHtml(report.reason ?? "")}
-      </div>
+      const reportId =
+        String(report.id);
 
 
-      <div class="label">
-        投稿ID
-      </div>
+      /* =========================
+         投稿への通報
+      ========================= */
 
-      <div class="value">
-        ${escapeHtml(String(report.post_id ?? ""))}
-      </div>
+      if (report.post_id !== null) {
 
-
-      <div class="label">
-        返信
-      </div>
-
-      <div class="value">
-        ${escapeHtml(report.reply ?? "")}
-      </div>
+        const post =
+          postMap.get(
+            String(report.post_id)
+          );
 
 
-      <div class="label">
-        日時
-      </div>
+        /* 投稿がすでに削除されている */
 
-      <div class="value">
-        ${escapeHtml(report.created_at ?? "")}
-      </div>
+        if (!post) {
+
+          return `
+
+            <div class="report">
+
+              <strong>
+                🚨 投稿への通報
+              </strong>
+
+              <div class="label">
+                理由
+              </div>
+
+              <div class="value">
+                ${escapeHtml(
+                  report.reason ?? ""
+                )}
+              </div>
+
+              <div class="label">
+                通報者
+              </div>
+
+              <div class="value">
+                ${escapeHtml(
+                  report.reporter_name ?? "匿名"
+                )}
+              </div>
+
+              <div class="label">
+                投稿
+              </div>
+
+              <div class="value">
+                投稿はすでに削除されています。
+              </div>
+
+              <button
+                class="delete-report"
+                data-report-id="${escapeAttr(
+                  reportId
+                )}"
+              >
+                🗑️ 通報を削除
+              </button>
+
+            </div>
+
+          `;
+        }
 
 
-      <button
-        class="delete"
-        data-post-id="${escapeAttr(report.post_id ?? "")}"
-        data-report-id="${escapeAttr(report.id ?? "")}"
-      >
-        🗑️ この投稿を削除
-      </button>
+        return `
+
+          <div class="report">
+
+            <strong>
+              🚨 投稿への通報
+            </strong>
+
+            <div class="label">
+              通報理由
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                report.reason ?? ""
+              )}
+            </div>
+
+            <div class="label">
+              通報者
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                report.reporter_name ?? "匿名"
+              )}
+            </div>
+
+            <div class="label">
+              投稿タイトル
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                post.title ?? ""
+              )}
+            </div>
+
+            <div class="label">
+              投稿者
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                post.author ?? "名無し"
+              )}
+            </div>
+
+            <div class="label">
+              投稿内容
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                post.body ?? ""
+              )}
+            </div>
+
+            <div class="label">
+              通報日時
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                report.created_at ?? ""
+              )}
+            </div>
+
+            <button
+              class="delete"
+              data-post-id="${escapeAttr(
+                String(post.id)
+              )}"
+              data-report-id="${escapeAttr(
+                reportId
+              )}"
+            >
+              🗑️ この投稿を削除
+            </button>
+
+            <button
+              class="delete-report"
+              data-report-id="${escapeAttr(
+                reportId
+              )}"
+            >
+              ✓ 通報だけ削除
+            </button>
+
+          </div>
+
+        `;
+      }
 
 
-      <div class="notice">
-        削除すると、この通報も一覧から消えます。
-      </div>
+      /* =========================
+         返信への通報
+      ========================= */
 
-    </div>
+      if (report.reply_id !== null) {
 
-  `).join("");
+        const reply =
+          replyMap.get(
+            String(report.reply_id)
+          );
 
+
+        /* 返信がすでに削除されている */
+
+        if (!reply) {
+
+          return `
+
+            <div class="report">
+
+              <strong>
+                🚨 返信への通報
+              </strong>
+
+              <div class="label">
+                理由
+              </div>
+
+              <div class="value">
+                ${escapeHtml(
+                  report.reason ?? ""
+                )}
+              </div>
+
+              <div class="label">
+                通報者
+              </div>
+
+              <div class="value">
+                ${escapeHtml(
+                  report.reporter_name ?? "匿名"
+                )}
+              </div>
+
+              <div class="label">
+                返信
+              </div>
+
+              <div class="value">
+                返信はすでに削除されています。
+              </div>
+
+              <button
+                class="delete-report"
+                data-report-id="${escapeAttr(
+                  reportId
+                )}"
+              >
+                🗑️ 通報を削除
+              </button>
+
+            </div>
+
+          `;
+        }
+
+
+        return `
+
+          <div class="report">
+
+            <strong>
+              🚨 返信への通報
+            </strong>
+
+            <div class="label">
+              通報理由
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                report.reason ?? ""
+              )}
+            </div>
+
+            <div class="label">
+              通報者
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                report.reporter_name ?? "匿名"
+              )}
+            </div>
+
+            <div class="label">
+              返信者
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                reply.author ?? "名無し"
+              )}
+            </div>
+
+            <div class="label">
+              返信内容
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                reply.body ?? ""
+              )}
+            </div>
+
+            <div class="label">
+              通報日時
+            </div>
+
+            <div class="value">
+              ${escapeHtml(
+                report.created_at ?? ""
+              )}
+            </div>
+
+            <button
+              class="delete"
+              data-reply-id="${escapeAttr(
+                String(reply.id)
+              )}"
+              data-report-id="${escapeAttr(
+                reportId
+              )}"
+            >
+              🗑️ この返信を削除
+            </button>
+
+            <button
+              class="delete-report"
+              data-report-id="${escapeAttr(
+                reportId
+              )}"
+            >
+              ✓ 通報だけ削除
+            </button>
+
+          </div>
+
+        `;
+      }
+
+
+      return "";
+
+    }).join("");
+
+
+  /* 投稿削除ボタン */
 
   reports
-    .querySelectorAll(".delete")
+    .querySelectorAll(
+      ".delete[data-post-id]"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -511,6 +922,51 @@ async function loadReports() {
 
           deletePost(
             button.dataset.postId,
+            button.dataset.reportId
+          );
+
+        }
+      );
+
+    });
+
+
+  /* 返信削除ボタン */
+
+  reports
+    .querySelectorAll(
+      ".delete[data-reply-id]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          deleteReply(
+            button.dataset.replyId,
+            button.dataset.reportId
+          );
+
+        }
+      );
+
+    });
+
+
+  /* 通報だけ削除 */
+
+  reports
+    .querySelectorAll(
+      ".delete-report"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          deleteReport(
             button.dataset.reportId
           );
 
