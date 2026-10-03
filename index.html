@@ -5046,7 +5046,16 @@ if(!notifications || notifications.length === 0){
         padding:14px;
         margin-top:10px;
       ">
-
+${!notification.is_read ? `
+  <div style="
+    color:#38d996;
+    font-size:11px;
+    font-weight:bold;
+    margin-bottom:5px;
+  ">
+    ● 未読
+  </div>
+` : ""}
         <div style="
           color:#eafff6;
           font-size:14px;
