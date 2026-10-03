@@ -2746,7 +2746,12 @@ document
 .getElementById("body")
 .value
 .trim();
+const imageInput =
+document
+.getElementById("post-image");
 
+const imageFile =
+imageInput.files[0] || null;
 
 if(!author){
 
