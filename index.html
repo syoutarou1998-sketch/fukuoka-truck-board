@@ -5558,7 +5558,51 @@ ${postsHtml}
 /* =========================
    自分の投稿を削除
 ========================= */
+/* =========================
+   通知から投稿へ移動
+========================= */
 
+window.openNotificationPost =
+async function(postId){
+
+  if(!postId){
+    return;
+  }
+
+  document
+    .getElementById("mypage-modal")
+    .style.display = "none";
+
+  await loadPosts();
+
+  setTimeout(function(){
+
+    const post =
+      document.getElementById(
+        "post-" + postId
+      );
+
+    if(post){
+
+      post.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+      });
+
+      post.style.boxShadow =
+        "0 0 0 3px rgba(52,211,153,.65)";
+
+      setTimeout(function(){
+
+        post.style.boxShadow = "";
+
+      },1800);
+
+    }
+
+  },150);
+
+};
 window.deleteMyPost =
 async function(postId){
 
