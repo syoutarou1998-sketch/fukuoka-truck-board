@@ -2777,7 +2777,29 @@ document
 
 const imageFile =
 imageInput.files[0] || null;
+if(imageFile){
 
+  if(!imageFile.type.startsWith("image/")){
+
+    alert(
+      "画像ファイルのみアップロードできます"
+    );
+
+    return;
+
+  }
+
+  if(imageFile.size > 5 * 1024 * 1024){
+
+    alert(
+      "画像は5MB以下にしてください"
+    );
+
+    return;
+
+  }
+
+}
 if(!author){
 
 alert(
