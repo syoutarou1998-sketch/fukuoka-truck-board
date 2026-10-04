@@ -4099,10 +4099,48 @@ async function(){
 window.closeModal =
 function(){
 
-document
-.getElementById("modal")
-.style.display =
-"none";
+  /* 投稿モーダルを閉じる */
+
+  document
+    .getElementById("modal")
+    .style.display =
+    "none";
+
+
+  /* 入力内容をリセット */
+
+  document
+    .getElementById("title")
+    .value = "";
+
+  document
+    .getElementById("body")
+    .value = "";
+
+
+  /* 画像をリセット */
+
+  const imageInput =
+    document.getElementById("post-image");
+
+  const imagePreview =
+    document.getElementById(
+      "post-image-preview"
+    );
+
+
+  if(imageInput){
+
+    imageInput.value = "";
+
+  }
+
+
+  if(imagePreview){
+
+    imagePreview.innerHTML = "";
+
+  }
 
 };
 
