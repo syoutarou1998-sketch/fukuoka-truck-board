@@ -6048,5 +6048,110 @@ async function(postId){
 };
 
 updateAuthArea();
+/* =========================
+   投稿画像プレビュー
+========================= */
 
+const postImageInput =
+document.getElementById("post-image");
+
+const postImagePreview =
+document.getElementById("post-image-preview");
+
+
+postImageInput.addEventListener(
+  "change",
+  function(){
+
+    postImagePreview.innerHTML = "";
+
+    const file =
+      this.files[0];
+
+    if(!file){
+      return;
+    }
+
+
+    /* 画像か確認 */
+
+    if(!file.type.startsWith("image/")){
+
+      alert(
+        "画像ファイルを選択してください"
+      );
+
+      this.value = "";
+
+      return;
+    }
+
+
+    /* 5MB制限 */
+
+    if(file.size > 5 * 1024 * 1024){
+
+      alert(
+        "画像は5MB以下にしてください"
+      );
+
+      this.value = "";
+
+      return;
+    }
+
+
+    /* プレビュー作成 */
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload =
+      function(e){
+
+        postImagePreview.innerHTML = `
+
+          <div
+            style="
+              margin-top:10px;
+              position:relative;
+            "
+          >
+
+            <div
+              style="
+                font-size:13px;
+                color:#666;
+                margin-bottom:6px;
+              "
+            >
+              📷 プレビュー
+            </div>
+
+
+            <img
+              src="${e.target.result}"
+              alt="画像プレビュー"
+              style="
+                width:100%;
+                max-width:600px;
+                max-height:400px;
+                object-fit:contain;
+                border-radius:12px;
+                border:1px solid #ddd;
+                display:block;
+              "
+            >
+
+          </div>
+
+        `;
+      };
+
+
+    reader.readAsDataURL(file);
+
+  }
+);
 </script>
