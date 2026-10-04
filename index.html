@@ -4077,16 +4077,73 @@ async function(){
     }
   } = await supabase.auth.getUser();
 
+
   if(!user){
 
-    alert("投稿するにはログインしてください🚛");
+    alert(
+      "投稿するにはログインしてください🚛"
+    );
 
     openAuthModal();
 
     return;
+
   }
 
+
+  /* =========================
+     投稿フォームを完全リセット
+  ========================= */
+
+  const titleInput =
+    document.getElementById("title");
+
+  const bodyInput =
+    document.getElementById("body");
+
+  const imageInput =
+    document.getElementById("post-image");
+
+  const imagePreview =
+    document.getElementById(
+      "post-image-preview"
+    );
+
+
+  if(titleInput){
+
+    titleInput.value = "";
+
+  }
+
+
+  if(bodyInput){
+
+    bodyInput.value = "";
+
+  }
+
+
+  if(imageInput){
+
+    imageInput.value = "";
+
+  }
+
+
+  if(imagePreview){
+
+    imagePreview.innerHTML = "";
+
+  }
+
+
+  /* プロフィール情報を再セット */
+
   await loadProfileToPostForm();
+
+
+  /* 投稿画面を表示 */
 
   document
     .getElementById("modal")
