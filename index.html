@@ -4995,7 +4995,11 @@ document
 .getElementById("profile-bio")
 .value
 .trim();
+const avatarInput =
+document.getElementById("profile-avatar");
 
+const avatarFile =
+avatarInput?.files?.[0] || null;
 
 if(!nickname){
 
