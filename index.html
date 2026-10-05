@@ -5108,26 +5108,35 @@ if(avatarFile){
 
 }
 
+const profileData = {
+
+  id:user.id,
+
+  nickname:nickname,
+
+  prefecture:prefecture || null,
+
+  truck_type:truckType || null,
+
+  bio:bio || null,
+
+  updated_at:new Date().toISOString()
+
+};
+
+if(avatarUrl){
+
+  profileData.avatar_url =
+    avatarUrl;
+
+}
+
 const {error} =
 await supabase
 
 .from("profiles")
 
-.upsert({
-
-id:user.id,
-
-nickname:nickname,
-
-prefecture:prefecture || null,
-
-truck_type:truckType || null,
-
-bio:bio || null,
-
-updated_at:new Date().toISOString()
-
-});
+.upsert(profileData);
 
 
 button.disabled = false;
