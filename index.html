@@ -5170,7 +5170,93 @@ updateAuthArea();
 
 };
 
+/* =========================
+   プロフィール画像プレビュー
+========================= */
 
+const profileAvatarInput =
+document.getElementById("profile-avatar");
+
+const profileAvatarPreview =
+document.getElementById("profile-avatar-preview");
+
+if(
+  profileAvatarInput &&
+  profileAvatarPreview
+){
+
+  profileAvatarInput.addEventListener(
+    "change",
+    function(){
+
+      const file =
+        this.files[0];
+
+      if(!file){
+
+        return;
+
+      }
+
+      if(
+        !file.type.startsWith("image/")
+      ){
+
+        alert(
+          "画像ファイルを選択してください"
+        );
+
+        this.value = "";
+
+        return;
+
+      }
+
+      if(
+        file.size >
+        5 * 1024 * 1024
+      ){
+
+        alert(
+          "プロフィール画像は5MB以下にしてください"
+        );
+
+        this.value = "";
+
+        return;
+
+      }
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        function(event){
+
+          profileAvatarPreview.innerHTML = `
+
+            <img
+              src="${event.target.result}"
+              alt="プロフィール画像プレビュー"
+              style="
+                width:110px;
+                height:110px;
+                object-fit:cover;
+                border-radius:50%;
+                border:2px solid #34d399;
+              "
+            >
+
+          `;
+
+        };
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+}
 /* =========================
    プロフィールを閉じる
 ========================= */
