@@ -5175,89 +5175,76 @@ updateAuthArea();
    プロフィール画像プレビュー
 ========================= */
 
-const profileAvatarInput =
-document.getElementById("profile-avatar");
+window.previewProfileAvatar =
+function(event){
 
-const profileAvatarPreview =
-document.getElementById("profile-avatar-preview");
+  const file =
+    event.target.files[0];
 
-if(
-  profileAvatarInput &&
-  profileAvatarPreview
-){
+  const preview =
+    document.getElementById(
+      "profile-avatar-preview"
+    );
 
-  profileAvatarInput.addEventListener(
-    "change",
-    function(){
+  if(!file || !preview){
 
-      const file =
-        this.files[0];
+    return;
 
-      if(!file){
+  }
 
-        return;
+  if(!file.type.startsWith("image/")){
 
-      }
+    alert(
+      "画像ファイルを選択してください"
+    );
 
-      if(
-        !file.type.startsWith("image/")
-      ){
+    event.target.value = "";
 
-        alert(
-          "画像ファイルを選択してください"
-        );
+    return;
 
-        this.value = "";
+  }
 
-        return;
+  if(file.size > 5 * 1024 * 1024){
 
-      }
+    alert(
+      "プロフィール画像は5MB以下にしてください"
+    );
 
-      if(
-        file.size >
-        5 * 1024 * 1024
-      ){
+    event.target.value = "";
 
-        alert(
-          "プロフィール画像は5MB以下にしてください"
-        );
+    return;
 
-        this.value = "";
+  }
 
-        return;
+  const reader =
+    new FileReader();
 
-      }
+  reader.onload =
+  function(e){
 
-      const reader =
-        new FileReader();
+    preview.innerHTML = `
 
-      reader.onload =
-        function(event){
+      <img
+        src="${e.target.result}"
+        alt="プロフィール画像"
+        style="
+          width:110px;
+          height:110px;
+          object-fit:cover;
+          border-radius:50%;
+          border:2px solid #34d399;
+          display:block;
+          margin:0 auto;
+        "
+      >
 
-          profileAvatarPreview.innerHTML = `
+    `;
 
-            <img
-              src="${event.target.result}"
-              alt="プロフィール画像プレビュー"
-              style="
-                width:110px;
-                height:110px;
-                object-fit:cover;
-                border-radius:50%;
-                border:2px solid #34d399;
-              "
-            >
+  };
 
-          `;
+  reader.readAsDataURL(file);
 
-        };
-
-      reader.readAsDataURL(file);
-
-    }
-  );
-
-}
+};
 /* =========================
    プロフィールを閉じる
 ========================= */
