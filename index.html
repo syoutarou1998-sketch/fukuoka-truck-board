@@ -5062,7 +5062,27 @@ if(avatarFile){
     Date.now() +
     "." +
     extension;
+const {
+  data: {
+    session
+  },
+  error: sessionError
+} = await supabase.auth.getSession();
 
+if(sessionError || !session){
+
+  alert(
+    "ログインセッションを確認できませんでした。\nもう一度ログインしてください。"
+  );
+
+  button.disabled = false;
+  button.textContent = "プロフィールを保存";
+
+  return;
+
+}
+
+await supabase.auth.refreshSession();
   const {
     error:uploadError
   } =
