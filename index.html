@@ -5021,7 +5021,92 @@ button.disabled = true;
 
 button.textContent =
 "保存中...";
+/* =========================
+   プロフィール画像アップロード
+========================= */
 
+let avatarUrl = null;
+
+if(avatarFile){
+
+  if(!avatarFile.type.startsWith("image/")){
+
+    alert("プロフィール画像は画像ファイルを選択してください");
+
+    button.disabled = false;
+    button.textContent = "プロフィールを保存";
+
+    return;
+
+  }
+
+  if(avatarFile.size > 5 * 1024 * 1024){
+
+    alert("プロフィール画像は5MB以下にしてください");
+
+    button.disabled = false;
+    button.textContent = "プロフィールを保存";
+
+    return;
+
+  }
+
+  const extension =
+    (avatarFile.name.split(".").pop() || "jpg")
+    .toLowerCase();
+
+  const filePath =
+    user.id +
+    "/avatar-" +
+    Date.now() +
+    "." +
+    extension;
+
+  const {
+    error:uploadError
+  } =
+  await supabase.storage
+    .from("avatars")
+    .upload(
+      filePath,
+      avatarFile,
+      {
+        cacheControl:"3600",
+        upsert:true,
+        contentType:avatarFile.type
+      }
+    );
+
+  if(uploadError){
+
+    console.error(
+      "プロフィール画像アップロードエラー:",
+      uploadError
+    );
+
+    alert(
+      "プロフィール画像のアップロードに失敗しました。\n" +
+      uploadError.message
+    );
+
+    button.disabled = false;
+    button.textContent = "プロフィールを保存";
+
+    return;
+
+  }
+
+  const {
+    data:publicUrlData
+  } =
+  supabase.storage
+    .from("avatars")
+    .getPublicUrl(filePath);
+
+  avatarUrl =
+    publicUrlData?.publicUrl || null;
+
+}
 
 const {error} =
 await supabase
