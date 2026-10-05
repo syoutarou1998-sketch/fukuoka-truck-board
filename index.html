@@ -5068,7 +5068,11 @@ const {
   },
   error: sessionError
 } = await supabase.auth.getSession();
-
+console.log("プロフィール画像アップロード確認", {
+  userId: user?.id,
+  sessionUserId: session?.user?.id,
+  hasSession: !!session
+});
 if(sessionError || !session){
 
   alert(
