@@ -5008,7 +5008,30 @@ alert("ログインしてください");
 return;
 
 }
+/* =========================
+   変更前のプロフィール画像を取得
+========================= */
 
+let previousAvatarUrl = null;
+
+const {
+  data: existingProfile,
+  error: existingProfileError
+} = await supabase
+  .from("profiles")
+  .select("avatar_url")
+  .eq("id", user.id)
+  .maybeSingle();
+
+if (existingProfileError) {
+  console.warn(
+    "変更前のプロフィール画像を取得できませんでした:",
+    existingProfileError
+  );
+} else {
+  previousAvatarUrl =
+    existingProfile?.avatar_url || null;
+}
 
 const nickname =
 document
