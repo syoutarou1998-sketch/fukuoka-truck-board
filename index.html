@@ -5277,17 +5277,22 @@ if (
         oldPath.startsWith(user.id + "/") &&
         !oldPath.includes("..")
       ) {
-        const { error: deleteError } =
-          await supabase.storage
-            .from("avatars")
-            .remove([oldPath]);
+        const { data: deletedFiles, error: deleteError } =
+  await supabase.storage
+    .from("avatars")
+    .remove([oldPath]);
 
-        if (deleteError) {
-          console.warn(
-            "古いプロフィール画像の削除に失敗しました:",
-            deleteError
-          );
-        }
+console.log("古い画像の削除確認", {
+  oldPath,
+  deletedFiles,
+  deleteError
+});
+
+if (deleteError) {
+  alert("古い画像の削除に失敗しました:\n" + deleteError.message);
+} else {
+  alert("古い画像の削除処理が完了しました。\n対象: " + oldPath);
+}
       }
     }
   } catch (cleanupError) {
