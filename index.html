@@ -5233,6 +5233,24 @@ closeProfileModal();
 
 updateAuthArea();
 
+} catch (error) {
+
+  console.error(
+    "プロフィール保存中の予期しないエラー:",
+    error
+  );
+
+  alert(
+    "プロフィールの保存中にエラーが発生しました。\n" +
+    (error?.message || "通信状態を確認して、もう一度お試しください。")
+  );
+
+} finally {
+
+  button.disabled = false;
+  button.textContent = "プロフィールを保存";
+
+}
 };
 
 /* =========================
