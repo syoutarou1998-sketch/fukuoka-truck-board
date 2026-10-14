@@ -5246,7 +5246,57 @@ return;
 
 }
 
+/* =========================
+   古いプロフィール画像を整理
+========================= */
 
+if (
+  avatarFile &&
+  avatarUrl &&
+  previousAvatarUrl &&
+  previousAvatarUrl !== avatarUrl
+) {
+  try {
+    const oldUrl = new URL(previousAvatarUrl);
+
+    const storageMarker =
+      "/storage/v1/object/public/avatars/";
+
+    const markerIndex =
+      oldUrl.pathname.indexOf(storageMarker);
+
+    if (markerIndex !== -1) {
+      const oldPath = decodeURIComponent(
+        oldUrl.pathname.slice(
+          markerIndex + storageMarker.length
+        )
+      );
+
+      // 自分のフォルダ内の画像だけを対象にする
+      if (
+        oldPath.startsWith(user.id + "/") &&
+        !oldPath.includes("..")
+      ) {
+        const { error: deleteError } =
+          await supabase.storage
+            .from("avatars")
+            .remove([oldPath]);
+
+        if (deleteError) {
+          console.warn(
+            "古いプロフィール画像の削除に失敗しました:",
+            deleteError
+          );
+        }
+      }
+    }
+  } catch (cleanupError) {
+    console.warn(
+      "古いプロフィール画像の整理中にエラーが発生しました:",
+      cleanupError
+    );
+  }
+}
 alert(
 "プロフィールを保存しました！🚛"
 );
