@@ -3314,18 +3314,22 @@ window.likePost = async function(postId){
 
         .from("notifications")
 
-        .insert({
+        
+.insert({
 
-          user_id:postAuthor.user_id,
+  user_id:postAuthor.user_id,
 
-          type:"like",
+  from_user_id:user.id,
 
-          message:
-            "あなたの投稿に「いいね」がつきました👍",
+  type:"like",
 
-          post_id:postId
+  message:
+    "あなたの投稿に「いいね」がつきました👍",
 
-        });
+  post_id:postId
+
+});
+
 
 
       if(notificationError){
