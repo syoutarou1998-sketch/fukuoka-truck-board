@@ -2635,10 +2635,10 @@ post.created_at
 <div style="margin-top:10px;">
 
 <button
-class="like-button ${localStorage.getItem("liked_post_" + post.id) === "true" ? "liked" : ""}"
+class="like-button ${likedPosts.has(String(post.id)) ? "liked" : ""}"
 onclick="likePost('${post.id}')"
 >
-${localStorage.getItem("liked_post_" + post.id) === "true" ? "👍 いいね済み" : "👍 いいね"}
+${likedPosts.has(String(post.id)) ? "👍 いいね済み" : "👍 いいね"}
 </button>
 
 <span id="like-count-${post.id}">
