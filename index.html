@@ -2338,6 +2338,33 @@ post => post.id
 );
 
 
+/* ログイン中のユーザーのいいね状態を取得 */
+likedPosts = new Set();
+
+if (currentUser && postIds.length > 0) {
+  const {
+    data: userLikes,
+    error: userLikesError
+  } = await supabase
+    .from("post_likes")
+    .select("post_id")
+    .eq("user_id", currentUser.id)
+    .in("post_id", postIds);
+
+  if (userLikesError) {
+    console.error(
+      "いいね状態の取得に失敗しました:",
+      userLikesError
+    );
+  } else {
+    likedPosts = new Set(
+      (userLikes || []).map(
+        like => String(like.post_id)
+      )
+    );
+  }
+}
+
 /* 返信 */
 
 const {
