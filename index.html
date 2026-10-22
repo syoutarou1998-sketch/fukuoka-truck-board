@@ -2197,6 +2197,21 @@ loadPosts();
 
 async function loadPosts(){
 
+/* 現在のログインユーザーを最新状態にする */
+const {
+  data: { user: signedInUser },
+  error: signedInUserError
+} = await supabase.auth.getUser();
+
+if (signedInUserError) {
+  console.error(
+    "ログインユーザー取得エラー:",
+    signedInUserError
+  );
+} else {
+  currentUser = signedInUser || null;
+}
+
 const status =
 document.getElementById("status");
 
