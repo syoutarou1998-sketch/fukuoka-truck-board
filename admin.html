@@ -1025,7 +1025,26 @@ ${statusControl(report)}
 
     }).join("");
 
+/* =========================
+   対応状況切り替え
+========================= */
 
+reports
+  .querySelectorAll(".status-toggle")
+  .forEach(button => {
+
+    button.addEventListener("click", async () => {
+
+      button.disabled = true;
+
+      await updateReportStatus(
+        button.dataset.reportId,
+        button.dataset.nextStatus
+      );
+
+    });
+
+  });
   /* 投稿削除ボタン */
 
   reports
