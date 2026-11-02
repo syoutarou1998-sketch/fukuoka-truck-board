@@ -662,10 +662,16 @@ async function loadReports() {
   );
 
 
-  status.textContent =
-    "通報 " +
-    reportRows.length +
-    "件";
+  const pendingCount = reportRows.filter(
+  report => report.status !== "resolved"
+).length;
+
+const resolvedCount = reportRows.length - pendingCount;
+
+status.textContent =
+  "通報 " + reportRows.length + "件" +
+  " ／ 未対応 " + pendingCount + "件" +
+  " ／ 対応済み " + resolvedCount + "件";
 
 
   /* 通報カード */
