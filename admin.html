@@ -467,7 +467,64 @@ async function deleteReport(reportId) {
   await loadReports();
 }
 
+/* =========================
+   通報対応状況の管理
+========================= */
 
+function statusControl(report) {
+
+  const isResolved = report.status === "resolved";
+
+  const label = isResolved ? "対応済み" : "未対応";
+
+  const nextLabel = isResolved
+    ? "未対応に戻す"
+    : "対応済みにする";
+
+  const nextStatus = isResolved
+    ? "pending"
+    : "resolved";
+
+  return `
+    <div>
+      <span class="report-status ${isResolved ? "resolved" : "pending"}">
+        ${label}
+      </span>
+    </div>
+
+    <button
+      class="status-toggle ${isResolved ? "pending" : ""}"
+      data-report-id="${escapeAttr(String(report.id))}"
+      data-next-status="${nextStatus}"
+    >
+      ${nextLabel}
+    </button>
+  `;
+}
+
+
+async function updateReportStatus(reportId, nextStatus) {
+
+  if (!["pending", "resolved"].includes(nextStatus)) {
+    alert("不正な対応状況です。");
+    return;
+  }
+
+  const result = await supabase
+    .from("reports")
+    .update({ status: nextStatus })
+    .eq("id", reportId);
+
+  if (result.error) {
+    alert(
+      "対応状況の更新に失敗しました：\n" +
+      result.error.message
+    );
+    return;
+  }
+
+  await loadReports();
+}
 /* =========================
    通報一覧
 ========================= */
