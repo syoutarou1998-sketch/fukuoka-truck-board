@@ -104,6 +104,37 @@ button{
   font-size:14px;
   color:#555;
 }
+/* 通報の対応状況 */
+.report-status {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.report-status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.report-status.resolved {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+/* 対応状況切り替えボタン */
+.status-toggle {
+  margin-top: 12px;
+  margin-right: 8px;
+  background: #146c43;
+  color: white;
+}
+
+.status-toggle.pending {
+  background: #555;
+}
 </style>
 
 </head>
