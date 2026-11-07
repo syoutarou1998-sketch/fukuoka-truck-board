@@ -4975,37 +4975,29 @@ const avatarPreview =
   document.getElementById("profile-avatar-preview");
 
 if (avatarPreview) {
-  avatarPreview.innerHTML = profile?.avatar_url
-    ? `
-      <img
-        src="${profile.avatar_url}"
-        alt="プロフィール画像"
-        style="
-          width:110px;
-          height:110px;
-          object-fit:cover;
-          border-radius:50%;
-          border:2px solid #34d399;
-          display:block;
-          margin:0 auto;
-        "
-      >
-    `
-    : `
-      <div style="
-        width:110px;
-        height:110px;
-        margin:0 auto;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        border-radius:50%;
-        background:#10231b;
-        border:1px solid #27654d;
-        color:#6f8e85;
-        font-size:42px;
-      ">👤</div>
-    `;
+  avatarPreview.replaceChildren();
+
+  const avatarUrl = profile?.avatar_url;
+
+  if (avatarUrl) {
+    try {
+      const url = new URL(avatarUrl, window.location.href);
+
+      if (url.protocol !== "https:") {
+        throw new Error("安全でない画像URL");
+      }
+
+      const img = document.createElement("img");
+      img.src = url.href;
+      img.alt = "プロフィール画像";
+      img.style.cssText = "width:110px;height:110px;object-fit:cover;border-radius:50%;border:2px solid #34d399;display:block;margin:0 auto;";
+      avatarPreview.appendChild(img);
+    } catch (error) {
+      avatarPreview.textContent = "👤";
+    }
+  } else {
+    avatarPreview.textContent = "👤";
+  }
 }
 
 }else{
