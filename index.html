@@ -5254,9 +5254,7 @@ console.log("古い画像の削除確認", {
 });
 
 if (deleteError) {
-  alert("古い画像の削除に失敗しました:\n" + deleteError.message);
-} else {
-  alert("古い画像の削除処理が完了しました。\n対象: " + oldPath);
+  console.warn("古いプロフィール画像の削除に失敗しました:", deleteError);
 }
       }
     }
