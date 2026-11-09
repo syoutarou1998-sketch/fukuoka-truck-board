@@ -6523,7 +6523,136 @@ async function(postId){
   await openMyPage();
 
 };
+/* =========================
+   トップ画面の未読通知ボタン
+========================= */
 
+const topNoticeButton = document.createElement("button");
+
+topNoticeButton.id = "top-notice-button";
+topNoticeButton.type = "button";
+topNoticeButton.hidden = true;
+
+topNoticeButton.style.cssText = `
+  width:100%;
+  max-width:420px;
+  margin:16px auto 0;
+  padding:14px 18px;
+  background:linear-gradient(135deg,#065f46,#047857);
+  color:#ffffff;
+  border:1px solid #34d399;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(16,185,129,.18);
+`;
+
+topNoticeButton.setAttribute("aria-live", "polite");
+
+document.getElementById("auth-area").after(topNoticeButton);
+
+topNoticeButton.onclick = function(){
+  window.openMyPage();
+};
+
+let topNoticeRequest = 0;
+
+async function refreshTopNotice(){
+  const requestId = ++topNoticeRequest;
+
+  try{
+    const { data, error:sessionError } =
+      await supabase.auth.getSession();
+
+    if(requestId !== topNoticeRequest) return;
+
+    if(sessionError) throw sessionError;
+
+    const user = data.session?.user;
+
+    if(!user){
+      topNoticeButton.hidden = true;
+      topNoticeButton.textContent = "";
+      delete topNoticeButton.dataset.userId;
+      return;
+    }
+
+    if(topNoticeButton.dataset.userId !== user.id){
+      topNoticeButton.textContent = "🔔 通知を確認中…";
+      topNoticeButton.dataset.userId = user.id;
+    }
+
+    topNoticeButton.hidden = false;
+
+    const { count, error } = await supabase
+      .from("notifications")
+      .select("id", { count:"exact", head:true })
+      .eq("user_id", user.id)
+      .eq("is_read", false);
+
+    if(requestId !== topNoticeRequest) return;
+
+    if(error) throw error;
+
+    const unread = count ?? 0;
+
+    topNoticeButton.textContent = unread > 0
+      ? `🔔 未読の通知 ${unread}件 ›`
+      : "🔔 未読の通知はありません";
+
+    topNoticeButton.style.borderColor =
+      unread > 0 ? "#34d399" : "#29483d";
+
+  }catch(error){
+    if(requestId !== topNoticeRequest) return;
+
+    console.error("未読通知数の取得エラー:", error);
+
+    topNoticeButton.textContent =
+      "🔔 通知数を取得できませんでした";
+
+    topNoticeButton.hidden = false;
+  }
+}
+
+/* ログイン・ログアウト時に更新 */
+supabase.auth.onAuthStateChange(() => {
+  ++topNoticeRequest;
+  topNoticeButton.hidden = true;
+
+  setTimeout(() => {
+    refreshTopNotice();
+  }, 0);
+});
+
+/* ホーム画面のアプリに戻ったときに更新 */
+document.addEventListener("visibilitychange", () => {
+  if(!document.hidden){
+    refreshTopNotice();
+  }
+});
+
+/* 表示中は30秒ごとに更新 */
+setInterval(() => {
+  if(!document.hidden){
+    refreshTopNotice();
+  }
+}, 30000);
+
+/* 通知を開いて既読にした後に更新 */
+const originalOpenNotificationPost =
+  window.openNotificationPost;
+
+window.openNotificationPost = async function(...args){
+  try{
+    return await originalOpenNotificationPost.apply(this, args);
+  }finally{
+    await refreshTopNotice();
+  }
+};
+
+refreshTopNotice();
 updateAuthArea();
 /* =========================
    投稿画像プレビュー
