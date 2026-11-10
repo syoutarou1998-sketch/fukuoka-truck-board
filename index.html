@@ -6262,77 +6262,171 @@ if(notificationId){
   },150);
 
 };
-window.deleteMyPost =
-async function(postId){
+let myPostDeletionInProgress = false;
 
-  const {
-    data:{
-      user
+window.deleteMyPost = async function(postId){
+
+  if(myPostDeletionInProgress) return;
+  myPostDeletionInProgress = true;
+
+  let postDeleted = false;
+
+  try{
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
+
+    if(userError) throw userError;
+
+    if(!user){
+      alert("削除するにはログインしてください");
+      return;
     }
-  } = await supabase.auth.getUser();
 
-  if(!user){
+    // 削除前に、自分の投稿と画像URLを取得
+    const {
+      data: post,
+      error: fetchError
+    } = await supabase
+      .from("posts")
+      .select("id,image_url")
+      .eq("id", postId)
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if(fetchError) throw fetchError;
+
+    if(!post){
+      alert("投稿が見つからないか、削除する権限がありません。");
+      return;
+    }
+
+    if(!confirm(
+      "この投稿と投稿画像を削除しますか？\n\n" +
+      "この操作は取り消せません。"
+    )){
+      return;
+    }
+
+    // 自分のフォルダにある投稿画像だけを削除対象にする
+    let imagePath = null;
+    let imageCleanupFailed = false;
+
+    if(post.image_url){
+      try{
+        const imageUrl = new URL(post.image_url);
+        const storageUrl = new URL(SUPABASE_URL);
+        const prefix =
+          "/storage/v1/object/public/post-images/";
+
+        if(
+          imageUrl.origin !== storageUrl.origin ||
+          !imageUrl.pathname.startsWith(prefix)
+        ){
+          throw new Error("投稿画像の保存先を確認できません");
+        }
+
+        const path = decodeURIComponent(
+          imageUrl.pathname.slice(prefix.length)
+        );
+
+        if(
+          !path.startsWith(user.id + "/") ||
+          path.includes("..") ||
+          path.includes("\\")
+        ){
+          throw new Error("自分の画像フォルダではありません");
+        }
+
+        imagePath = path;
+
+      }catch(error){
+        console.warn("投稿画像の確認に失敗:", error);
+        imageCleanupFailed = true;
+      }
+    }
+
+    // 投稿の削除成功を確認してから画像を削除
+    const {
+      data: deletedPosts,
+      error: deleteError
+    } = await supabase
+      .from("posts")
+      .delete()
+      .eq("id", postId)
+      .eq("user_id", user.id)
+      .select("id");
+
+    if(deleteError) throw deleteError;
+
+    if(!deletedPosts || deletedPosts.length === 0){
+      alert("投稿の削除を確認できませんでした。再読み込みしてください。");
+      return;
+    }
+
+    postDeleted = true;
+
+    if(imagePath){
+      try{
+        const {
+          data: deletedImages,
+          error: imageError
+        } = await supabase.storage
+          .from("post-images")
+          .remove([imagePath]);
+
+        if(imageError) throw imageError;
+
+        if(!deletedImages || deletedImages.length === 0){
+          throw new Error("画像の削除結果を確認できません");
+        }
+
+      }catch(error){
+        console.warn("投稿画像の削除に失敗:", error);
+        imageCleanupFailed = true;
+      }
+    }
+
+    if(imageCleanupFailed){
+      alert(
+        "投稿は削除しました。\n" +
+        "ただし、保存先の画像の削除を確認できませんでした。\n" +
+        "画像が残っている可能性があります。"
+      );
+    }else{
+      alert(
+        post.image_url
+          ? "投稿と投稿画像を削除しました！"
+          : "投稿を削除しました！"
+      );
+    }
+
+  }catch(error){
+    console.error("投稿削除エラー:", error);
 
     alert(
-      "削除するにはログインしてください"
+      (postDeleted
+        ? "投稿は削除しましたが、後処理でエラーが発生しました。\n"
+        : "投稿の削除処理でエラーが発生しました。\n") +
+      (error?.message || "通信状態を確認してください。")
     );
 
-    return;
-
+  }finally{
+    try{
+      if(postDeleted){
+        await Promise.all([
+          openMyPage(),
+          loadPosts()
+        ]);
+      }
+    }catch(error){
+      console.error("削除後の画面更新エラー:", error);
+      alert("画面の更新に失敗しました。再読み込みしてください。");
+    }finally{
+      myPostDeletionInProgress = false;
+    }
   }
-
-
-  const confirmed =
-    confirm(
-      "この投稿を削除しますか？\n\nこの操作は取り消せません。"
-    );
-
-  if(!confirmed){
-
-    return;
-
-  }
-
-
-  const {
-    error
-  } = await supabase
-
-    .from("posts")
-
-    .delete()
-
-    .eq("id",postId)
-
-    .eq("user_id",user.id);
-
-
-  if(error){
-
-    console.error(
-      "投稿削除エラー:",
-      error
-    );
-
-    alert(
-      "投稿の削除に失敗しました。\n" +
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  alert(
-    "投稿を削除しました！"
-  );
-
-
-  openMyPage();
-
-  loadPosts();
-
 };
 /* =========================
    自分の投稿を編集
