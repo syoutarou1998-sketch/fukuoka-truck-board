@@ -2280,7 +2280,10 @@ return;
 
 }
 
-
+/* 投稿の変更前後を比較するために保存 */
+loadPosts.postSnapshot = new Map(
+  posts.map(post => [String(post.id), { ...post }])
+);
 /* カテゴリー */
 
 let filteredPosts =
