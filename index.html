@@ -3103,239 +3103,138 @@ await loadPosts();
    Supabase保存版
 ========================= */
 
-window.likePost = async function(postId){
+/* 同じ投稿の連打を防止 */
+const likesInProgress = new Set();
 
-  /* =========================
-     ログイン確認
-  ========================= */
-
-  const {
-    data:{ user },
-    error:userError
-  } = await supabase.auth.getUser();
-
-  if(userError){
-
-    console.error(
-      "ログイン確認エラー:",
-      userError
-    );
-
-    alert(
-      "ログイン確認に失敗しました。"
-    );
-
-    return;
-  }
-
-  if(!user){
-
-    alert(
-      "いいねするにはログインしてください🚛"
-    );
-
-    openAuthModal();
-
-    return;
-  }
-
-
-  /* =========================
-     現在のいいね状態を確認
-  ========================= */
-
-  const {
-    data:existingLike,
-    error:checkError
-  } = await supabase
-
-    .from("post_likes")
-
-    .select("id")
-
-    .eq("post_id",postId)
-
-    .eq("user_id",user.id)
-
+/* 投稿を作り直さず、いいね表示だけを更新 */
+async function refreshPostLikeDisplay(postId){
+  const { data: post, error } = await supabase
+    .from("posts")
+    .select("likes")
+    .eq("id", postId)
     .maybeSingle();
 
+  if(error) throw error;
+  if(!post) return;
 
-  if(checkError){
+  const count = document.getElementById(
+    "like-count-" + postId
+  );
 
-    console.error(
-      "いいね確認エラー:",
-      checkError
-    );
-
-    alert(
-      "いいね状態の確認に失敗しました。\n" +
-      checkError.message
-    );
-
-    return;
+  if(count){
+    count.textContent = post.likes ?? 0;
   }
 
+  const card = document.getElementById(
+    "post-" + postId
+  );
 
-  /* =================================================
-     すでにいいね済み → いいねを取り消す
-  ================================================= */
+  const button = card?.querySelector(".like-button");
 
-  if(existingLike){
+  if(button){
+    const liked = likedPosts.has(String(postId));
 
+    button.classList.toggle("liked", liked);
+    button.textContent = liked
+      ? "👍 いいね済み"
+      : "👍 いいね";
+  }
+}
+
+window.likePost = async function(postId){
+  const key = String(postId);
+
+  if(likesInProgress.has(key)) return;
+  likesInProgress.add(key);
+
+  const button = document
+    .getElementById("post-" + postId)
+    ?.querySelector(".like-button");
+
+  if(button) button.disabled = true;
+
+  try{
     const {
-      error:deleteError
-    } = await supabase
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
 
-      .from("post_likes")
+    if(userError) throw userError;
 
-      .delete()
-
-      .eq("id",existingLike.id)
-      .eq("user_id",user.id);
-
-
-    if(deleteError){
-
-      console.error(
-        "いいね解除エラー:",
-        deleteError
-      );
-
-      alert(
-        "いいねの取り消しに失敗しました。\n" +
-        deleteError.message
-      );
-
+    if(!user){
+      alert("いいねするにはログインしてください🚛");
+      openAuthModal();
       return;
     }
 
-
-    /* いいね数を -1 */
-
     const {
-      error:rpcError
-    } = await supabase.rpc(
-      "decrement_post_likes",
-      {
-        post_id_input:postId
-      }
+      data: existingLike,
+      error: checkError
+    } = await supabase
+      .from("post_likes")
+      .select("id")
+      .eq("post_id", postId)
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if(checkError) throw checkError;
+
+    if(existingLike){
+      const { error } = await supabase
+        .from("post_likes")
+        .delete()
+        .eq("id", existingLike.id)
+        .eq("user_id", user.id);
+
+      if(error) throw error;
+
+      likedPosts.delete(key);
+    }else{
+      const { error } = await supabase
+        .from("post_likes")
+        .insert({
+          post_id: postId,
+          user_id: user.id
+        });
+
+      if(error) throw error;
+
+      likedPosts.add(key);
+    }
+
+    /* 現在使っているいいね数の更新処理を維持 */
+    const { error: rpcError } = await supabase.rpc(
+      existingLike
+        ? "decrement_post_likes"
+        : "increment_post_likes",
+      { post_id_input: postId }
     );
 
+    await refreshPostLikeDisplay(postId);
 
     if(rpcError){
-
-      console.error(
-        "いいね数減少エラー:",
-        rpcError
-      );
-
+      console.error(rpcError);
       alert(
-        "いいねは取り消しましたが、\n" +
-        "いいね数の更新に失敗しました。\n" +
+        "いいねの変更は保存されましたが、" +
+        "件数の更新に失敗しました。\n" +
         rpcError.message
       );
-
-      return;
     }
-
-
-    /* localStorage解除 */
-
-    
-
-
+  }catch(error){
+    console.error("いいね処理エラー:", error);
     alert(
-      "👍 いいねを取り消しました"
+      "いいね処理でエラーが発生しました。\n" +
+      (error?.message || "通信状態を確認してください。")
     );
+  }finally{
+    likesInProgress.delete(key);
 
+    const currentButton = document
+      .getElementById("post-" + postId)
+      ?.querySelector(".like-button");
 
-    await loadPosts();
-
-    return;
+    if(currentButton) currentButton.disabled = false;
   }
-
-
-  /* =================================================
-     まだいいねしていない → いいねする
-  ================================================= */
-
-  const {
-    error:insertError
-  } = await supabase
-
-    .from("post_likes")
-
-    .insert({
-
-      post_id:postId,
-
-      user_id:user.id
-
-    });
-
-
-  if(insertError){
-
-    console.error(
-      "いいね保存エラー:",
-      insertError
-    );
-
-    alert(
-      "いいねに失敗しました。\n" +
-      insertError.message
-    );
-
-    return;
-  }
-
-
-  /* いいね数を +1 */
-
-  const {
-    error:rpcError
-  } = await supabase.rpc(
-    "increment_post_likes",
-    {
-      post_id_input:postId
-    }
-  );
-
-
-  if(rpcError){
-
-    console.error(
-      "いいね数更新エラー:",
-      rpcError
-    );
-
-    alert(
-      "いいねは保存されましたが、\n" +
-      "いいね数の更新に失敗しました。\n" +
-      rpcError.message
-    );
-
-    return;
-  }
-
-
-  /* localStorage保存 */
-
-  
-
-
-  alert(
-    "👍 いいねしました！"
-  );
-
-
-  
-
-
-  /* 投稿一覧を再読み込み */
-
-  await loadPosts();
-
 };
 
 
