@@ -4514,8 +4514,7 @@ function setupBoardRealtime(){
       .channel("board-realtime")
 
 
-      /* 投稿の変更を監視 */
-
+            /* 投稿の変更を監視 */
       .on(
         "postgres_changes",
         {
@@ -4523,14 +4522,60 @@ function setupBoardRealtime(){
           schema: "public",
           table: "posts"
         },
-        async function(){
+        async function(payload){
+          try{
+            const post = payload.new;
 
-          console.log(
-            "📡 投稿が更新されました"
-          );
+            if(payload.eventType === "UPDATE" && post?.id){
+              const key = String(post.id);
+              const previous =
+                loadPosts.postSnapshot?.get(key);
 
-          await loadPosts();
+              /* いいね数・更新日時以外に変更があるか確認 */
+              const onlyLikeChange = previous &&
+                [...new Set([
+                  ...Object.keys(previous),
+                  ...Object.keys(post)
+                ])].every(field => {
+                  if(
+                    field === "likes" ||
+                    field === "updated_at"
+                  ){
+                    return true;
+                  }
 
+                  return JSON.stringify(previous[field]) ===
+                    JSON.stringify(post[field]);
+                });
+
+              if(onlyLikeChange){
+                loadPosts.postSnapshot.set(
+                  key,
+                  { ...post }
+                );
+
+                /* 一覧を作り直さず、数字だけ更新 */
+                const count = document.getElementById(
+                  "like-count-" + post.id
+                );
+
+                if(count){
+                  count.textContent = post.likes ?? 0;
+                }
+
+                return;
+              }
+            }
+
+            /* 投稿の追加・削除・本文変更などは再取得 */
+            await loadPosts();
+
+          }catch(error){
+            console.error(
+              "投稿のリアルタイム更新エラー:",
+              error
+            );
+          }
         }
       )
 
