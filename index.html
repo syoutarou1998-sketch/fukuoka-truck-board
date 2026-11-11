@@ -1430,6 +1430,26 @@ label{
   }
 
 }
+/* いいね切り替え時のサイズを固定 */
+.like-button{
+  min-width:140px;
+  height:40px;
+  border:1px solid transparent;
+  white-space:nowrap;
+  vertical-align:middle;
+  transition:
+    background .18s ease,
+    color .18s ease,
+    box-shadow .18s ease;
+}
+
+.like-button:active{
+  transform:none;
+}
+
+.like-button.liked{
+  border:1px solid #2aa876;
+}
 </style>
 </head>
 
