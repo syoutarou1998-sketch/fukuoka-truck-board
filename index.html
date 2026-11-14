@@ -5945,7 +5945,24 @@ const notificationSection = `
             margin-top:8px;
           ">
             ${formatDate(post.created_at)}
-          </div>
+          
+${post.image_url ? `
+  <div style="margin-top:12px;">
+    <img
+      src="${escapeHtml(post.image_url)}"
+      alt="投稿画像"
+      loading="lazy"
+      style="
+        width:100%;
+        max-height:350px;
+        object-fit:contain;
+        border-radius:10px;
+        display:block;
+      "
+    >
+  </div>
+` : ""}
+</div>
 <button
   onclick="editMyPost('${post.id}')"
   style="
