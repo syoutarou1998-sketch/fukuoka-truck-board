@@ -2,34 +2,35 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
+<meta name="theme-color" content="#081624">
 <title>全国トラック掲示板</title>
 <style>/* =========================================================
    🚛 全国トラック掲示板
-   PREMIUM BLACK × EMERALD
+   NAVY × GOLD — responsive edition
    CSS FINAL
 ========================================================= */
 
 :root{
-  --main:#10b981;
-  --main-light:#34d399;
-  --main-dark:#047857;
+  --main:#f8bd38;
+  --main-light:#f8bd38;
+  --main-dark:#36536d;
 
-  --bg:#050908;
-  --bg-deep:#030605;
+  --bg:#0b1929;
+  --bg-deep:#0b1929;
 
-  --panel:#0b1712;
-  --panel-2:#10231b;
-  --panel-3:#142c22;
+  --panel:#0b1929;
+  --panel-2:#0b1929;
+  --panel-3:#152b40;
 
-  --border:#1b5542;
-  --border-light:#276d56;
+  --border:#36536d;
+  --border-light:#36536d;
 
-  --text:#f2fff9;
-  --text-soft:#d5ebe3;
-  --sub:#9bbcaf;
-  --muted:#708d82;
+  --text:#dce6f1;
+  --text-soft:#dce6f1;
+  --sub:#9aafc4;
+  --muted:#9aafc4;
 
   --danger:#ff8f8f;
 }
@@ -61,14 +62,14 @@ body{
   background:
     radial-gradient(
       circle at 50% 0%,
-      rgba(16,185,129,.14),
+      rgba(48,86,125,.14),
       transparent 38%
     ),
     linear-gradient(
       180deg,
-      #06100d 0%,
-      #08150f 42%,
-      #030706 100%
+      #0b1929 0%,
+      #0b1929 42%,
+      #0b1929 100%
     );
 
   color:var(--text);
@@ -92,17 +93,17 @@ header{
   background:
     radial-gradient(
       circle at 50% -30%,
-      rgba(52,211,153,.30),
+      rgba(48,86,125,.30),
       transparent 58%
     ),
     linear-gradient(
       135deg,
-      #030906 0%,
-      #0b2118 50%,
-      #030906 100%
+      #0b1929 0%,
+      #0b1929 50%,
+      #0b1929 100%
     );
 
-  border-bottom:1px solid rgba(52,211,153,.45);
+  border-bottom:1px solid rgba(48,86,125,.45);
 
   box-shadow:
     0 12px 40px rgba(0,0,0,.50);
@@ -133,7 +134,7 @@ header::after{
     );
 
   box-shadow:
-    0 0 15px rgba(52,211,153,.65);
+    0 0 15px rgba(48,86,125,.65);
 }
 
 
@@ -150,7 +151,7 @@ header h1{
   letter-spacing:.5px;
 
   text-shadow:
-    0 0 12px rgba(52,211,153,.25),
+    0 0 12px rgba(48,86,125,.25),
     0 3px 10px rgba(0,0,0,.5);
 }
 
@@ -167,7 +168,7 @@ header h1::first-letter{
 header p{
   margin:0;
 
-  color:#b9d8ce;
+  color:#dce6f1;
 
   font-size:13px;
   font-weight:600;
@@ -209,9 +210,9 @@ header p{
   background:
     linear-gradient(
       135deg,
-      #036b4a 0%,
-      #0b9f69 48%,
-      #20d890 100%
+      #36536d 0%,
+      #f8bd38 48%,
+      #f8bd38 100%
     );
 
   color:#ffffff;
@@ -222,7 +223,7 @@ header p{
   cursor:pointer;
 
   box-shadow:
-    0 9px 28px rgba(16,185,129,.25),
+    0 9px 28px rgba(48,86,125,.25),
     inset 0 1px 0 rgba(255,255,255,.25);
 
   transition:
@@ -235,7 +236,7 @@ header p{
   filter:brightness(1.08);
 
   box-shadow:
-    0 12px 34px rgba(16,185,129,.34),
+    0 12px 34px rgba(48,86,125,.34),
     inset 0 1px 0 rgba(255,255,255,.28);
 }
 
@@ -257,8 +258,8 @@ header p{
   background:
     linear-gradient(
       145deg,
-      rgba(17,37,29,.98),
-      rgba(7,15,11,.98)
+      rgba(48,86,125,.98),
+      rgba(48,86,125,.98)
     );
 
   border:1px solid var(--border);
@@ -285,11 +286,11 @@ select,
 
   margin:7px 0 14px;
 
-  background:#08130f !important;
+  background:#0b1929 !important;
 
-  color:#effff8 !important;
+  color:#dce6f1 !important;
 
-  border:1px solid #205f4b !important;
+  border:1px solid #36536d !important;
 
   border-radius:12px !important;
 
@@ -310,7 +311,7 @@ select:focus,
   border-color:var(--main) !important;
 
   box-shadow:
-    0 0 0 3px rgba(16,185,129,.10);
+    0 0 0 3px rgba(48,86,125,.10);
 }
 
 
@@ -318,7 +319,7 @@ input::placeholder,
 textarea::placeholder,
 .search-input::placeholder{
 
-  color:#718f84;
+  color:#9aafc4;
 }
 
 
@@ -341,8 +342,8 @@ textarea::placeholder,
   background:
     linear-gradient(
       135deg,
-      #047857,
-      #10b981
+      #36536d,
+      #f8bd38
     );
 
   color:#ffffff;
@@ -353,7 +354,7 @@ textarea::placeholder,
   cursor:pointer;
 
   box-shadow:
-    0 6px 20px rgba(16,185,129,.20);
+    0 6px 20px rgba(48,86,125,.20);
 
   transition:.18s ease;
 }
@@ -379,13 +380,13 @@ textarea::placeholder,
 
   padding:11px;
 
-  border:1px solid #29463b;
+  border:1px solid #36536d;
 
   border-radius:11px;
 
-  background:#121e19;
+  background:#0b1929;
 
-  color:#b8d2c8;
+  color:#dce6f1;
 
   font-size:14px;
   font-weight:700;
@@ -396,9 +397,9 @@ textarea::placeholder,
 }
 
 .clear-button:hover{
-  background:#172820;
+  background:#152b40;
 
-  border-color:#376653;
+  border-color:#36536d;
 }
 
 
@@ -426,13 +427,13 @@ textarea::placeholder,
   background:
     linear-gradient(
       145deg,
-      #10241b,
-      #09140f
+      #152b40,
+      #0b1929
     );
 
-  color:#d0e8df;
+  color:#dce6f1;
 
-  border:1px solid #205340;
+  border:1px solid #36536d;
 
   border-radius:15px;
 
@@ -458,7 +459,7 @@ textarea::placeholder,
 
   transform:translateY(-1px);
 
-  border-color:#2b745a;
+  border-color:#36536d;
 }
 
 
@@ -467,16 +468,16 @@ textarea::placeholder,
   background:
     linear-gradient(
       135deg,
-      #047857,
-      #10b981
+      #36536d,
+      #f8bd38
     );
 
   color:#ffffff;
 
-  border-color:#34d399;
+  border-color:#f8bd38;
 
   box-shadow:
-    0 8px 25px rgba(16,185,129,.28);
+    0 8px 25px rgba(48,86,125,.28);
 }
 
 
@@ -493,25 +494,25 @@ textarea::placeholder,
   background:
     linear-gradient(
       145deg,
-      #10221a,
-      #09130f
+      #0b1929,
+      #0b1929
     );
 
-  border:1px solid #1d5541;
+  border:1px solid #36536d;
 
   border-radius:15px;
 
-  color:#e2f5ed;
+  color:#dce6f1;
 }
 
 
 .sort-box{
 
-  background:#102019;
+  background:#0b1929;
 
-  color:#bde0d3;
+  color:#dce6f1;
 
-  border:1px solid #1d5541;
+  border:1px solid #36536d;
 
   border-radius:14px;
 }
@@ -542,7 +543,7 @@ textarea::placeholder,
 
 .section-title span{
 
-  color:#69e7b1;
+  color:#f8bd38;
 
   font-size:13px;
   font-weight:700;
@@ -566,13 +567,13 @@ textarea::placeholder,
   background:
     linear-gradient(
       145deg,
-      #10231b 0%,
-      #08130f 100%
+      #0b1929 0%,
+      #0b1929 100%
     );
 
-  color:#edfff8;
+  color:#dce6f1;
 
-  border:1px solid #1b5542;
+  border:1px solid #36536d;
 
   border-radius:18px;
 
@@ -588,7 +589,7 @@ textarea::placeholder,
 
 .post:hover{
 
-  border-color:#286a54;
+  border-color:#36536d;
 
   box-shadow:
     0 15px 38px rgba(0,0,0,.45);
@@ -612,12 +613,12 @@ textarea::placeholder,
   background:
     linear-gradient(
       180deg,
-      #34d399,
-      #047857
+      #f8bd38,
+      #36536d
     );
 
   box-shadow:
-    0 0 12px rgba(16,185,129,.18);
+    0 0 12px rgba(48,86,125,.18);
 }
 
 
@@ -633,11 +634,11 @@ textarea::placeholder,
 
   padding:5px 10px;
 
-  background:#12382b;
+  background:#152b40;
 
-  color:#6ff0b8;
+  color:#dce6f1;
 
-  border:1px solid #22664d;
+  border:1px solid #36536d;
 
   border-radius:999px;
 
@@ -655,7 +656,7 @@ textarea::placeholder,
 
   margin-bottom:5px;
 
-  color:#9fbab0;
+  color:#9aafc4;
 
   font-size:13px;
 
@@ -669,7 +670,7 @@ textarea::placeholder,
 
 .post-location{
 
-  color:#87a69a;
+  color:#9aafc4;
 
   font-size:12px;
 }
@@ -703,7 +704,7 @@ textarea::placeholder,
 
   margin:8px 0;
 
-  color:#d4e8df;
+  color:#dce6f1;
 
   line-height:1.7;
 
@@ -715,7 +716,7 @@ textarea::placeholder,
 
 .post small{
 
-  color:#779b90;
+  color:#9aafc4;
 
   font-size:11px;
 }
@@ -731,7 +732,7 @@ textarea::placeholder,
 
   padding-top:12px;
 
-  border-top:1px solid #1b3c30;
+  border-top:1px solid #152b40;
 }
 
 
@@ -739,7 +740,7 @@ textarea::placeholder,
 
   margin-bottom:8px;
 
-  color:#b9d9ce;
+  color:#dce6f1;
 
   font-size:14px;
 
@@ -753,11 +754,11 @@ textarea::placeholder,
 
   padding:10px;
 
-  background:#0a1511;
+  background:#0b1929;
 
-  color:#dcefe9;
+  color:#dce6f1;
 
-  border:1px solid #18382c;
+  border:1px solid #152b40;
 
   border-radius:10px;
 }
@@ -765,7 +766,7 @@ textarea::placeholder,
 
 .reply-author{
 
-  color:#8fb4a5;
+  color:#9aafc4;
 
   font-size:12px;
 
@@ -777,7 +778,7 @@ textarea::placeholder,
 
   margin-top:4px;
 
-  color:#d6e9e1;
+  color:#dce6f1;
 
   font-size:14px;
 
@@ -791,7 +792,7 @@ textarea::placeholder,
 
   margin-top:4px;
 
-  color:#6f8980;
+  color:#9aafc4;
 
   font-size:11px;
 }
@@ -814,8 +815,8 @@ textarea::placeholder,
   background:
     linear-gradient(
       135deg,
-      #087f58,
-      #16c978
+      #36536d,
+      #f8bd38
     ) !important;
 
   color:#ffffff !important;
@@ -827,7 +828,7 @@ textarea::placeholder,
   cursor:pointer;
 
   box-shadow:
-    0 5px 16px rgba(16,185,129,.20);
+    0 5px 16px rgba(48,86,125,.20);
 
   transition:.18s ease;
 }
@@ -879,8 +880,8 @@ textarea::placeholder,
   background:
     linear-gradient(
       135deg,
-      #047857,
-      #10b981
+      #36536d,
+      #f8bd38
     );
 
   color:white;
@@ -906,8 +907,8 @@ textarea::placeholder,
   background:
     linear-gradient(
       135deg,
-      #087f58,
-      #16c978
+      #36536d,
+      #f8bd38
     );
 
   color:white;
@@ -917,7 +918,7 @@ textarea::placeholder,
   cursor:pointer;
 
   box-shadow:
-    0 5px 16px rgba(16,185,129,.20);
+    0 5px 16px rgba(48,86,125,.20);
 
   transition:.18s ease;
 }
@@ -935,14 +936,14 @@ textarea::placeholder,
 
 .like-button.liked{
 
-  background:#14231c;
+  background:#152b40;
 
-  color:#67e8b5;
+  color:#f8bd38;
 
-  border:1px solid #2aa876;
+  border:1px solid #f8bd38;
 
   box-shadow:
-    0 4px 12px rgba(16,185,129,.10);
+    0 4px 12px rgba(48,86,125,.10);
 }
 
 
@@ -952,7 +953,7 @@ textarea::placeholder,
 
   margin-left:5px;
 
-  color:#6ee7b7;
+  color:#f8bd38;
 
   font-weight:900;
 }
@@ -972,7 +973,7 @@ textarea::placeholder,
 
   border-radius:9px;
 
-  background:#151b18 !important;
+  background:#0b1929 !important;
 
   color:#ff8989 !important;
 
@@ -1006,7 +1007,7 @@ textarea::placeholder,
 
   padding:12px;
 
-  background:#111916;
+  background:#0b1929;
 
   color:#eeeeee;
 
@@ -1088,13 +1089,13 @@ textarea::placeholder,
   background:
     linear-gradient(
       145deg,
-      #10231b,
-      #06100c
+      #0b1929,
+      #0b1929
     );
 
-  color:#effff8;
+  color:#dce6f1;
 
-  border:1px solid #27654d;
+  border:1px solid #36536d;
 
   border-radius:20px;
 
@@ -1132,9 +1133,9 @@ textarea::placeholder,
   background:
     linear-gradient(
       135deg,
-      #047857,
-      #10b981,
-      #34d399
+      #36536d,
+      #f8bd38,
+      #f8bd38
     );
 
   color:white;
@@ -1146,7 +1147,7 @@ textarea::placeholder,
   cursor:pointer;
 
   box-shadow:
-    0 7px 20px rgba(16,185,129,.22);
+    0 7px 20px rgba(48,86,125,.22);
 
   transition:.18s ease;
 }
@@ -1182,13 +1183,13 @@ textarea::placeholder,
 
   margin-top:8px;
 
-  border:1px solid #2b4539;
+  border:1px solid #36536d;
 
   border-radius:11px;
 
-  background:#151e1a;
+  background:#0b1929;
 
-  color:#bfd3ca;
+  color:#dce6f1;
 
   font-size:15px;
 
@@ -1202,9 +1203,9 @@ textarea::placeholder,
 
 .close:hover{
 
-  background:#1b2923;
+  background:#152b40;
 
-  border-color:#3b5e4e;
+  border-color:#36536d;
 }
 
 
@@ -1214,7 +1215,7 @@ textarea::placeholder,
 
 label{
 
-  color:#d8eee7;
+  color:#dce6f1;
 
   font-size:13px;
 
@@ -1230,7 +1231,7 @@ label{
 
   padding:30px 10px;
 
-  color:#78958a;
+  color:#9aafc4;
 
   text-align:center;
 
@@ -1246,7 +1247,7 @@ label{
 
   margin:10px;
 
-  color:#7fa99d;
+  color:#9aafc4;
 
   text-align:center;
 
@@ -1266,13 +1267,13 @@ label{
 
 ::-webkit-scrollbar-track{
 
-  background:#040807;
+  background:#0b1929;
 }
 
 
 ::-webkit-scrollbar-thumb{
 
-  background:#176247;
+  background:#36536d;
 
   border-radius:10px;
 }
@@ -1280,7 +1281,7 @@ label{
 
 ::-webkit-scrollbar-thumb:hover{
 
-  background:#208463;
+  background:#f8bd38;
 }
 
 
@@ -1290,7 +1291,7 @@ label{
 
 ::selection{
 
-  background:rgba(16,185,129,.30);
+  background:rgba(48,86,125,.30);
 
   color:#ffffff;
 }
@@ -1448,8 +1449,31 @@ label{
 }
 
 .like-button.liked{
-  border:1px solid #2aa876;
+  border:1px solid #f8bd38;
 }
+
+/* NAVY MOBILE LAYOUT — presentation overrides */
+:root{color-scheme:dark;--main:#f8bd38;--main-light:#ffd36c;--main-dark:#c48a12;--bg:#081624;--bg-deep:#071320;--panel:#102337;--panel-2:#152b40;--panel-3:#1b354d;--border:#304a63;--border-light:#58728a;--text:#f4f7fb;--text-soft:#dce6f1;--sub:#a8b9ca;--muted:#90a5ba}
+html{background:var(--bg);scroll-padding-bottom:100px}
+body{background:radial-gradient(ellipse at 50% 18%,#10283e 0,transparent 55%),#081624;min-height:100svh;line-height:1.6;padding-bottom:calc(100px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+button,input,select,textarea{font-family:inherit}button{touch-action:manipulation}button:focus-visible,summary:focus-visible{outline:3px solid #ffd36c;outline-offset:3px}img{max-width:100%}
+header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:24px max(16px,calc((100% - 800px)/2));padding-top:calc(24px + env(safe-area-inset-top));background:#081725;border-bottom:3px solid #f8bd38;box-shadow:none;text-align:left;overflow:visible}
+header::after{display:none}header h1{display:flex;align-items:center;gap:10px;margin:0;font-size:clamp(15px,4.4vw,25px);letter-spacing:0;text-shadow:none;line-height:1.4;white-space:nowrap}.brand-icon{display:grid;place-items:center;flex-shrink:0;width:40px;height:42px;font-size:26px;background:#192c36;border:1px solid #7d6936;border-radius:12px}header p{grid-column:1/-1;grid-row:2;color:#a8b9ca;font-size:12px;font-weight:400}
+#auth-area{margin:0!important;text-align:right}#auth-area button{min-height:44px;padding:9px 10px!important;font-size:12px!important;margin:0!important;background:#152b40!important;color:#f0f5fa!important;border:1px solid #304a63!important;border-radius:10px!important;box-shadow:none!important}#auth-area:has(button[onclick="logoutUser()"]) {grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;text-align:left}#auth-area>div{flex-basis:100%;margin:0!important;overflow-wrap:anywhere}
+#top-notice-button{grid-column:1/-1;width:100%!important;max-width:none!important;margin:0!important;padding:11px 14px!important;background:#152b40!important;color:#f5cf74!important;box-shadow:none!important;text-align:left}#top-notice-button[hidden]{display:none!important}
+.container{width:100%;max-width:832px;margin:0 auto;padding:18px 16px}
+.region-bar{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);gap:7px;align-items:center;margin-bottom:14px}.region-chip{min-height:42px;border:1px solid #60768b;background:transparent;color:#e7edf5;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer}.region-chip.active{background:#f8bd38;color:#091624;border-color:#f8bd38}.region-bar select{min-width:0;width:100%;height:42px;margin:0;padding:8px 9px;border-radius:999px!important;font-size:13px;background:#0d2032!important}
+.categories{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;padding:0 0 7px;margin:0 0 12px;scrollbar-width:thin;scrollbar-color:#304a63 transparent}.category{flex:0 0 auto;min-height:42px;padding:9px 15px;font-size:13px;line-height:1.5;background:transparent;color:#e1e9f2;border:1px solid #60768b;border-radius:999px;box-shadow:none;white-space:nowrap}.category:hover{transform:none}.category.active{background:#f8bd38;color:#091624;border-color:#f8bd38;box-shadow:none}.category[data-category="求人・仕事募集"]:not(.active){color:#ffda80;border-color:#9a7935;background:#29281f}
+.search-panel{margin:4px 0 22px;color:#9eb3c7;font-size:13px}.search-panel summary{cursor:pointer;min-height:40px;padding:8px 0}.search-box{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:12px;margin:4px 0 0;background:#102337;box-shadow:none}.search-input{min-width:0;margin:0!important}.search-button{width:auto;margin:0;padding:8px 16px;box-shadow:none}.clear-button{grid-column:1/-1;width:auto;justify-self:end;margin:0;padding:5px 10px;min-height:36px;font-weight:400;background:none;border:none;box-shadow:none;color:#acbfd1}
+.feed-heading{display:flex;justify-content:space-between;align-items:center;position:relative;border-bottom:1px solid #304a63;padding-bottom:15px;margin-bottom:12px}.feed-heading::after{content:"";position:absolute;left:0;bottom:-2px;width:110px;height:3px;border-radius:4px;background:#f8bd38}.feed-heading h2{margin:0;font-size:22px;font-weight:900;letter-spacing:-.5px}.feed-heading span{font-size:12px;color:#a8b9ca}.status{color:#a8b9ca;font-size:13px;text-align:center;margin:16px 0}.status:empty{display:none}
+.post{background:#102337;border:1px solid #2c435a;box-shadow:0 8px 22px #0002;padding:16px;border-radius:16px;margin-bottom:14px;overflow-wrap:anywhere}.post:hover{box-shadow:0 8px 22px #0002;border-color:#49647d}.post::before{display:none}.post-category{background:#1b344c;border-color:#3e5973;color:#dce8f4}.post h3{font-size:18px;line-height:1.6}.post p{font-size:15px;line-height:1.85}.post small,.reply-date{color:#9bb0c4}.post div[style*="color:#555"]{color:#a8b9ca!important}.reply{background:#0b1b2c;border-color:#2b435a}.reply-button{background:#1c3a55!important;color:#e7f2ff!important;border:1px solid #466785;box-shadow:none}.like-button{background:#152c42!important;color:#dde8f4!important;border:1px solid #436079!important;box-shadow:none!important;transform:none!important;min-height:40px}.like-button.liked{background:#3b321e!important;color:#ffda7e!important;border-color:#bf9337!important}.report-button{min-height:40px}.submit,.reply-submit,.search-button{background:#f8bd38;color:#081624;box-shadow:none}
+input,select,textarea,.search-input{background:#0b1b2c!important;color:#f0f5fa!important;border-color:#3c5872!important;font-size:16px}input::placeholder,textarea::placeholder{color:#91a7bc}input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px #f8bd3820!important;border-color:#f8bd38!important}.close{background:#1a3046;color:#dce6f1;border-color:#3a536b}
+.post-button{position:fixed;z-index:40;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:auto;min-width:158px;min-height:52px;margin:0;padding:12px 25px;background:#f8bd38;color:#081624;border:1px solid #ffda7e;border-radius:999px;font-size:16px;box-shadow:0 6px 25px #0008}.post-button:hover{box-shadow:0 6px 25px #0008}.post-button:active{transform:translateX(-50%) scale(.98)}
+.modal{padding:16px;padding-top:calc(16px + env(safe-area-inset-top));padding-bottom:calc(24px + env(safe-area-inset-bottom));overscroll-behavior:contain}.modal-box{max-width:600px;margin:16px auto;padding:20px;background:#102337;border-color:#3b5670;overflow-wrap:anywhere}.modal-box button{min-height:44px;max-width:100%}.modal-box img{max-width:100%}.modal-box [style*="color:#666"]{color:#a8b9ca!important}
+@media(max-width:360px){header{padding-left:12px;padding-right:12px;gap:8px}header h1{gap:6px;font-size:15px}.brand-icon{width:32px;height:36px;font-size:23px}#auth-area button{font-size:11px!important;padding:8px!important}.container{padding:16px 12px}.region-bar{gap:5px}.region-chip{padding:8px 9px;font-size:12px}.region-bar select{font-size:12px;padding-left:6px}.modal{padding-left:8px;padding-right:8px}.modal-box{padding:16px}}
+@media(min-width:700px){header{padding-top:32px;padding-bottom:24px}header p{font-size:14px}.container{padding-top:26px}.category{font-size:14px}.region-bar{grid-template-columns:auto auto auto minmax(140px,220px);justify-content:start;gap:10px}.post{padding:24px}.feed-heading h2{font-size:26px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+
 </style>
 </head>
 
@@ -1458,10 +1482,10 @@ label{
 
 <header>
 
-<h1>🚛 全国トラック掲示板</h1>
+<h1><span class="brand-icon" aria-hidden="true">🚛</span><span>全国トラック掲示板</span></h1>
 
 <p>
-全国のトラックドライバー・運送業界の情報交換
+ドライバー同士で、現場の声をつなごう。
 </p>
 
 <div id="auth-area" style="margin-top:15px;">
@@ -1469,7 +1493,7 @@ label{
 <button
 onclick="openAuthModal()"
 style="
-background:linear-gradient(135deg,#047857,#10b981);
+background:linear-gradient(135deg,#36536d,#f8bd38);
 color:white;
 border:none;
 border-radius:10px;
@@ -1478,7 +1502,7 @@ font-weight:bold;
 font-size:14px;
 "
 >
-🔐 ログイン / 新規登録
+ログイン / 登録
 </button>
 
 </div>
@@ -1487,113 +1511,18 @@ font-size:14px;
 </header>
 
 
-<div class="container">
-
-
-<button
-class="post-button"
-onclick="openModal()"
->
-＋ 投稿する
-</button>
-
-
-<!-- 検索 -->
-
-<div class="search-box">
-
-<input
-id="search"
-class="search-input"
-type="search"
-placeholder="4t・大型・トレーラー・求人など"
->
-
-<button
-class="search-button"
-onclick="searchPosts()"
->
-🔍 検索
-</button>
-
-<button
-class="clear-button"
-onclick="clearSearch()"
->
-検索をクリア
-</button>
-
-</div>
-
-
-<!-- カテゴリー -->
-
-<div class="categories">
-
-<div
-class="category active"
-data-category="すべて"
-onclick="filterCategory('すべて')"
->
-📋 すべて
-</div>
-
-<div
-class="category"
-data-category="求人・仕事募集"
-onclick="filterCategory('求人・仕事募集')"
->
-💼 求人・仕事募集
-</div>
-
-<div
-class="category"
-data-category="運送情報"
-onclick="filterCategory('運送情報')"
->
-🚛 運送情報
-</div>
-
-<div
-class="category"
-data-category="道路・待機場所"
-onclick="filterCategory('道路・待機場所')"
->
-🛣️ 道路・待機場所
-</div>
-
-<div
-class="category"
-data-category="雑談"
-onclick="filterCategory('雑談')"
->
-💬 雑談
-</div>
-
-</div>
-
-
-<div
-id="status"
-class="status"
->
-投稿を読み込み中...
-</div>
-
-<!-- 都道府県フィルター -->
-
-<div class="search-box">
-
-<label style="font-weight:bold;">
-📍 都道府県で絞り込み
-</label>
-
+<main class="container">
+<nav class="region-bar" aria-label="地域で絞り込み">
+<button type="button" class="region-chip" data-region="福岡県" onclick="selectRegion('福岡県')">📍 福岡</button>
+<button type="button" class="region-chip" data-region="九州" onclick="selectRegion('九州')">📍 九州</button>
+<button type="button" class="region-chip active" data-region="すべて" onclick="selectRegion('すべて')">全国</button>
 <select
 id="prefecture-filter"
 onchange="filterPrefecture()"
 >
 
-<option value="すべて">全国</option>
+<option value="すべて">都道府県</option>
+<option value="九州">九州全域</option>
 
 <option value="北海道">北海道</option>
 <option value="青森県">青森県</option>
@@ -1650,11 +1579,27 @@ onchange="filterPrefecture()"
 <option value="沖縄県">沖縄県</option>
 
 </select>
-
+</nav>
+<nav class="categories" aria-label="投稿カテゴリ">
+<button type="button" class="category active" data-category="すべて" onclick="filterCategory('すべて')">すべて</button>
+<button type="button" class="category" data-category="雑談" onclick="filterCategory('雑談')">💬 雑談</button>
+<button type="button" class="category" data-category="道路・待機場所" onclick="filterCategory('道路・待機場所')">🛣️ 道路・待機場所</button>
+<button type="button" class="category" data-category="運送情報" onclick="filterCategory('運送情報')">🚛 運送情報</button>
+<button type="button" class="category" data-category="求人・仕事募集" onclick="filterCategory('求人・仕事募集')">💼 求人・仕事募集</button>
+</nav>
+<details class="search-panel">
+<summary>🔍 キーワードで探す</summary>
+<div class="search-box">
+<input id="search" class="search-input" type="search" aria-label="投稿を検索" placeholder="4t・大型・トレーラー・求人など">
+<button type="button" class="search-button" onclick="searchPosts()">検索</button>
+<button type="button" class="clear-button" onclick="clearSearch()">検索をクリア</button>
 </div>
+</details>
+<div class="feed-heading"><h2>みんなの投稿</h2><span>新着順</span></div>
+<div id="status" class="status" role="status">投稿を読み込み中...</div>
 <div id="posts"></div>
-
-</div>
+<button type="button" class="post-button" onclick="openModal()">＋ 投稿する</button>
+</main>
 <!-- =========================
      ログイン・新規登録モーダル
 ========================= -->
@@ -1778,9 +1723,9 @@ text-align:center;
     align-items:center;
     justify-content:center;
     border-radius:50%;
-    background:#10231b;
-    border:1px solid #27654d;
-    color:#6f8e85;
+    background:#0b1929;
+    border:1px solid #36536d;
+    color:#9aafc4;
     font-size:42px;
   ">
     👤
@@ -2211,6 +2156,26 @@ loadPosts();
 
 };
 
+// Region shortcuts reuse the existing prefecture filter.
+window.selectRegion = function(region){
+  document.getElementById("prefecture-filter").value = region;
+  window.filterPrefecture();
+};
+function syncRegionChips(){
+  document.querySelectorAll("[data-region]").forEach(button => {
+    const active = button.dataset.region === currentPrefecture;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+document.getElementById("prefecture-filter").addEventListener("change", syncRegionChips);
+const originalPrefectureFilter = window.filterPrefecture;
+window.filterPrefecture = function(){ originalPrefectureFilter(); syncRegionChips(); };
+syncRegionChips();
+document.getElementById("search").addEventListener("keydown", event => {
+  if(event.key === "Enter" && !event.isComposing) window.searchPosts();
+});
+
 /* =========================
    投稿読み込み
 ========================= */
@@ -2303,7 +2268,9 @@ if(currentPrefecture !== "すべて"){
 filteredPosts =
 filteredPosts.filter(
 post =>
-post.prefecture === currentPrefecture
+currentPrefecture === "九州"
+? ["福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県"].includes(post.prefecture)
+: post.prefecture === currentPrefecture
 );
 
 }
@@ -2639,7 +2606,7 @@ max-width:600px;
 max-height:500px;
 object-fit:contain;
 border-radius:12px;
-border:1px solid #1b5542;
+border:1px solid #36536d;
 display:block;
 "
 >
@@ -4384,7 +4351,7 @@ area.innerHTML = `
 <div style="
 font-size:13px;
 margin-bottom:8px;
-color:#b9d9ce;
+color:#dce6f1;
 ">
 
 👤 ${escapeHtml(user.email)}
@@ -4393,7 +4360,7 @@ color:#b9d9ce;
 <button
 onclick="openMyPage()"
 style="
-background:linear-gradient(135deg,#065f46,#10b981);
+background:linear-gradient(135deg,#152b40,#f8bd38);
 color:white;
 border:none;
 border-radius:10px;
@@ -4407,7 +4374,7 @@ margin-right:6px;
 <button
 onclick="openProfileModal()"
 style="
-background:linear-gradient(135deg,#047857,#10b981);
+background:linear-gradient(135deg,#36536d,#f8bd38);
 color:white;
 border:none;
 border-radius:10px;
@@ -4422,9 +4389,9 @@ margin-right:6px;
 <button
 onclick="logoutUser()"
 style="
-background:#17231f;
-color:#b8d3ca;
-border:1px solid #29483d;
+background:#152b40;
+color:#dce6f1;
+border:1px solid #36536d;
 border-radius:10px;
 padding:10px 16px;
 font-weight:bold;
@@ -4443,7 +4410,7 @@ area.innerHTML = `
 <button
 onclick="openAuthModal()"
 style="
-background:linear-gradient(135deg,#047857,#10b981);
+background:linear-gradient(135deg,#36536d,#f8bd38);
 color:white;
 border:none;
 border-radius:10px;
@@ -4452,7 +4419,7 @@ font-weight:bold;
 font-size:14px;
 "
 >
-🔐 ログイン / 新規登録
+ログイン / 登録
 </button>
 
 `;
@@ -4879,7 +4846,7 @@ if (avatarPreview) {
       const img = document.createElement("img");
       img.src = url.href;
       img.alt = "プロフィール画像";
-      img.style.cssText = "width:110px;height:110px;object-fit:cover;border-radius:50%;border:2px solid #34d399;display:block;margin:0 auto;";
+      img.style.cssText = "width:110px;height:110px;object-fit:cover;border-radius:50%;border:2px solid #f8bd38;display:block;margin:0 auto;";
       avatarPreview.appendChild(img);
     } catch (error) {
       avatarPreview.textContent = "👤";
@@ -5322,7 +5289,7 @@ function(event){
           height:110px;
           object-fit:cover;
           border-radius:50%;
-          border:2px solid #34d399;
+          border:2px solid #f8bd38;
           display:block;
           margin:0 auto;
         "
@@ -5366,9 +5333,9 @@ function(){
         align-items:center;
         justify-content:center;
         border-radius:50%;
-        background:#10231b;
-        border:1px solid #27654d;
-        color:#6f8e85;
+        background:#0b1929;
+        border:1px solid #36536d;
+        color:#9aafc4;
         font-size:42px;
       ">
         👤
@@ -5610,7 +5577,7 @@ if(!notifications || notifications.length === 0){
   notificationsHtml = `
     <div style="
       padding:15px;
-      color:#8faea2;
+      color:#9aafc4;
       text-align:center;
     ">
       🔔 通知はありません。
@@ -5626,8 +5593,8 @@ if(!notifications || notifications.length === 0){
       <div
         onclick="openNotificationPost('${notification.post_id || ""}','${notification.id}')"
         style="
-          background:${notification.is_read ? "#091712" : "#123c2d"};
-          border:1px solid #174f3d;
+          background:${notification.is_read ? "#0b1929" : "#152b40"};
+          border:1px solid #152b40;
           border-radius:12px;
           padding:14px;
           margin-top:10px;
@@ -5636,7 +5603,7 @@ if(!notifications || notifications.length === 0){
 
 ${!notification.is_read ? `
   <div style="
-    color:#38d996;
+    color:#f8bd38;
     font-size:11px;
     font-weight:bold;
     margin-bottom:5px;
@@ -5645,7 +5612,7 @@ ${!notification.is_read ? `
   </div>
 ` : ""}
         <div style="
-          color:#eafff6;
+          color:#dce6f1;
           font-size:14px;
           font-weight:bold;
         ">
@@ -5656,7 +5623,7 @@ ${!notification.is_read ? `
         </div>
 
         <div style="
-          color:#6f8e85;
+          color:#9aafc4;
           font-size:11px;
           margin-top:7px;
         ">
@@ -5717,7 +5684,7 @@ if(likedPosts.length === 0){
   likedPostsHtml = `
     <div style="
       padding:15px;
-      color:#8faea2;
+      color:#9aafc4;
       text-align:center;
     ">
       まだいいねした投稿はありません。
@@ -5730,15 +5697,15 @@ if(likedPosts.length === 0){
     likedPosts.map(post => `
 
       <div style="
-        background:#091712;
-        border:1px solid #174f3d;
+        background:#0b1929;
+        border:1px solid #152b40;
         border-radius:12px;
         padding:14px;
         margin-top:10px;
       ">
 
         <div style="
-          color:#67e8b5;
+          color:#f8bd38;
           font-size:12px;
           font-weight:bold;
         ">
@@ -5755,7 +5722,7 @@ if(likedPosts.length === 0){
         </div>
 
         <div style="
-          color:#b9d9ce;
+          color:#dce6f1;
           font-size:13px;
           margin-top:6px;
           line-height:1.5;
@@ -5764,7 +5731,7 @@ if(likedPosts.length === 0){
         </div>
 
         <div style="
-          color:#6f8e85;
+          color:#9aafc4;
           font-size:11px;
           margin-top:8px;
         ">
@@ -5794,7 +5761,7 @@ if(replies.length === 0){
   repliesHtml = `
     <div style="
       padding:15px;
-      color:#8faea2;
+      color:#9aafc4;
       text-align:center;
     ">
       まだ返信していません。
@@ -5807,15 +5774,15 @@ if(replies.length === 0){
     replies.map(reply => `
 
       <div style="
-        background:#091712;
-        border:1px solid #174f3d;
+        background:#0b1929;
+        border:1px solid #152b40;
         border-radius:12px;
         padding:14px;
         margin-top:10px;
       ">
 
         <div style="
-          color:#b9d9ce;
+          color:#dce6f1;
           font-size:14px;
           line-height:1.6;
         ">
@@ -5823,7 +5790,7 @@ if(replies.length === 0){
         </div>
 
         <div style="
-          color:#6f8e85;
+          color:#9aafc4;
           font-size:11px;
           margin-top:8px;
         ">
@@ -5893,7 +5860,7 @@ const notificationSection = `
       `
       <div style="
         padding:15px;
-        color:#8faea2;
+        color:#9aafc4;
         text-align:center;
       ">
         まだ投稿していません。
@@ -5906,15 +5873,15 @@ const notificationSection = `
       posts.map(post => `
 
         <div style="
-          background:#091712;
-          border:1px solid #174f3d;
+          background:#0b1929;
+          border:1px solid #152b40;
           border-radius:12px;
           padding:14px;
           margin-top:10px;
         ">
 
           <div style="
-            color:#67e8b5;
+            color:#f8bd38;
             font-size:12px;
             font-weight:bold;
           ">
@@ -5931,7 +5898,7 @@ const notificationSection = `
           </div>
 
           <div style="
-            color:#b9d9ce;
+            color:#dce6f1;
             font-size:13px;
             margin-top:6px;
             line-height:1.5;
@@ -5958,7 +5925,7 @@ const notificationSection = `
           ` : ""}
 
           <div style="
-            color:#6f8e85;
+            color:#9aafc4;
             font-size:11px;
             margin-top:8px;
           ">
@@ -5974,9 +5941,9 @@ const notificationSection = `
     width:100%;
     padding:9px;
     border-radius:8px;
-    border:1px solid #2aa879;
-    background:#0b2119;
-    color:#7ff0bd;
+    border:1px solid #f8bd38;
+    background:#0b1929;
+    color:#dce6f1;
     font-weight:bold;
     cursor:pointer;
   "
@@ -6014,10 +5981,10 @@ const notificationSection = `
     <div style="
       background:linear-gradient(
         145deg,
-        #10231b,
-        #08130f
+        #0b1929,
+        #0b1929
       );
-      border:1px solid #1b5b46;
+      border:1px solid #36536d;
       border-radius:16px;
       padding:16px;
       margin-bottom:15px;
@@ -6026,8 +5993,8 @@ const notificationSection = `
       
       ${
         profile?.avatar_url
-          ? `<img src="${escapeHtml(profile.avatar_url)}" alt="プロフィール画像" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:2px solid #2aa879;display:block;margin:0 auto 12px;">`
-          : `<div style="width:88px;height:88px;border-radius:50%;border:2px solid #2aa879;background:#0b2119;color:#7ff0bd;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px;">👤</div>`
+          ? `<img src="${escapeHtml(profile.avatar_url)}" alt="プロフィール画像" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:2px solid #f8bd38;display:block;margin:0 auto 12px;">`
+          : `<div style="width:88px;height:88px;border-radius:50%;border:2px solid #f8bd38;background:#0b1929;color:#dce6f1;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px;">👤</div>`
       }
 
       <div style="
@@ -6047,9 +6014,9 @@ const notificationSection = `
     margin-top:10px;
     padding:12px;
     border-radius:10px;
-    border:1px solid #2aa879;
-    background:#0b2119;
-    color:#7ff0bd;
+    border:1px solid #f8bd38;
+    background:#0b1929;
+    color:#dce6f1;
     font-weight:bold;
     cursor:pointer;
   "
@@ -6057,7 +6024,7 @@ const notificationSection = `
   ✏️ プロフィールを編集
 </button>
       <div style="
-        color:#b9d9ce;
+        color:#dce6f1;
         line-height:1.8;
         font-size:14px;
       ">
@@ -6068,8 +6035,8 @@ const notificationSection = `
       <div style="
         margin-top:12px;
         padding-top:12px;
-        border-top:1px solid #1b3d32;
-        color:#d5ebe3;
+        border-top:1px solid #152b40;
+        color:#dce6f1;
         line-height:1.6;
         font-size:14px;
       ">
@@ -6087,15 +6054,15 @@ const notificationSection = `
     ">
 
       <div style="
-        background:#0b1712;
-        border:1px solid #174f3d;
+        background:#0b1929;
+        border:1px solid #152b40;
         border-radius:12px;
         padding:14px;
         text-align:center;
       ">
 
         <div style="
-          color:#6ee7b7;
+          color:#f8bd38;
           font-size:24px;
           font-weight:900;
         ">
@@ -6103,7 +6070,7 @@ const notificationSection = `
         </div>
 
         <div style="
-          color:#91b7aa;
+          color:#9aafc4;
           font-size:12px;
         ">
           📝 投稿
@@ -6113,15 +6080,15 @@ const notificationSection = `
 
 
       <div style="
-        background:#0b1712;
-        border:1px solid #174f3d;
+        background:#0b1929;
+        border:1px solid #152b40;
         border-radius:12px;
         padding:14px;
         text-align:center;
       ">
 
         <div style="
-          color:#6ee7b7;
+          color:#f8bd38;
           font-size:24px;
           font-weight:900;
         ">
@@ -6129,7 +6096,7 @@ const notificationSection = `
         </div>
 
         <div style="
-          color:#91b7aa;
+          color:#9aafc4;
           font-size:12px;
         ">
           💬 返信
@@ -6237,7 +6204,7 @@ if(notificationId){
       });
 
       post.style.boxShadow =
-        "0 0 0 3px rgba(52,211,153,.65)";
+        "0 0 0 3px rgba(48,86,125,.65)";
 
       setTimeout(function(){
 
@@ -6618,14 +6585,14 @@ topNoticeButton.style.cssText = `
   max-width:420px;
   margin:16px auto 0;
   padding:14px 18px;
-  background:linear-gradient(135deg,#065f46,#047857);
+  background:linear-gradient(135deg,#152b40,#36536d);
   color:#ffffff;
-  border:1px solid #34d399;
+  border:1px solid #f8bd38;
   border-radius:12px;
   font-size:15px;
   font-weight:900;
   cursor:pointer;
-  box-shadow:0 6px 20px rgba(16,185,129,.18);
+  box-shadow:0 6px 20px rgba(48,86,125,.18);
 `;
 
 topNoticeButton.setAttribute("aria-live", "polite");
@@ -6682,7 +6649,7 @@ async function refreshTopNotice(){
       : "🔔 未読の通知はありません";
 
     topNoticeButton.style.borderColor =
-      unread > 0 ? "#34d399" : "#29483d";
+      unread > 0 ? "#f8bd38" : "#36536d";
 
   }catch(error){
     if(requestId !== topNoticeRequest) return;
@@ -6841,3 +6808,5 @@ postImageInput.addEventListener(
   }
 );
 </script>
+</body>
+</html>
