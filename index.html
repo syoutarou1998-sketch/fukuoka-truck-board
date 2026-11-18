@@ -2058,7 +2058,30 @@ supabase.auth.getUser()
 });/* =========================
    安全処理
 ========================= */
+function officialBadge(userId){
+  if(String(userId) !== "b018c4d7-fc58-4711-a7cb-8bffc1a46752"){
+    return "";
+  }
 
+  return `
+    <button type="button"
+      class="official-badge"
+      title="公式運営アカウント"
+      aria-label="公式運営アカウント"
+      onclick="event.stopPropagation();alert('公式運営アカウント')">
+      <svg viewBox="0 0 24 24" width="19" height="19">
+        <path fill="#2495ef"
+          d="M12 1 15 3 19 3 20 7 23 10 22 14 22 17 18 18 16 22 12 21 8 22 6 18 2 17 2 13 1 10 4 7 5 3 9 3Z"/>
+        <path d="m7.5 12 3 3 6-6"
+          fill="none"
+          stroke="white"
+          stroke-width="2.3"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+      </svg>
+    </button>
+  `;
+}
 function escapeHtml(text){
 
 return String(text ?? "")
