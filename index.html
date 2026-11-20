@@ -2593,12 +2593,14 @@ post.category
 </span>
 
 
-<div class="post-author">
+ <div class="post-author"
+style="cursor:pointer;"
+onclick="openPublicProfile('${post.user_id}')">
 
 👤 ${escapeHtml(
 post.author ||
 "名無しのトラック運転手"
-)}${officialBadge(post.user_id)}
+)}${officialBadge(post.user_id)} ›
 
 </div>
 <div style="font-size:13px;color:#555;margin-bottom:8px;">
