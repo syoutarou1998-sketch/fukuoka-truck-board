@@ -2425,6 +2425,66 @@ console.error(replyError);
 const replyList =
 replies || [];
 
+// 投稿者・返信者のプロフィール画像を一括取得
+const avatarUserIds = [...new Set(
+  [...filteredPosts, ...replyList]
+    .map(item => item.user_id)
+    .filter(Boolean)
+)];
+
+const avatarMap = new Map();
+
+try{
+  for(let i = 0; i < avatarUserIds.length; i += 100){
+
+    const {data:avatarProfiles,error:avatarError} = await supabase
+      .from("profiles")
+      .select("id,avatar_url")
+      .in("id",avatarUserIds.slice(i,i+100));
+
+    if(avatarError) throw avatarError;
+
+    (avatarProfiles || []).forEach(profile => {
+      avatarMap.set(String(profile.id),profile.avatar_url);
+    });
+
+  }
+}catch(error){
+  console.error("プロフィール画像取得エラー:",error);
+}
+
+function renderAvatar(userId){
+
+  const url = avatarMap.get(String(userId));
+
+  if(url){
+    try{
+      const safeUrl = new URL(url);
+
+      if(safeUrl.protocol === "https:"){
+        return `<img
+          src="${escapeHtml(safeUrl.href)}"
+          alt="プロフィール画像"
+          loading="lazy"
+          style="
+            width:32px;
+            height:32px;
+            object-fit:cover;
+            border-radius:50%;
+            vertical-align:middle;
+            margin-right:6px;
+            border:1px solid #405c72;
+          "
+          onerror="this.replaceWith(document.createTextNode('👤'))"
+        >`;
+      }
+    }catch(error){}
+  }
+
+  return "👤";
+
+}
+
 
 /* 投稿表示 */
 
