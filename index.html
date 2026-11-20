@@ -2463,12 +2463,14 @@ reply => `
 
 <div class="reply">
 
-<div class="reply-author">
+<div class="reply-author"
+style="cursor:pointer;"
+onclick="openPublicProfile('${reply.user_id}')">
 
 👤 ${escapeHtml(
 reply.author ||
 "名無しのトラック運転手"
-)}
+)}${officialBadge(reply.user_id)} ›
 
 </div>
 
