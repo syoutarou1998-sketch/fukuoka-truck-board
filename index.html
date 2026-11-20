@@ -6924,7 +6924,7 @@ window.openPublicProfile = async function(userId){
           ${officialBadge(userId)}
         </h2>
 
-        <p>📍 ${escapeHtml(profile?.prefecture || "未設定")}</p>
+        <p>📍 ${escapeHtml(profile?.prefecture || list[0]?.prefecture || "未設定")}</p>
 
         <p>🚚 ${escapeHtml(profile?.truck_type || "未設定")}</p>
 
