@@ -2659,7 +2659,7 @@ post.category
 style="cursor:pointer;"
 onclick="openPublicProfile('${post.user_id}')">
 
-👤 ${escapeHtml(
+${renderAvatar(post.user_id)} ${escapeHtml(
 post.author ||
 "名無しのトラック運転手"
 )}${officialBadge(post.user_id)} ›
