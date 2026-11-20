@@ -6920,7 +6920,7 @@ window.openPublicProfile = async function(userId){
           style="font-size:50px;">👤</div>
 
         <h2 style="color:white;">
-          ${escapeHtml(profile?.nickname || "名無しの運転手")}
+          ${escapeHtml(profile?.nickname || list[0]?.author || "名無しの運転手")}
           ${officialBadge(userId)}
         </h2>
 
