@@ -6904,7 +6904,7 @@ window.openPublicProfile = async function(userId){
 
     const {data:posts,count,error:postError} = await supabase
       .from("posts")
-      .select("id,title,body,category,likes,created_at",{count:"exact"})
+      .select("id,title,body,category,likes,created_at,author,prefecture",{count:"exact"})
       .eq("user_id",userId)
       .order("created_at",{ascending:false})
       .limit(30);
