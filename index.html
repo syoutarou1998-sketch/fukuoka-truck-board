@@ -6847,6 +6847,141 @@ postImageInput.addEventListener(
 
   }
 );
+
+// 他のユーザーのプロフィール表示
+window.openPublicProfile = async function(userId){
+
+  if(!userId || userId === "null" || userId === "undefined"){
+    alert("プロフィールがありません");
+    return;
+  }
+
+  const old = document.getElementById("public-profile");
+  if(old) old.remove();
+
+  const modal = document.createElement("dialog");
+
+  modal.id = "public-profile";
+
+  modal.style.cssText = `
+    box-sizing:border-box;
+    width:92%;
+    max-width:520px;
+    max-height:85vh;
+    overflow:auto;
+    background:#112638;
+    color:#dce6f1;
+    border:1px solid #405c72;
+    border-radius:18px;
+    padding:20px;
+  `;
+
+  modal.innerHTML = `
+    <button onclick="this.closest('dialog').close()"
+      style="padding:10px;color:white;background:#193850;border:1px solid #405c72;border-radius:10px;">
+      ← 掲示板に戻る
+    </button>
+    <div id="public-profile-content">
+      読み込み中...
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  modal.addEventListener("close",()=>modal.remove());
+  modal.showModal();
+
+  const content = modal.querySelector("#public-profile-content");
+
+  try{
+
+    const {data:profile,error} = await supabase
+      .from("profiles")
+      .select("nickname,prefecture,truck_type,bio,avatar_url")
+      .eq("id",userId)
+      .maybeSingle();
+
+    if(error) throw error;
+
+    const {data:posts,count,error:postError} = await supabase
+      .from("posts")
+      .select("id,title,body,category,likes,created_at",{count:"exact"})
+      .eq("user_id",userId)
+      .order("created_at",{ascending:false})
+      .limit(30);
+
+    if(postError) throw postError;
+
+    const list = posts || [];
+
+    content.innerHTML = `
+      <div style="text-align:center;padding:20px 0;">
+
+        <div id="public-profile-avatar"
+          style="font-size:50px;">👤</div>
+
+        <h2 style="color:white;">
+          ${escapeHtml(profile?.nickname || "名無しの運転手")}
+          ${officialBadge(userId)}
+        </h2>
+
+        <p>📍 ${escapeHtml(profile?.prefecture || "未設定")}</p>
+
+        <p>🚚 ${escapeHtml(profile?.truck_type || "未設定")}</p>
+
+        <p style="white-space:pre-wrap;overflow-wrap:anywhere;">
+          ${escapeHtml(profile?.bio || "自己紹介はまだありません")}
+        </p>
+
+        <div style="padding:15px;background:#0b1929;border-radius:12px;color:#f8bd38;">
+          投稿 ${count ?? list.length}件
+          ｜ 👍 ${list.reduce((sum,p)=>sum+(Number(p.likes)||0),0)}
+        </div>
+
+      </div>
+
+      <h3>最近の投稿</h3>
+
+      ${list.map(p=>`
+        <div style="
+          border:1px solid #405c72;
+          border-radius:12px;
+          padding:14px;
+          margin-bottom:12px;
+          overflow-wrap:anywhere;
+        ">
+          <small>${escapeHtml(p.category || "")}</small>
+          <h3>${escapeHtml(p.title || "")}</h3>
+          <p style="white-space:pre-wrap;">${escapeHtml(p.body || "")}</p>
+          <small>👍 ${Number(p.likes)||0}</small>
+        </div>
+      `).join("") || "まだ投稿はありません"}
+    `;
+
+    if(profile?.avatar_url){
+      try{
+        const url = new URL(profile.avatar_url);
+
+        if(url.protocol === "https:"){
+          const img = document.createElement("img");
+          img.src = url.href;
+          img.alt = "プロフィール画像";
+          img.style.cssText = "width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid #f8bd38;";
+
+          content.querySelector("#public-profile-avatar")
+            .replaceChildren(img);
+        }
+      }catch(e){}
+    }
+
+  }catch(error){
+
+    console.error(error);
+    content.textContent = "プロフィールの取得に失敗しました。";
+
+  }
+
+};
+
 </script>
 </body>
 </html>
